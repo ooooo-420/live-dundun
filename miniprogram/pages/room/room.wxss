@@ -1,0 +1,48 @@
+.grow { flex: 1; min-width: 0; }
+
+.head { padding-top: 32rpx; padding-bottom: 8rpx; }
+.head-row { display: flex; justify-content: space-between; align-items: center; }
+.state { font-size: 24rpx; color: var(--mute); }
+.state.live { color: var(--ember); }
+.now { display: flex; align-items: flex-end; gap: 20rpx; margin-top: 16rpx; }
+.big { font-size: 160rpx; line-height: 0.9; font-weight: 700; color: var(--ember); }
+.now-side { display: flex; flex-direction: column; min-width: 0; padding-bottom: 12rpx; }
+.now-title { font-size: 24rpx; color: var(--soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.quick { display: flex; gap: 16rpx; margin-bottom: 8rpx; }
+.pick-btn { width: 140rpx; flex: none; }
+
+.opt { display: flex; justify-content: space-between; align-items: center; gap: 24rpx; padding: 26rpx 0; border-bottom: 1rpx solid var(--line); }
+.picker { color: var(--ember); }
+.chev { margin-left: 8rpx; color: var(--mute); }
+.note { margin-top: 18rpx; }
+
+.list-head { display: flex; justify-content: space-between; }
+.clear { color: var(--ember); padding: 0 0 0 24rpx; }
+.empty { padding-top: 8rpx; }
+
+.list { border-top: 1rpx solid var(--line); }
+.item { display: flex; align-items: center; gap: 24rpx; padding: 24rpx 32rpx; border-bottom: 1rpx solid var(--line); }
+.item.on { background: var(--ember-dim); }
+.check { width: 36rpx; height: 36rpx; border: 3rpx solid #4a4740; flex: none; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }
+.item.on .check { background: var(--ember); border-color: var(--ember); }
+.tick { width: 8rpx; height: 16rpx; border: solid var(--ember-ink); border-width: 0 4rpx 4rpx 0; transform: rotate(45deg) translate(-1rpx, -2rpx); opacity: 0; }
+.item.on .tick { opacity: 1; }
+.idx { width: 64rpx; flex: none; font-size: 34rpx; font-weight: 700; color: var(--soft); }
+.item.on .idx { color: var(--ember); }
+.item.exp .idx { color: var(--ember); }
+.t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.exp-tag { color: var(--ember); margin-left: 14rpx; }
+
+.foot { padding-top: 48rpx; text-align: center; }
+.danger-link { color: #ff8a73; font-size: 26rpx; padding: 20rpx 32rpx; }
+
+.spacer { height: 180rpx; }
+.bottom {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  padding: 20rpx 32rpx calc(20rpx + env(safe-area-inset-bottom));
+  background: var(--void);
+  border-top: 1rpx solid var(--line);
+  z-index: 10;  /* 蓋住底下捲過去的商品列 */
+}
+.saved { color: var(--soft); }

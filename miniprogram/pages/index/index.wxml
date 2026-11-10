@@ -1,0 +1,79 @@
+<view wx:if="{{demo}}" class="banner warn">示範資料，還沒連到電腦。<view class="link link-btn" hover-class="press-link" bindtap="resetDemo">重設</view></view>
+<view wx:elif="{{!needJoin && !pcOk && !loading}}" class="banner warn">電腦上次回報：{{pcText}}。電腦可能關了，或黑色視窗沒在跑。</view>
+<view wx:if="{{error}}" class="banner err">連不上雲端：{{error}}</view>
+
+<!-- 還沒加入：輸入邀請碼 -->
+<view class="wrap join" wx:if="{{needJoin}}">
+  <view class="hero-title">輸入邀請碼</view>
+  <view class="soft hero-sub">請已經在用的帳號打開「成員與邀請」，產生一組 6 位數字，30 分鐘內有效。</view>
+  <input class="input code-input num-font" type="number" maxlength="6" placeholder="000000" placeholder-class="ph" value="{{code}}" bindinput="onCode" />
+  <view class="btn" hover-class="press" hover-stay-time="80" bindtap="joinNow">加入</view>
+</view>
+
+<view wx:else>
+  <!-- 監控開關：招牌的小吸積盤 -->
+  <view class="wrap status enter" wx:if="{{!demo}}">
+    <view class="disk {{monitoring ? '' : 'off'}}"><view class="ring"></view><view class="core"></view></view>
+    <view class="status-text">
+      <view>{{monitoring ? '監控中' : '監控已暫停'}}</view>
+      <view class="muted">{{monitoring ? '講到目標會通知你' : '不盯直播、不發通知'}}<text wx:if="{{pcOk && pcText}}">　·　電腦 {{pcText}}回報</text></view>
+    </view>
+    <view class="toggle {{monitoring ? 'on' : ''}} {{switching ? 'busy' : ''}}" hover-class="press" hover-stay-time="80" bindtap="toggleMonitoring"><view class="knob"></view></view>
+  </view>
+
+  <!-- 直播間 -->
+  <view class="wrap">
+    <view class="section-label">直播間</view>
+  </view>
+
+  <view wx:if="{{!loading && rooms.length === 0}}" class="wrap empty">
+    <view class="empty-disk"><view class="ring"></view><view class="core"></view></view>
+    <view class="soft">還沒有直播間</view>
+    <view class="muted">在抖音直播間按分享 →「複製連結」，再貼到下面。</view>
+  </view>
+
+  <view class="rooms">
+    <view wx:for="{{rooms}}" wx:key="id" class="room-row enter" style="animation-delay: {{index < 6 ? index * 50 : 300}}ms">
+      <view class="del {{item.x || item.drag ? 'show' : ''}}" style="width: {{delPx}}px" hover-class="press-link" data-i="{{index}}" catchtap="askRemove">刪除</view>
+      <view class="room {{item.drag ? '' : 'snap'}}" style="transform: translateX({{item.x}}px)"
+        hover-class="{{item.drag || item.x ? 'none' : 'press-row'}}" hover-start-time="60" hover-stay-time="100"
+        data-i="{{index}}" bindtap="open" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" bindtouchcancel="touchEnd">
+        <view class="room-head">
+          <text class="room-name">{{item.name}}</text>
+          <text class="room-state {{item.live ? 'live' : ''}} {{item.alert ? 'alert' : ''}}"><text wx:if="{{item.live}}" class="dot"></text>{{item.statusText}}</text>
+        </view>
+
+        <view wx:if="{{item.live && item.explaining && item.explaining.index}}" class="now">
+          <view class="big-wrap">
+            <text wx:if="{{item.bump && item.prevIndex}}" class="big display-font flip-out">{{item.prevIndex}}</text>
+            <text class="big display-font {{item.bump ? 'flip-in' : ''}}">{{item.explaining.index}}</text>
+          </view>
+          <view class="now-side">
+            <text class="soft">號 講解中</text>
+            <text class="now-title">{{item.explaining.title}}</text>
+          </view>
+        </view>
+        <view wx:if="{{item.live && item.prog}}" class="prog"><view class="prog-bar" style="width: {{item.prog}}%"></view></view>
+
+        <view class="chips" wx:if="{{item.chips.length}}">
+          <text wx:for="{{item.chips}}" wx:for-item="c" wx:key="key" class="tag num-font {{c.cls}}">{{c.text}}</text>
+        </view>
+        <view wx:else class="muted">還沒設目標</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加入直播間 -->
+  <view class="wrap">
+    <view class="section-label">加入直播間</view>
+    <view class="add-row">
+      <input class="input grow" placeholder="貼上抖音分享的連結" placeholder-class="ph" value="{{link}}" bindinput="onLink" />
+      <view class="btn add-btn {{busy ? 'off' : ''}}" hover-class="press" hover-stay-time="80" bindtap="add">{{link ? '加入' : '貼上'}}</view>
+    </view>
+    <view wx:if="{{pending}}" class="muted tip">有 {{pending}} 個指令等電腦處理</view>
+  </view>
+
+  <view class="wrap foot">
+    <view class="foot-link link-btn" hover-class="press-link" bindtap="openMembers">成員與邀請</view>
+  </view>
+</view>

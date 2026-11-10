@@ -1,0 +1,9 @@
+{
+  "triggers": [
+    {
+      "name": "every5min",
+      "type": "timer",
+      "config": "0 */5 * * * * *"
+    }
+  ]
+}

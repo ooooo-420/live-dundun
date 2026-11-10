@@ -1,0 +1,18 @@
+{
+  "wechat": {
+    "appid": "填測試號頁面最上方的 appID",
+    "appsecret": "填測試號頁面最上方的 appsecret",
+    "openid": "填用戶列表裡你自己那一行的「微信號」",
+    "template_id": "填模板消息接口裡「直播商品提醒」的模板ID"
+  },
+  "miniprogram": {
+    "appid": "填正式小程序的 AppID（後台 开发与服务 → 开发管理 → 开发设置）",
+    "appsecret": "填正式小程序的 AppSecret（同一頁，按「生成」或「重置」）",
+    "env": "cloud1-your-env-id"
+  },
+  "bark": {
+    "url": "選填。iPhone 裝 Bark 後，把 App 裡顯示的網址貼來（https://api.day.app/你的key）；不填就只用微信",
+    "sound": "minuet",
+    "level": "timeSensitive"
+  }
+}

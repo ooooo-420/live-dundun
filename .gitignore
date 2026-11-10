@@ -1,0 +1,11 @@
+.memory-bridge/log/
+.memory-bridge/state/
+.memory-bridge/paused
+
+# 本地密鑰和環境，不可提交
+config.local.json
+.venv/
+browser-profile/
+__pycache__/
+logs/
+data/

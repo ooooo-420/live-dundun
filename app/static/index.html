@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>直播商品監控</title>
+<style>
+  :root { --bg:#f6f6f4; --card:#fff; --ink:#1d1d1b; --mute:#6b6b66; --line:#e3e2dd; --accent:#e8384f; --ok:#1f8a4c; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.5 system-ui, "Microsoft JhengHei", "PingFang TC", sans-serif; background:var(--bg); color:var(--ink); }
+  main { max-width:880px; margin:0 auto; padding:20px 16px 60px; }
+  h1 { font-size:20px; margin:0 0 16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:14px; }
+  .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  input[type=text] { flex:1; min-width:220px; padding:8px 10px; border:1px solid var(--line); border-radius:6px; font:inherit; }
+  input[type=number] { width:56px; padding:4px 6px; border:1px solid var(--line); border-radius:6px; font:inherit; }
+  button { padding:7px 12px; border:1px solid var(--line); background:#fff; border-radius:6px; font:inherit; cursor:pointer; }
+  button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  button:disabled { opacity:.5; cursor:default; }
+  .mute { color:var(--mute); font-size:13px; }
+  .badge { display:inline-block; padding:1px 8px; border-radius:99px; font-size:12px; background:#eee; }
+  .live { background:#ffe3e7; color:var(--accent); }
+  .offline { background:#eee; color:var(--mute); }
+  .err { background:#fff1d6; color:#8a5a00; }
+  table { width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
+  th, td { text-align:left; padding:6px 6px; border-top:1px solid var(--line); vertical-align:middle; }
+  th { font-weight:600; color:var(--mute); font-size:12px; }
+  .title { max-width:360px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .cartbox { max-height:420px; overflow:auto; margin-top:8px; }
+  .now { background:#fff6f7; }
+  .notes li { margin:2px 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>直播商品監控</h1>
+
+  <div class="card">
+    <div class="row">
+      <input id="url" type="text" placeholder="貼上直播間網址，例如 https://live.douyin.com/123456789">
+      <button class="primary" onclick="addRoom()">加入監控</button>
+      <button onclick="testPush()">測試微信通知</button>
+    </div>
+    <div id="msg" class="mute"></div>
+  </div>
+
+  <div id="rooms"></div>
+
+  <div class="card">
+    <b>最近的通知</b>
+    <ul id="notes" class="notes mute"></ul>
+  </div>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const STATUS = { starting:['啟動中',''], offline:['沒開播','offline'], live:['直播中','live'], no_cart:['沒開播，或直播中但沒有小黃車','offline'], need_login:['要先登入抖音（在監控用的 Edge 視窗裡登入）','err'], captcha:['等你完成滑塊驗證（在監控用的 Edge 視窗）','err'], error:['出錯，稍後重試','err'] };
+const TYPE = { A:'A 型（講解中會置頂成 1 號）', B:'B 型（號碼不變）' };
+let carts = {};      // rid -> items（使用者按了載入購物車才有）
+let editing = {};    // rid -> 是否正在選商品（選的時候不要自動重畫）
+
+function esc(s) { return String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function msg(t) { $('#msg').textContent = t; }
+
+async function api(path, body, method) {
+  const r = await fetch(path, { method: method || (body ? 'POST' : 'GET'), headers: {'Content-Type':'application/json'}, body: body ? JSON.stringify(body) : undefined });
+  const j = await r.json();
+  if (!r.ok) throw new Error(j.error || r.statusText);
+  return j;
+}
+
+async function addRoom() {
+  try { await api('/api/rooms', { url: $('#url').value.trim() }); $('#url').value=''; msg('已加入，程式會在專用的 Edge 視窗打開它。'); refresh(); }
+  catch (e) { msg(e.message); }
+}
+async function removeRoom(rid) {
+  if (!confirm('停止監控這個直播間？')) return;
+  await api('/api/rooms/' + rid, null, 'DELETE'); delete carts[rid]; delete editing[rid]; refresh();
+}
+async function testPush() {
+  try { await api('/api/test_push', {}); msg('已發送測試通知，請看微信。'); } catch (e) { msg('失敗：' + e.message); }
+}
+async function loadCart(rid) {
+  msg('正在讀取購物車，商品多的話要十幾秒…');
+  try { const j = await api('/api/rooms/' + rid + '/cart', {}); carts[rid] = j.items; editing[rid] = true; msg(j.items.length ? '' : '沒讀到商品，確認直播中有小黃車。'); render(lastState); }
+  catch (e) { msg(e.message); }
+}
+function cancelEdit(rid) { editing[rid] = false; render(lastState); }
+async function saveTargets(rid) {
+  const rows = [...document.querySelectorAll(`[data-room="${rid}"] tr[data-id]`)];
+  const targets = rows.filter(r => r.querySelector('.pick').checked).map(r => ({
+    id: r.dataset.id,
+    arrive: r.querySelector('.arrive').checked,
+    ahead: +r.querySelector('.ahead').value || 0,
+    missed: r.querySelector('.missed').checked,
+  }));
+  try { await api('/api/rooms/' + rid + '/targets', { targets }); editing[rid] = false; msg(`已設定 ${targets.length} 件目標。`); refresh(); }
+  catch (e) { msg(e.message); }
+}
+
+function targetTable(r) {
+  if (!r.targets.length) return '<div class="mute">還沒設定目標商品。</div>';
+  return `<table><tr><th>設定時號碼</th><th>商品</th><th>到了通知</th><th>提前</th><th>錯過提醒</th><th>狀態</th></tr>` +
+    r.targets.map(t => `<tr><td>${t.pos}</td><td class="title" title="${esc(t.title)}">${esc(t.title)}</td>
+      <td>${t.arrive?'✓':''}</td><td>${t.ahead||''}</td><td>${t.missed?'✓':''}</td>
+      <td class="mute">${t.explained?'已講解':''} ${Object.entries(t.sent||{}).filter(([,v])=>v).map(([k])=>({arrive:'已通知',ahead:'已提前通知',missed:'已提醒錯過'})[k]).join('、')}</td></tr>`).join('') + '</table>';
+}
+
+function cartTable(r) {
+  const items = carts[r.id] || [];
+  const chosen = Object.fromEntries(r.targets.map(t => [t.id, t]));
+  const nowId = r.explaining && r.explaining.id;
+  return `<div class="mute" style="margin-top:8px">勾選要的商品，設定通知方式，再按「儲存目標」。號碼會以現在這份清單為準。</div>
+    <div class="cartbox"><table><tr><th>選</th><th>號</th><th>商品</th><th>價格</th><th>到了通知</th><th>提前幾件</th><th>錯過提醒</th></tr>` +
+    items.map(i => { const t = chosen[i.id]; return `<tr data-id="${esc(i.id)}" class="${i.id===nowId?'now':''}">
+      <td><input type="checkbox" class="pick" ${t?'checked':''}></td><td>${i.index}</td>
+      <td class="title" title="${esc(i.title)}">${i.id===nowId?'<span class="badge live">講解中</span> ':''}${esc(i.title)}</td>
+      <td>${i.price!=null?'¥'+i.price:''}</td>
+      <td><input type="checkbox" class="arrive" ${!t||t.arrive?'checked':''}></td>
+      <td><input type="number" class="ahead" min="0" max="50" value="${t?t.ahead:0}"></td>
+      <td><input type="checkbox" class="missed" ${t&&t.missed?'checked':''}></td></tr>`; }).join('') +
+    `</table></div><div class="row" style="margin-top:8px"><button class="primary" onclick="saveTargets('${r.id}')">儲存目標</button><button onclick="cancelEdit('${r.id}')">取消</button></div>`;
+}
+
+let lastState = { rooms: [], notes: [] };
+function render(s) {
+  lastState = s;
+  $('#rooms').innerHTML = s.rooms.map(r => {
+    const [label, cls] = STATUS[r.status] || [r.status, ''];
+    const ex = r.explaining;
+    return `<div class="card" data-room="${r.id}">
+      <div class="row"><b>${esc(r.name)}</b><span class="badge ${cls}">${label}</span>
+        ${r.type ? `<span class="badge">${TYPE[r.type]}</span>` : ''}
+        <span style="flex:1"></span>
+        <button onclick="loadCart('${r.id}')" ${r.status!=='live'?'disabled':''}>載入購物車 / 選商品</button>
+        <button onclick="removeRoom('${r.id}')">移除</button></div>
+      <div class="mute">${esc(r.url)}${r.error ? ' · ' + esc(r.error) : ''}</div>
+      <div style="margin-top:6px">正在講解：${ex ? `<b>${ex.index ?? '?'} 號</b> ${esc(ex.title)}` : '<span class="mute">—</span>'}
+        <span class="mute">· 購物車 ${r.cart_count} 件</span></div>
+      ${editing[r.id] ? cartTable(r) : targetTable(r)}
+    </div>`;
+  }).join('') || '<div class="card mute">還沒有監控任何直播間。</div>';
+  $('#notes').innerHTML = s.notes.map(n => `<li>${n.t} ${esc(n.room)} · ${esc(n.product)} · ${esc(n.status)} ${n.ok?'':'<b style="color:#b00">發送失敗：'+esc(n.error)+'</b>'}</li>`).join('') || '<li>還沒有。</li>';
+}
+
+async function refresh() {
+  try { const s = await api('/api/state'); if (!Object.values(editing).some(Boolean)) render(s); else lastState = s; }
+  catch (e) { msg('連不上監控程式，它可能已經關閉。'); }
+}
+refresh(); setInterval(refresh, 3000);
+</script>
+</body>
+</html>
