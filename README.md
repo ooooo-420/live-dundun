@@ -54,7 +54,7 @@ iPhone (WeChat mini program)  ──commands──▶  WeChat Cloud DB  ◀─�
 You need Python 3.12+, Microsoft Edge, a WeChat sandbox account (接口测试号) for template messages, and a WeChat mini program with cloud development enabled.
 
 1. `python -m venv .venv` and install `requests`, `playwright`, `aiohttp`.
-2. Copy `config.example.json` to `config.local.json` and fill it in, or run `set_miniprogram.bat` and `set_openid.bat`.
+2. Copy `config.example.json` to `config.local.json` and fill it in, or run `set_miniprogram.bat` and `set_openid.bat`. In `miniprogram/`, copy `project.config.example.json` to `project.config.json` and `utils/config.example.js` to `utils/config.js`, and put your own AppID and cloud environment ID in them.
 3. Deploy `cloudfunctions/api` and `cloudfunctions/watchdog` from WeChat DevTools, and upload the watchdog's timer trigger.
 4. `python login.py` once, then `start.bat`.
 

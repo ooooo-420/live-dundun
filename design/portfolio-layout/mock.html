@@ -1,0 +1,60 @@
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;900&family=Bricolage+Grotesque:opsz,wght@12..96,800&display=swap">
+<style>
+body{margin:0;background:#1b1c22;font-family:"Noto Sans TC",sans-serif;color:#f4efe5}
+.mock{position:relative;width:1440px;height:900px;background:#020205;overflow:hidden;margin:0 0 40px}
+.hole{position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,#000 0 38%,rgba(255,170,90,.9) 40%,rgba(255,120,40,.35) 50%,rgba(255,120,40,0) 70%);filter:blur(1px)}
+.hole:after{content:"";position:absolute;inset:36%;border-radius:50%;background:#000;box-shadow:0 0 60px 20px rgba(255,160,80,.35)}
+.tag{position:absolute;left:28px;top:18px;font:800 26px "Bricolage Grotesque";letter-spacing:-.02em}
+.name{position:absolute;font-weight:900;letter-spacing:-.02em;white-space:nowrap}
+.ember{color:#ffb56b}.cream{color:#f7f0e0}.dim{color:#8f897f}
+.label{position:absolute;left:28px;bottom:20px;font-size:14px;color:#807c75}
+/* B 排版柱 */
+.col{position:absolute;left:88px;top:150px}
+.col .big{font:900 150px/1 "Noto Sans TC";color:#ffb56b;letter-spacing:-.04em}
+.col .sub{font-size:22px;color:#bdb8ae;margin:14px 0 54px 6px}
+.col .row{font:900 54px/1.35 "Noto Sans TC";color:#f7f0e0}
+.col .row.d{color:#6f6a62}
+.col .idx{display:inline-block;width:56px;font:500 16px "Bricolage Grotesque";color:#807c75;vertical-align:middle}
+/* C 愛因斯坦環 */
+.ring{position:absolute;left:50%;top:50%;width:720px;height:720px;margin:-360px 0 0 -360px;border-radius:50%;border:1px solid rgba(255,181,107,.12)}
+</style>
+
+<!-- A 軌道 -->
+<div class="mock">
+ <div class="tag">wuu</div>
+ <div class="hole" style="left:510px;top:240px"></div>
+ <svg style="position:absolute;inset:0" width="1440" height="900"><ellipse cx="720" cy="450" rx="520" ry="150" fill="none" stroke="rgba(255,181,107,.14)"/><ellipse cx="720" cy="450" rx="300" ry="86" fill="none" stroke="rgba(255,181,107,.22)"/></svg>
+ <div class="name ember" style="left:910px;top:360px;font-size:78px">直播蹲蹲</div>
+ <div class="name cream" style="left:150px;top:420px;font-size:52px">記憶中轉站</div>
+ <div class="name cream" style="left:880px;top:560px;font-size:48px;opacity:.85">簡歷製作台</div>
+ <div class="name dim" style="left:300px;top:245px;font-size:44px">個人中控台</div>
+ <div class="label">A 軌道：四個作品在吸積盤的兩條軌道上慢慢繞，最新的在最內圈、最亮；靠近黑洞那一側會被透鏡拉長、都卜勒增亮</div>
+</div>
+
+<!-- B 排版柱 -->
+<div class="mock">
+ <div class="tag">wuu</div>
+ <div class="hole" style="left:880px;top:220px;width:520px;height:520px"></div>
+ <div class="col">
+  <div class="big">直播蹲蹲</div>
+  <div class="sub">講到你要的那一號，微信叫你 · 2026</div>
+  <div class="row"><span class="idx">02</span>記憶中轉站</div>
+  <div class="row"><span class="idx">03</span>簡歷製作台</div>
+  <div class="row d"><span class="idx">04</span>個人中控台</div>
+ </div>
+ <div class="label">B 排版柱：像海報，一個字塊＋一個黑洞。最新作品最大、帶一句話；其餘依序縮小變暗。字塊右緣靠近黑洞的字會被引力拉長</div>
+</div>
+
+<!-- C 愛因斯坦環 -->
+<div class="mock">
+ <div class="tag">wuu</div>
+ <div class="ring"></div>
+ <div class="hole" style="left:510px;top:240px"></div>
+ <div class="name ember" style="left:50%;top:84px;transform:translateX(-50%);font-size:84px">直播蹲蹲</div>
+ <div class="name cream" style="left:118px;top:400px;font-size:50px">記憶中轉站</div>
+ <div class="name cream" style="left:1010px;top:400px;font-size:50px">簡歷製作台</div>
+ <div class="name dim" style="left:50%;top:740px;transform:translateX(-50%);font-size:46px">個人中控台</div>
+ <div class="label">C 愛因斯坦環：四個作品落在黑洞外的一圈環上（上、左、右、下），最新的在正上方吸積盤最亮處。對稱、安靜，像一枚徽章</div>
+</div>
+</html>

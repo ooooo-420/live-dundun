@@ -4,6 +4,9 @@
 
 # 本地密鑰和環境，不可提交
 config.local.json
+miniprogram/project.config.json
+miniprogram/project.private.config.json
+miniprogram/utils/config.js
 .venv/
 browser-profile/
 __pycache__/
