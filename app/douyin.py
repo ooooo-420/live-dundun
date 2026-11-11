@@ -44,6 +44,14 @@ SCAN_JS = r"""
   const capText = leaves.find(e => /拖动.*滑块|完成.*拼图|请完成下列验证/.test(e.textContent) && shown(e));
   const captcha = !!(capEl || capText);
   const captchaWhy = capEl ? (capEl.id || capEl.tagName) + ' ' + (capEl.src || '').slice(0, 60) : capText ? capText.textContent.slice(0, 30) : '';
+  // 驗證框在頁面上的位置：給手機看截圖、把手機上的手勢對回頁面座標用
+  let captchaRect = null;
+  if (captcha) {
+    let box = capEl || capText;
+    if (!capEl) { for (let p = capText; p && p !== document.body; p = p.parentElement) { const r = p.getBoundingClientRect(); if (r.width >= 260 && r.height >= 160) { box = p; break; } } }
+    const r = box.getBoundingClientRect();
+    captchaRect = { x: r.left, y: r.top, w: r.width, h: r.height };
+  }
   const needLogin =leaves.some(e => /^(扫码登录|登录后抖音更懂你)$/.test(e.textContent.trim()) && e.getBoundingClientRect().width > 0);
 
   const items = new Map();
@@ -62,7 +70,7 @@ SCAN_JS = r"""
     if (el.textContent.trim() === '讲解中') { const v = promoOf(el, 12); if (v) { badge = brief(v); break; } }
   }
   return {
-    ended, hasCartButton, needLogin, captcha, captchaWhy,
+    ended, hasCartButton, needLogin, captcha, captchaWhy, captchaRect,
     items: [...items.values()].sort((a, b) => a.index - b.index),
     floating, badge,
     title: document.title,
@@ -107,6 +115,7 @@ class Scan:
     need_login: bool = False
     captcha: bool = False
     captcha_why: str = ""
+    captcha_rect: dict | None = None
     items: list[dict] = field(default_factory=list)
     floating: dict | None = None
     badge: dict | None = None
@@ -129,6 +138,7 @@ async def scan(page: Page) -> Scan:
         need_login=r["needLogin"],
         captcha=r["captcha"],
         captcha_why=r.get("captchaWhy") or "",
+        captcha_rect=r.get("captchaRect"),
         items=r["items"],
         floating=r["floating"],
         badge=r["badge"],
@@ -182,6 +192,47 @@ async def refresh_cart(page: Page) -> Scan:
     await open_cart(page)
     await load_all(page)
     return await stable_scan(page)
+
+
+async def shot(page: Page, rect: dict | None) -> tuple[str, dict]:
+    """截驗證框那一塊（JPEG、base64），回傳截圖和實際截的範圍（頁面座標）。沒有範圍就截整個可見畫面。"""
+    vp = page.viewport_size or {"width": 1400, "height": 850}
+    if rect and rect["w"] > 20 and rect["h"] > 20:
+        pad = 12
+        x = max(0, rect["x"] - pad)
+        y = max(0, rect["y"] - pad)
+        w = min(vp["width"] - x, rect["w"] + pad * 2)
+        h = min(vp["height"] - y, rect["h"] + pad * 2)
+        clip = {"x": x, "y": y, "width": w, "height": h}
+    else:
+        clip = {"x": 0, "y": 0, "width": vp["width"], "height": vp["height"]}
+    data = await page.screenshot(clip=clip, type="jpeg", quality=62, timeout=15000)
+    import base64
+    return base64.b64encode(data).decode("ascii"), {"x": clip["x"], "y": clip["y"], "w": clip["width"], "h": clip["height"]}
+
+
+async def replay(page: Page, area: dict, kind: str, points: list) -> None:
+    """把使用者在手機上的手勢照原樣放回頁面：點一下，或按住拖過去（照手機上記下的軌跡和時間）。
+    座標是 0～1 的比例，對到截圖範圍 area。這是使用者本人在操作，程式只是轉達。"""
+    pts = []
+    for p in points[:400]:
+        nx, ny, t = float(p[0]), float(p[1]), float(p[2]) if len(p) > 2 else 0.0
+        pts.append((area["x"] + min(1, max(0, nx)) * area["w"], area["y"] + min(1, max(0, ny)) * area["h"], max(0.0, t)))
+    if not pts:
+        return
+    if kind == "tap":
+        await page.mouse.click(pts[0][0], pts[0][1])
+        return
+    await page.mouse.move(pts[0][0], pts[0][1])
+    await page.mouse.down()
+    last_t = pts[0][2]
+    for x, y, t in pts[1:]:
+        dt = min(0.2, max(0.0, (t - last_t) / 1000))
+        if dt:
+            await asyncio.sleep(dt)
+        await page.mouse.move(x, y)
+        last_t = t
+    await page.mouse.up()
 
 
 def consistent(items: list[dict]) -> bool:

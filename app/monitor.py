@@ -17,6 +17,7 @@ PROFILE = ROOT / "browser-profile"
 POLL_LIVE = 4          # 直播中：每幾秒讀一次講解中商品
 POLL_OFFLINE = 300     # 沒開播：每幾秒重新整理一次（太頻繁容易觸發滑塊驗證）
 NO_CART_GRACE = 60     # 開播但一直沒看到購物車按鈕多久，就當作「沒有小黃車」
+WATCH_KEEP = 12 * 3600  # 重開程式時，多久以內選過的直播間才繼續盯
 
 
 class RoomWorker:
@@ -32,6 +33,10 @@ class RoomWorker:
         self.cart_ref: list[dict] = []
         self.cart_time = 0.0
         self.error = ""
+        # 人機驗證：最新截圖（給手機看）和截圖範圍（把手機上的手勢對回頁面）
+        self.shot: dict | None = None
+        self.shot_area: dict | None = None
+        self.shot_v = 0
 
     @property
     def room(self) -> dict:
@@ -46,6 +51,7 @@ class RoomWorker:
             "status": self.status,
             "error": self.error,
             "type": r.get("type"),
+            "watch": bool(r.get("watch")),
             "explaining": self.explaining,
             "cart_count": len(self.cart),
             "targets": r.get("targets", []),
@@ -155,18 +161,60 @@ class RoomWorker:
                 await self.on_change(last_id, cur, s)
                 last_id = cur
 
+    async def take_shot(self, rect: dict | None = None) -> None:
+        if rect is None:
+            rect = (await douyin.scan(self.page)).captcha_rect
+        img, area = await douyin.shot(self.page, rect)
+        self.shot_v += 1
+        self.shot = {"img": img, "w": area["w"], "h": area["h"], "v": self.shot_v, "t": int(time.time() * 1000)}
+        self.shot_area = area
+
     async def wait_captcha(self, why: str = "") -> douyin.Scan:
-        """出現滑塊驗證：程式不碰它，通知使用者到監控用的 Edge 自己完成，完成前不重新整理頁面。"""
+        """出現人機驗證：程式自己不解，也不繞過。把驗證框截圖傳到小程序，由使用者本人在手機上操作
+        （或到電腦上的 Edge 自己完成），完成前不重新整理頁面。"""
         self.set_status("captcha")
         store.log("captcha", room=self.rid, why=why)
-        await self.mon.push_text(self.room.get("name") or self.rid, "需要人工驗證", "請到監控用的 Edge 完成滑塊驗證")
+        try:
+            async with self.lock:
+                await self.take_shot()
+        except Exception as e:
+            store.log("captcha_shot_error", room=self.rid, error=str(e)[:200])
+        await self.mon.push_text(self.room.get("name") or self.rid, "需要人機驗證", "打開小程序就能在手機上完成")
+        last_shot = time.time()
         while True:
-            await asyncio.sleep(10)
+            await asyncio.sleep(2)
             async with self.lock:
                 s = await douyin.scan(self.page)
+                if s.captcha and time.time() - last_shot > 20:  # 驗證圖可能自己換了，定時更新
+                    try:
+                        await self.take_shot(s.captcha_rect)
+                    except Exception:
+                        pass
+                    last_shot = time.time()
             if not s.captcha:
+                self.shot = None
+                self.shot_area = None
                 store.log("captcha_done", room=self.rid)
                 return s
+
+    async def remote_input(self, payload: dict) -> str:
+        """使用者在手機上對驗證截圖做的手勢：照原樣放回頁面，再截一張新的給手機看結果。"""
+        if self.status != "captcha" or not self.page:
+            raise ValueError("這間現在不需要驗證")
+        kind = payload.get("kind")
+        if kind not in ("tap", "drag", "refresh"):
+            raise ValueError("不認得的操作")
+        if payload.get("v") and self.shot and payload["v"] != self.shot["v"]:
+            raise ValueError("驗證畫面已經換了，請照新的畫面再操作一次")
+        async with self.lock:
+            if kind != "refresh" and self.shot_area:
+                await douyin.replay(self.page, self.shot_area, kind, payload.get("points") or [])
+                await asyncio.sleep(1.6)
+            s = await douyin.scan(self.page)
+            if s.captcha:
+                await self.take_shot(s.captcha_rect)
+        store.log("captcha_input", room=self.rid, kind=kind, n=len(payload.get("points") or []), still=s.captcha)
+        return "還要再驗證" if s.captcha else "驗證完成"
 
     def set_status(self, st: str) -> None:
         if st != self.status:
@@ -240,12 +288,23 @@ class Monitor:
         """手機上把監控關掉時為 True：Edge 關掉、不盯直播；背景程式照樣和雲端同步，等「開」的指令。"""
         return bool(self.state.get("paused"))
 
+    def watched(self, rid: str) -> bool:
+        return bool(self.state["rooms"].get(rid, {}).get("watch"))
+
     async def start(self) -> None:
         self.wechat = Notifier()
         self._pw = await async_playwright().start()
         self.closed = asyncio.Event()
+        # 直播連結常常當天就失效：超過 12 小時前選的直播間，重開程式時不自動再盯
+        stale = time.time() - WATCH_KEEP
+        for r in self.state["rooms"].values():
+            if r.get("watch") and r.get("watch_since", 0) < stale:
+                r["watch"] = False
+        self.save()
         for rid in list(self.state["rooms"]):
             self.workers[rid] = RoomWorker(self, rid)
+            if not self.watched(rid):
+                self.workers[rid].status = "idle"
         if self.paused:
             print("監控目前是「關」（在手機上關的），等手機打開。", flush=True)
             for w in self.workers.values():
@@ -258,9 +317,40 @@ class Monitor:
         asyncio.create_task(self.keep_browser())
 
     def run_workers(self) -> None:
-        for w in self.workers.values():
-            if w.task is None or w.task.done():
+        """只盯使用者選了的直播間。"""
+        for rid, w in self.workers.items():
+            if self.watched(rid) and (w.task is None or w.task.done()):
+                w.status = "starting"
                 w.task = asyncio.create_task(w.run())
+
+    async def watch(self, rid: str, on: bool) -> None:
+        """手機上對某一間按「盯」或「不盯」。"""
+        if rid not in self.workers:
+            raise ValueError("電腦上沒有這個直播間")
+        if on and self.paused:
+            raise ValueError("監控是關的，先打開監控")
+        room = self.state["rooms"][rid]
+        room["watch"] = on
+        if on:
+            room["watch_since"] = time.time()
+        self.save()
+        w = self.workers[rid]
+        if on:
+            self.run_workers()
+        else:
+            if w.task:
+                w.task.cancel()
+            w.task = None
+            if w.page and not w.page.is_closed():
+                try:
+                    await w.page.close()
+                except Exception:
+                    pass
+            w.page = None
+            w.explaining = None
+            w.shot = None
+            w.status = "idle"
+        store.log("watch", room=rid, on=on)
 
     async def pause(self) -> None:
         if self.paused:
@@ -287,11 +377,13 @@ class Monitor:
         # 先開好 Edge 再把 paused 改成 False，不然 keep_browser 會以為 Edge 被關掉而搶著再開一次
         if self.closed.is_set():
             await self.launch()
+        # 打開監控＝電腦先準備好（Edge 開著、登入狀態在），不自動打開以前的直播間；使用者在手機上選了哪間才盯哪間
         self.state["paused"] = False
+        for r in self.state["rooms"].values():
+            r["watch"] = False
         self.save()
         for w in self.workers.values():
-            w.status = "starting"
-        self.run_workers()
+            w.status = "idle"
         store.log("resumed")
 
     async def launch(self) -> None:
@@ -337,19 +429,23 @@ class Monitor:
     def spawn(self, rid: str) -> None:
         w = RoomWorker(self, rid)
         self.workers[rid] = w
-        if self.paused:
-            w.status = "paused"
-        else:
-            w.task = asyncio.create_task(w.run())
+        w.status = "paused" if self.paused else "idle"
+        self.run_workers()
 
     def add_room(self, url: str) -> str:
+        """貼了新連結＝要盯這間：加進來並馬上開始盯（監控是關的就先記著）。同一間重貼也會重新開始盯。"""
         rid = store.room_id_from_url(url)
         if not rid:
             raise ValueError("看不懂這個網址，要是 live.douyin.com/數字 這種")
         if rid not in self.state["rooms"]:
             self.state["rooms"][rid] = {"url": f"https://live.douyin.com/{rid}", "targets": [], "snapshot": []}
-            self.save()
+        self.state["rooms"][rid]["watch"] = True
+        self.state["rooms"][rid]["watch_since"] = time.time()
+        self.save()
+        if rid not in self.workers:
             self.spawn(rid)
+        elif not self.paused:
+            self.run_workers()
         return rid
 
     async def remove_room(self, rid: str) -> None:

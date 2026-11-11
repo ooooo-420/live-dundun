@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/room/room",
-    "pages/members/members"
+    "pages/members/members",
+    "pages/verify/verify"
   ],
   "window": {
     "navigationBarTextStyle": "white",

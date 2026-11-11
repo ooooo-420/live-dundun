@@ -1,0 +1,15 @@
+<view class="wrap enter">
+  <view class="title">在手機上完成驗證</view>
+  <view class="soft intro">這是電腦上那個驗證框的畫面。照它的要求操作：要拖滑塊就按住拖過去，要點字就點。你的手勢會原樣傳到電腦上。</view>
+
+  <view wx:if="{{shot}}" class="shot-box {{busy ? 'busy' : ''}}">
+    <image id="shot" class="shot" src="data:image/jpeg;base64,{{shot.img}}" mode="widthFix" />
+    <view class="touch" catchtouchstart="ts" catchtouchmove="tm" catchtouchend="te" catchtouchcancel="te"></view>
+    <view wx:if="{{finger}}" class="finger" style="left: {{finger.x}}px; top: {{finger.y}}px"></view>
+  </view>
+  <view wx:else class="wait muted">{{done ? '' : '等電腦截圖…'}}</view>
+
+  <view class="msg {{done ? 'ok' : ''}}">{{msg}}</view>
+  <view wx:if="{{!done}}" class="btn ghost" hover-class="press" hover-stay-time="80" bindtap="refresh">畫面不對？重新截圖</view>
+  <view class="muted note">程式不會自己解驗證。如果一直過不了，也可以直接到電腦上的 Edge 完成。</view>
+</view>

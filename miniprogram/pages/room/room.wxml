@@ -5,6 +5,7 @@
       <text class="state {{room.status === 'live' ? 'live' : ''}}">{{statusText}}</text>
       <text class="muted" wx:if="{{room.type}}">{{room.type === 'A' ? '講解中會被置頂成 1 號' : '號碼不會變'}}</text>
     </view>
+    <view wx:if="{{room.status === 'captcha'}}" class="verify-row" hover-class="press-link" bindtap="goVerify">抖音要人機驗證 · 點這裡在手機上完成 ›</view>
     <view wx:if="{{room.status === 'live' && room.explaining && room.explaining.index}}" class="now">
       <view class="big-wrap">
         <text wx:if="{{bump && prevIndex}}" class="big display-font flip-out">{{prevIndex}}</text>

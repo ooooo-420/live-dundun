@@ -41,7 +41,9 @@
         <view class="room-head">
           <text class="room-name">{{item.name}}</text>
           <text class="room-state {{item.live ? 'live' : ''}} {{item.alert ? 'alert' : ''}}"><text wx:if="{{item.live}}" class="dot"></text>{{item.statusText}}</text>
+          <view wx:if="{{monitoring}}" class="toggle sm {{item.watch ? 'on' : ''}} {{item.watchBusy ? 'busy' : ''}}" hover-class="press" hover-stay-time="80" data-i="{{index}}" catchtap="toggleWatch"><view class="knob"></view></view>
         </view>
+        <view wx:if="{{item.status === 'captcha'}}" class="verify-row" hover-class="press-link" data-i="{{index}}" catchtap="goVerify">抖音要人機驗證 · 點這裡在手機上完成 ›</view>
 
         <view wx:if="{{item.live && item.explaining && item.explaining.index}}" class="now">
           <view class="big-wrap">

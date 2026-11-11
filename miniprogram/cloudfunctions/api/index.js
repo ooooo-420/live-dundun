@@ -16,7 +16,8 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const _ = db.command
 
-const COLLECTIONS = ['rooms', 'carts', 'commands', 'config']
+const COLLECTIONS = ['rooms', 'carts', 'commands', 'config', 'captcha']
+const COMMANDS = ['add_room', 'remove_room', 'set_targets', 'pause', 'resume', 'watch', 'unwatch', 'captcha_input']
 let ensured = false
 
 async function ensure() {
@@ -126,7 +127,7 @@ async function fromApp(event) {
     }
     case 'command': {
       const { type, room, payload } = event
-      if (!['add_room', 'remove_room', 'set_targets', 'pause', 'resume'].includes(type)) throw new Error('不認得的指令')
+      if (!COMMANDS.includes(type)) throw new Error('不認得的指令')
       const r = await db.collection('commands').add({
         data: { type, room: room || null, payload: payload || null, done: false, result: null, created: Date.now() },
       })
@@ -135,6 +136,12 @@ async function fromApp(event) {
     case 'command_result': {
       const r = await db.collection('commands').doc(event.id).get()
       return { done: r.data.done, result: r.data.result }
+    }
+    case 'captcha': {
+      // 人機驗證截圖：電腦截下驗證框，手機上由使用者本人操作
+      let shot = null
+      try { shot = (await db.collection('captcha').doc(event.id).get()).data } catch (e) {}
+      return { shot: shot && shot.img ? shot : null }
     }
     case 'invite':
       return makeInvite()
@@ -185,6 +192,15 @@ async function fromPc(event) {
   if (event.carts) {
     for (const id of Object.keys(event.carts)) {
       await db.collection('carts').doc(id).set({ data: { items: event.carts[id], updated: now } })
+    }
+  }
+
+  // 驗證截圖：{ 直播間: {img,w,h,v,t} 或 null（驗證完成） }
+  if (event.captchas) {
+    for (const id of Object.keys(event.captchas)) {
+      const sh = event.captchas[id]
+      if (sh) await db.collection('captcha').doc(id).set({ data: { ...sh, updated: now } })
+      else { try { await db.collection('captcha').doc(id).remove() } catch (e) {} }
     }
   }
 

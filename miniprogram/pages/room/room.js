@@ -95,6 +95,10 @@ Page({
     })
   },
 
+  goVerify() {
+    wx.navigateTo({ url: `/pages/verify/verify?id=${this.data.id}` })
+  },
+
   toggle(e) {
     const id = e.currentTarget.dataset.id
     const picked = { ...this.data.picked }

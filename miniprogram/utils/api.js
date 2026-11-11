@@ -15,8 +15,9 @@ const STATUS_TEXT = {
   no_cart: '沒有小黃車',
   error: '出錯了',
   need_login: '要先登入抖音',
-  captcha: '要人工驗證',
+  captcha: '要人機驗證',
   paused: '監控關閉中',
+  idle: '沒在盯',
 }
 
 // 從分享文字或網址裡找出直播間連結
@@ -88,6 +89,17 @@ const cloudApi = {
   // targets: [{id, ahead, missed}]，電腦會以它當下的購物車重新對號碼
   async setTargets(id, targets) {
     return command('set_targets', id, { targets })
+  },
+  // 盯／不盯某一間
+  async setWatch(id, on) {
+    return command(on ? 'watch' : 'unwatch', id, null)
+  },
+  // 人機驗證：拿電腦截的驗證框圖；把使用者在手機上的手勢送回電腦
+  async getCaptcha(id) {
+    return (await call('captcha', { id })).shot
+  },
+  async captchaInput(id, payload) {
+    return command('captcha_input', id, payload, 15000)
   },
   // 成員：產生邀請碼、用邀請碼加入、列出和移除成員
   async invite() {
@@ -187,6 +199,19 @@ const demoApi = {
     }
     save(s)
     return wait({})
+  },
+  async setWatch(id, on) {
+    const s = load()
+    const r = s.rooms.find(x => x.id === id)
+    if (r) { r.watch = on; r.status = on ? 'starting' : 'idle' }
+    save(s)
+    return wait({})
+  },
+  async getCaptcha() {
+    return wait(null)
+  },
+  async captchaInput() {
+    return wait({ message: '驗證完成' })
   },
   async invite() {
     return wait({ code: '123456', minutes: 30 })

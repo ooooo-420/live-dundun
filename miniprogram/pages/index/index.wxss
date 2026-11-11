@@ -25,6 +25,11 @@
 .room-state.live { color: var(--ember); }
 .room-state.alert { color: #ff8a73; }
 .dot { width: 10rpx; height: 10rpx; border-radius: 50%; background: var(--ember); }
+.room-state { margin-left: auto; }
+.toggle.sm { width: 76rpx; height: 44rpx; border-radius: 22rpx; margin-left: 16rpx; }
+.toggle.sm .knob { width: 34rpx; height: 34rpx; top: 4rpx; left: 4rpx; }
+.toggle.sm.on .knob { transform: translateX(32rpx); }
+.verify-row { margin-top: 16rpx; padding: 16rpx 20rpx; background: var(--ember-dim); color: var(--ember); font-size: 26rpx; }
 
 .now { display: flex; align-items: flex-end; gap: 20rpx; margin: 18rpx 0 6rpx; }
 .big { font-size: 128rpx; line-height: 0.9; font-weight: 700; color: var(--ember); }

@@ -1,0 +1,11 @@
+.title { font-size: 40rpx; font-weight: 700; margin-top: 40rpx; }
+.intro { font-size: 26rpx; margin: 12rpx 0 32rpx; }
+.shot-box { position: relative; border: 1rpx solid var(--line); background: #fff; }
+.shot-box.busy { opacity: 0.55; }
+.shot { display: block; width: 100%; }
+.touch { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
+.finger { position: absolute; width: 44rpx; height: 44rpx; margin: -22rpx 0 0 -22rpx; border-radius: 50%; background: rgba(255, 181, 107, 0.45); border: 3rpx solid var(--ember); pointer-events: none; }
+.wait { padding: 120rpx 0; text-align: center; }
+.msg { margin: 24rpx 0; min-height: 40rpx; color: var(--soft); text-align: center; }
+.msg.ok { color: var(--ember); font-size: 34rpx; font-weight: 700; }
+.note { margin-top: 28rpx; }

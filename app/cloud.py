@@ -28,6 +28,7 @@ CONFIG = ROOT / "config.local.json"
 API = "https://api.weixin.qq.com"
 
 INTERVAL = 15        # 幾秒同步一次
+CAPTCHA_INTERVAL = 1.5  # 有直播間在等人機驗證時，同步快一點，手機上的操作才不會延遲
 PAUSED_INTERVAL = 60  # 手機把監控關掉時，改成每分鐘同步一次（省雲端額度）
 HEARTBEAT_EVERY = 4  # 每幾次同步帶一次心跳（約一分鐘），省資料庫寫入次數
 
@@ -138,6 +139,7 @@ class CloudSync:
         self.sent_paused: bool | None = None
         self.sent_notify = ""
         self.sent_carts: dict[str, str] = {}
+        self.sent_shots: dict[str, int] = {}  # 直播間 → 已送上去的驗證截圖版本（0＝沒有截圖）
         self.count = 0
         self.ok = False
         self.last_error = ""
@@ -146,7 +148,7 @@ class CloudSync:
         out = []
         for w in self.mon.workers.values():
             p = w.public()
-            out.append({k: p.get(k) for k in ("id", "url", "name", "status", "error", "type", "explaining", "cart_count", "targets")})
+            out.append({k: p.get(k) for k in ("id", "url", "name", "status", "error", "type", "watch", "explaining", "cart_count", "targets")})
         return out
 
     def build(self) -> tuple[dict, str | None, dict[str, str]]:
@@ -165,6 +167,15 @@ class CloudSync:
                 cd[rid] = d
         if carts:
             body["carts"] = carts
+        # 人機驗證截圖：換了才送；驗證完成（沒有截圖了）也要送一次 null 讓手機知道
+        shots = {}
+        for rid, w in self.mon.workers.items():
+            sh = getattr(w, "shot", None)
+            v = sh["v"] if sh else 0
+            if self.sent_shots.get(rid, 0) != v:
+                shots[rid] = sh
+        if shots:
+            body["captchas"] = shots
         if self.results:
             body["results"] = self.results
         paused = bool(getattr(self.mon, "paused", False))
@@ -194,6 +205,8 @@ class CloudSync:
         for rid in list(self.sent_carts):
             if rid not in self.mon.workers:
                 del self.sent_carts[rid]
+        for rid, sh in (body.get("captchas") or {}).items():
+            self.sent_shots[rid] = sh["v"] if sh else 0
         self.results = []
         errs = (data or {}).get("resultErrors") or []
         if errs:
@@ -229,6 +242,15 @@ class CloudSync:
             elif kind == "resume":
                 await self.mon.resume()
                 res = {"ok": True, "message": "監控已打開", "room": None}
+            elif kind in ("watch", "unwatch"):
+                await self.mon.watch(room, kind == "watch")
+                res = {"ok": True, "message": "開始盯這間" if kind == "watch" else "不盯這間了", "room": room}
+            elif kind == "captcha_input":
+                w = self.mon.workers.get(room)
+                if not w:
+                    raise ValueError("電腦上沒有這個直播間")
+                msg = await w.remote_input(payload)
+                res = {"ok": True, "message": msg, "room": room}
             elif kind == "remove_room":
                 await self.mon.remove_room(room)
                 res = {"ok": True, "message": "已移除", "room": room}
@@ -268,4 +290,6 @@ class CloudSync:
                 self.ok, self.last_error = False, err
             # 剛處理完新指令就很快再同步一次，讓小程序早點看到結果；只對新指令這樣做，避免卡住時狂打雲端
             idle = PAUSED_INTERVAL if getattr(self.mon, "paused", False) else INTERVAL
-            await asyncio.sleep(2 if n else idle)
+            if any(getattr(w, "status", "") == "captcha" for w in self.mon.workers.values()):
+                idle = CAPTCHA_INTERVAL
+            await asyncio.sleep(min(2, idle) if n else idle)

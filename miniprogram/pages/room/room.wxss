@@ -4,6 +4,7 @@
 .head-row { display: flex; justify-content: space-between; align-items: center; }
 .state { font-size: 24rpx; color: var(--mute); }
 .state.live { color: var(--ember); }
+.verify-row { margin-top: 20rpx; padding: 18rpx 20rpx; background: var(--ember-dim); color: var(--ember); font-size: 26rpx; }
 .now { display: flex; align-items: flex-end; gap: 20rpx; margin-top: 16rpx; }
 .big { font-size: 160rpx; line-height: 0.9; font-weight: 700; color: var(--ember); }
 .now-side { display: flex; flex-direction: column; min-width: 0; padding-bottom: 12rpx; }

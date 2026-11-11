@@ -100,6 +100,8 @@ Page({
         ...info(r),
         x: openX[r.id] || 0,
         drag: false,
+        watch: !!r.watch,
+        watchBusy: false,
         bump,
         prevIndex,
       }
@@ -197,6 +199,30 @@ Page({
         this.refresh()
       },
     })
+  },
+
+  // ---------- 盯／不盯、人機驗證 ----------
+
+  async toggleWatch(e) {
+    const i = e.currentTarget.dataset.i
+    const r = this.data.rooms[i]
+    if (!r || r.watchBusy) return
+    const on = !r.watch
+    this.setData({ [`rooms[${i}].watch`]: on, [`rooms[${i}].watchBusy`]: true })
+    try {
+      const res = await api.setWatch(r.id, on)
+      if (res.pending) wx.showToast({ title: '已送出，電腦稍後處理', icon: 'none' })
+    } catch (err) {
+      this.setData({ [`rooms[${i}].watch`]: !on })
+      wx.showToast({ title: err.message, icon: 'none' })
+    }
+    this.setData({ [`rooms[${i}].watchBusy`]: false })
+    this.refresh()
+  },
+
+  goVerify(e) {
+    const r = this.data.rooms[e.currentTarget.dataset.i]
+    if (r) wx.navigateTo({ url: `/pages/verify/verify?id=${r.id}` })
   },
 
   // ---------- 其他 ----------

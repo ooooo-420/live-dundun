@@ -1,0 +1,132 @@
+<!doctype html><html lang="zh-Hans"><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+body{margin:0;background:#d9d6cf;font-family:"Noto Sans SC",sans-serif;display:flex;gap:36px;padding:36px;align-items:flex-start}
+.phone{width:390px;height:844px;border-radius:48px;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(40,30,20,.25)}
+.cap{font:600 15px "Noto Sans SC";color:#3b3630;margin:14px 0 0 6px}
+.num{font-family:"Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums}
+svg{display:block}
+
+/* ---------- A 叫號單 ---------- */
+.A{background:#f5efe4;color:#2a241d}
+.A .top{padding:62px 24px 0;display:flex;justify-content:space-between;align-items:center}
+.A .brand{font:900 26px "Noto Sans SC";letter-spacing:-.02em}
+.A .sw{width:58px;height:34px;border-radius:17px;background:#ff6a3d;position:relative}
+.A .sw:after{content:"";position:absolute;right:4px;top:4px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(160,60,20,.35)}
+.A .hello{margin:18px 24px 0;display:flex;gap:12px;align-items:center;background:#fff;border-radius:22px;padding:12px 16px;box-shadow:0 10px 30px rgba(150,110,60,.12)}
+.A .hello b{font-weight:700}.A .hello span{color:#8a8175;font-size:13px;display:block}
+.A .ticket{margin:18px 24px 0;background:#ff6a3d;color:#fff;border-radius:28px;padding:22px 22px 18px;position:relative;box-shadow:0 18px 40px rgba(255,106,61,.32)}
+.A .ticket:before,.A .ticket:after{content:"";position:absolute;top:138px;width:22px;height:22px;border-radius:50%;background:#f5efe4}
+.A .ticket:before{left:-11px}.A .ticket:after{right:-11px}
+.A .perf{position:absolute;left:22px;right:22px;top:148px;border-top:2px dashed rgba(255,255,255,.45)}
+.A .room{font-weight:700;font-size:16px;display:flex;justify-content:space-between}
+.A .room i{font-style:normal;font-size:12px;background:rgba(255,255,255,.22);padding:3px 10px;border-radius:20px}
+.A .now{display:flex;align-items:flex-end;gap:10px;margin-top:6px}
+.A .now .num{font-size:96px;font-weight:800;line-height:.95;letter-spacing:-.04em}
+.A .now small{font-size:14px;opacity:.9;padding-bottom:12px;line-height:1.4}
+.A .chips{display:flex;gap:8px;margin-top:30px;flex-wrap:wrap}
+.A .chip{min-width:40px;height:34px;padding:0 12px;border-radius:17px;background:rgba(255,255,255,.2);display:grid;place-items:center;font:700 15px "Bricolage Grotesque"}
+.A .chip.next{background:#fff;color:#ff6a3d}
+.A .chip.done{opacity:.45;text-decoration:line-through}
+.A .eta{margin-top:12px;font-size:13px;opacity:.95}
+.A .card2{margin:16px 24px 0;background:#fff;border-radius:24px;padding:16px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 10px 30px rgba(150,110,60,.10)}
+.A .card2 .n{width:52px;height:52px;border-radius:16px;background:#f5efe4;display:grid;place-items:center;font:800 22px "Bricolage Grotesque";color:#b9ae9f}
+.A .card2 b{display:block;font-weight:700}.A .card2 span{font-size:12px;color:#8a8175}
+.A .go{margin-left:auto;font-size:13px;font-weight:700;color:#ff6a3d;background:#fff1ea;padding:8px 14px;border-radius:16px}
+.A .add{position:absolute;left:24px;right:24px;bottom:34px;height:58px;border-radius:29px;background:#2a241d;color:#f5efe4;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:16px;box-shadow:0 14px 30px rgba(42,36,29,.3)}
+
+/* ---------- B 蹲守 ---------- */
+.B{background:#eef0ff;color:#1f2140}
+.B .top{padding:62px 24px 0;display:flex;justify-content:space-between;align-items:center}
+.B .brand{font:900 24px "Noto Sans SC"}
+.B .pill{font-size:12px;font-weight:700;background:#1f2140;color:#d8ff5e;padding:6px 12px;border-radius:20px}
+.B .hero{margin:14px 20px 0;height:250px;border-radius:32px;background:#d8ff5e;position:relative;overflow:hidden}
+.B .hero .num{position:absolute;right:22px;top:14px;font-size:132px;font-weight:800;letter-spacing:-.05em;line-height:1}
+.B .hero .lab{position:absolute;right:26px;top:150px;font-size:13px;font-weight:700;text-align:right}
+.B .hero .lab span{display:block;font-weight:400;opacity:.7}
+.B .hero svg{position:absolute;left:10px;bottom:-6px}
+.B .track{margin:18px 24px 0}
+.B .track .row{display:flex;justify-content:space-between;font-size:13px;font-weight:700}
+.B .bar{height:14px;border-radius:7px;background:#dfe2fb;margin-top:8px;position:relative}
+.B .bar i{position:absolute;left:0;top:0;bottom:0;width:62%;border-radius:7px;background:#1f2140}
+.B .bar b{position:absolute;left:calc(62% - 9px);top:-4px;width:22px;height:22px;border-radius:50%;background:#d8ff5e;border:3px solid #1f2140;box-sizing:border-box}
+.B .chips{display:flex;gap:8px;margin:16px 24px 0}
+.B .chip{flex:1;height:54px;border-radius:18px;background:#fff;display:grid;place-items:center;font:800 18px "Bricolage Grotesque";box-shadow:0 8px 20px rgba(60,70,160,.08)}
+.B .chip.next{background:#1f2140;color:#d8ff5e}
+.B .chip.done{color:#b7bad8}
+.B .list{margin:18px 20px 0;background:#fff;border-radius:28px;padding:6px 18px}
+.B .li{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid #eef0ff}
+.B .li:last-child{border:0}
+.B .av{width:40px;height:40px;border-radius:14px;background:#ffd3c2}
+.B .li b{display:block;font-weight:700;font-size:15px}.B .li span{font-size:12px;color:#8a8dab}
+.B .li .st{margin-left:auto;font-size:12px;font-weight:700;color:#1f2140;background:#eef0ff;padding:6px 12px;border-radius:14px}
+.B .tab{position:absolute;left:50%;bottom:30px;translate:-50% 0;height:62px;padding:0 8px;border-radius:31px;background:#1f2140;display:flex;gap:6px;align-items:center}
+.B .tab span{width:46px;height:46px;border-radius:23px;display:grid;place-items:center;color:#8a8dd0;font-size:12px}
+.B .tab span.on{width:96px;background:#d8ff5e;color:#1f2140;font-weight:700}
+
+/* ---------- C 夜市 ---------- */
+.C{background:#17161c;color:#f3efe6}
+.C .top{padding:62px 24px 0;display:flex;justify-content:space-between;align-items:center}
+.C .brand{font:900 24px "Noto Sans SC"}
+.C .live{display:flex;gap:6px;align-items:center;font-size:12px;color:#c9c3b6;background:#24222b;padding:7px 12px;border-radius:20px}
+.C .live i{width:8px;height:8px;border-radius:50%;background:#ff8a5c;box-shadow:0 0 0 4px rgba(255,138,92,.2)}
+.C .stage{margin:18px 20px 0;border-radius:32px;background:linear-gradient(160deg,#2b2733,#1d1b23);padding:22px;position:relative;overflow:hidden}
+.C .stage:after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,150,90,.35),transparent 70%)}
+.C .stage .num{font-size:120px;font-weight:800;line-height:.9;letter-spacing:-.05em;color:#ffb27a}
+.C .stage small{display:block;color:#a9a397;margin-top:6px}
+.C .stage b{display:block;font-weight:700;margin-top:2px}
+.C .rail{display:flex;gap:6px;margin-top:22px}
+.C .rail span{flex:1;height:44px;border-radius:14px;background:#2f2c37;display:grid;place-items:center;font:700 15px "Bricolage Grotesque";color:#8d8797}
+.C .rail span.next{background:#ffb27a;color:#2a1a10}
+.C .rail span.done{opacity:.35}
+.C .sec{margin:22px 24px 10px;color:#a9a397;font-size:13px}
+.C .row{margin:0 20px 10px;background:#211f27;border-radius:22px;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.C .row .d{width:44px;height:44px;border-radius:15px;background:#2f2c37;display:grid;place-items:center;font:800 18px "Bricolage Grotesque";color:#8d8797}
+.C .row b{display:block;font-weight:700}.C .row span{font-size:12px;color:#8d8797}
+.C .row .tg{margin-left:auto;width:46px;height:28px;border-radius:14px;background:#3a3743;position:relative}
+.C .row .tg:after{content:"";position:absolute;left:4px;top:4px;width:20px;height:20px;border-radius:50%;background:#8d8797}
+.C .row .tg.on{background:#ffb27a}.C .row .tg.on:after{left:auto;right:4px;background:#2a1a10}
+.C .add{position:absolute;left:20px;right:20px;bottom:34px;height:56px;border-radius:20px;background:#f3efe6;color:#17161c;display:flex;align-items:center;justify-content:center;font-weight:700}
+</style>
+
+<div><div class="phone A">
+ <div class="top"><div class="brand">直播蹲蹲</div><div class="sw"></div></div>
+ <div class="hello">
+  <svg width="46" height="40" viewBox="0 0 46 40"><path d="M8 34c-3-10 1-22 15-22s18 12 15 22" fill="#ffd8c2" stroke="#2a241d" stroke-width="2.2" stroke-linecap="round"/><path d="M12 16l-3-9 8 5M34 16l3-9-8 5" fill="#ffd8c2" stroke="#2a241d" stroke-width="2.2" stroke-linejoin="round"/><circle cx="18" cy="24" r="2.2" fill="#2a241d"/><circle cx="28" cy="24" r="2.2" fill="#2a241d"/><path d="M21 29q2 1.6 4 0" stroke="#2a241d" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M4 36h38" stroke="#2a241d" stroke-width="2.2" stroke-linecap="round"/></svg>
+  <div><b>帮你蹲着呢</b><span>电脑在线 · 1 个直播间正在盯</span></div></div>
+ <div class="ticket">
+  <div class="room">Hypeyourself<i>直播中</i></div>
+  <div class="now"><span class="num">27</span><small>号 讲解中<br>植绒全棉牛仔夹克</small></div>
+  <div class="perf"></div>
+  <div class="chips"><span class="chip done">12</span><span class="chip next">31</span><span class="chip">36</span><span class="chip">42</span></div>
+  <div class="eta">还差 4 件到 31 号 · 大约 9 分钟</div>
+ </div>
+ <div class="card2"><div class="n num">—</div><div><b>Anniehall Official</b><span>链接已过期，重新粘贴</span></div><div class="go">粘贴</div></div>
+ <div class="add">＋ 粘贴抖音直播链接</div>
+</div><div class="cap">A 叫號單：奶油紙底 · 番茄橘 · 撕開的號碼票</div></div>
+
+<div><div class="phone B">
+ <div class="top"><div class="brand">直播蹲蹲</div><div class="pill">● 监控中</div></div>
+ <div class="hero">
+  <span class="num">27</span><div class="lab">号 讲解中<span>牛仔夹克</span></div>
+  <svg width="170" height="150" viewBox="0 0 170 150"><path d="M20 150c-6-44 10-86 62-86s70 42 62 86" fill="#fff" stroke="#1f2140" stroke-width="4" stroke-linecap="round"/><path d="M40 82l-10-34 30 18M124 82l10-34-30 18" fill="#fff" stroke="#1f2140" stroke-width="4" stroke-linejoin="round"/><ellipse cx="66" cy="108" rx="9" ry="11" fill="#1f2140"/><ellipse cx="100" cy="108" rx="9" ry="11" fill="#1f2140"/><circle cx="69" cy="104" r="3" fill="#fff"/><circle cx="103" cy="104" r="3" fill="#fff"/><path d="M78 126q5 4 10 0" stroke="#1f2140" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M120 120q22-6 30-26" stroke="#1f2140" stroke-width="4" fill="none" stroke-linecap="round"/></svg>
+ </div>
+ <div class="track"><div class="row"><span>27 号</span><span>目标 31 号 · 还差 4</span></div><div class="bar"><i></i><b></b></div></div>
+ <div class="chips"><span class="chip done">12</span><span class="chip next">31</span><span class="chip">36</span><span class="chip">42</span></div>
+ <div class="list">
+  <div class="li"><div class="av"></div><div><b>Hypeyourself</b><span>4 个目标 · B 型</span></div><span class="st">盯着</span></div>
+  <div class="li"><div class="av" style="background:#c9d7ff"></div><div><b>Anniehall</b><span>链接过期</span></div><span class="st" style="color:#8a8dab">粘贴</span></div>
+ </div>
+ <div class="tab"><span class="on">直播间</span><span>＋</span><span>成员</span></div>
+</div><div class="cap">B 蹲守貓：淡紫底 · 螢光檸檬 · 吉祥物探頭</div></div>
+
+<div><div class="phone C">
+ <div class="top"><div class="brand">直播蹲蹲</div><div class="live"><i></i>电脑在线</div></div>
+ <div class="stage"><span class="num">27</span><small>号 讲解中</small><b>植绒全棉牛仔夹克</b>
+  <div class="rail"><span class="done">12</span><span class="next">31</span><span>36</span><span>42</span></div></div>
+ <div class="sec">直播间</div>
+ <div class="row"><div class="d num">27</div><div><b>Hypeyourself</b><span>还差 4 件 · 约 9 分钟</span></div><div class="tg on"></div></div>
+ <div class="row"><div class="d num">—</div><div><b>Anniehall</b><span>链接过期</span></div><div class="tg"></div></div>
+ <div class="add">粘贴抖音直播链接</div>
+</div><div class="cap">C 夜燈：暖炭灰（不是純黑）· 杏橘 · 圓角厚卡</div></div>
+</html>

@@ -19,7 +19,7 @@ class FakeWorker:
 
     def public(self):
         return {"id": self.rid, "url": f"https://live.douyin.com/{self.rid}", "name": self.rid, "status": "live",
-                "error": "", "type": None, "explaining": None, "cart_count": len(self.cart), "targets": []}
+                "error": "", "type": None, "watch": True, "explaining": None, "cart_count": len(self.cart), "targets": []}
 
 
 class FakeMonitor:
@@ -191,6 +191,48 @@ def test_notify_credentials_sent_once():
     for _ in range(HEARTBEAT_EVERY):
         run(s.tick())
     assert fc.calls[-1]["notify"]["openid"] == "changed"
+
+
+def test_watch_and_captcha_commands():
+    mon, fc, s = make()
+    mon.add_room("https://live.douyin.com/666")
+    calls = []
+
+    async def watch(rid, on):
+        calls.append((rid, on))
+
+    mon.watch = watch
+    w = mon.workers["666"]
+    w.shot = None
+
+    async def remote_input(payload):
+        calls.append(("input", payload["kind"]))
+        return "驗證完成"
+
+    w.remote_input = remote_input
+    fc.queue = [{"_id": "c1", "type": "watch", "room": "666", "payload": None},
+                {"_id": "c2", "type": "unwatch", "room": "666", "payload": None},
+                {"_id": "c3", "type": "captcha_input", "room": "666", "payload": {"kind": "drag", "points": [[0, 0, 0]]}}]
+    run(s.tick())
+    assert calls == [("666", True), ("666", False), ("input", "drag")]
+    assert all(r["ok"] for r in s.results) and s.results[2]["message"] == "驗證完成"
+
+
+def test_captcha_shot_sent_once_then_cleared():
+    mon, fc, s = make()
+    mon.add_room("https://live.douyin.com/777")
+    w = mon.workers["777"]
+    w.shot = None
+    run(s.tick())
+    assert "captchas" not in fc.calls[-1]
+    w.shot = {"img": "abc", "w": 300, "h": 200, "v": 1, "t": 0}
+    run(s.tick())
+    assert fc.calls[-1]["captchas"]["777"]["v"] == 1
+    run(s.tick())
+    assert "captchas" not in fc.calls[-1]  # 沒換就不重送
+    w.shot = None
+    run(s.tick())
+    assert fc.calls[-1]["captchas"] == {"777": None}  # 驗證完成要告訴雲端
 
 
 def test_resolve_room_url():
