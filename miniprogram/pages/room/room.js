@@ -153,7 +153,7 @@ Page({
       const r = await api.setTargets(this.data.id, targets)
       wx.hideLoading()
       if (r.pending) {
-        wx.showModal({ title: '已送出', content: '电脑还没处理完，等一下回来看。电脑要开着、监控程序要在跑。', showCancel: false })
+        wx.showModal({ title: '已送出', content: '电脑还没处理完，等一下回来看。电脑要开着、监控程序要在运行。', showCancel: false })
       } else {
         wx.showToast({ title: r.message || (targets.length ? `已设 ${targets.length} 件` : '已清空目标'), icon: 'none' })
         await this.load()

@@ -4,7 +4,7 @@
   <view class="brand" style="line-height: {{nav.h}}px">{{brand}}</view>
 </view>
 <view wx:if="{{demo}}" class="banner warn">示范数据，还没连到电脑。<text class="link" bindtap="resetDemo">重设</text></view>
-<view wx:elif="{{!needJoin && !pcOk && !loading}}" class="banner warn">电脑上次回报：{{pcText}}。电脑可能关了，或黑色窗口没在跑。</view>
+<view wx:elif="{{!needJoin && !pcOk && !loading}}" class="banner warn">电脑上次回报：{{pcText}}。电脑可能关了，或监控程序没在运行。</view>
 <view wx:if="{{error}}" class="banner err">连不上云端：{{error}}</view>
 
 <!-- 还没加入：输入邀请码 -->

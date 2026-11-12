@@ -337,7 +337,7 @@ Page({
       const r = await api.setMonitoring(on)
       wx.hideLoading()
       if (r.pending) {
-        wx.showModal({ title: '已送出', content: '电脑还没处理完，等一下回来看。电脑要开着、黑色窗口要在跑。', showCancel: false })
+        wx.showModal({ title: '已送出', content: '电脑还没处理完，等一下回来看。电脑要开着、监控程序要在运行。', showCancel: false })
       } else {
         wx.showToast({ title: on ? '电脑准备好了，选一间来盯' : '监控已关闭', icon: 'none' })
       }
@@ -355,7 +355,7 @@ Page({
     wx.navigateTo({ url: '/pages/members/members' })
   },
 
-  // 一个键：读剪贴板里的抖音链接，确认后加入并开始盯
+  // 一个键：读剪贴板里的抖音链接，加入清单；要不要开始盯，加入后再问（不自动盯）
   async pasteAdd() {
     if (this.data.busy) return
     let text = ''
@@ -364,32 +364,33 @@ Page({
       wx.showModal({ title: '剪贴板里没有直播链接', content: '在抖音直播间按“分享 → 复制链接”，再回来按这个键。', showCancel: false })
       return
     }
-    const ok = await new Promise(r => wx.showModal({
-      title: '加入并开始盯这间？',
-      content: text.length > 60 ? text.slice(0, 60) + '…' : text,
-      confirmText: '加入',
-      confirmColor: '#3f8f5b',
-      success: x => r(x.confirm),
-      fail: () => r(false),
-    }))
-    if (!ok) return
+    const ask = (o) => new Promise(r => wx.showModal({ ...o, success: x => r(x.confirm), fail: () => r(false) }))
+    if (!await ask({ title: '加入这个直播间？', content: text.length > 60 ? text.slice(0, 60) + '…' : text, confirmText: '加入', confirmColor: '#3f8f5b' })) return
     this.setData({ busy: true })
     wx.showLoading({ title: '电脑处理中' })
+    let r = null
     try {
-      const r = await api.addRoom(text)
+      r = await api.addRoom(text)
       wx.hideLoading()
       await this.refresh()
-      if (r.pending) {
-        wx.showModal({ title: '已送出', content: '电脑还没处理完，等一下回来看。电脑要开着、黑色窗口要在跑。', showCancel: false })
-      } else {
-        wx.showToast({ title: '已加入，开始盯', icon: 'none' })
-        if (r.id) wx.navigateTo({ url: `/pages/room/room?id=${r.id}` })
-      }
     } catch (e) {
       wx.hideLoading()
       wx.showToast({ title: e.message, icon: 'none', duration: 3000 })
     }
     this.setData({ busy: false })
+    if (!r) return
+    if (r.pending) {
+      wx.showModal({ title: '链接已存好', content: '电脑上的监控程序现在没在运行。电脑一开，就会把这间加进来。', showCancel: false })
+      return
+    }
+    if (!this.data.monitoring) {
+      wx.showToast({ title: '已加入。点熊猫打开监控后，再选要盯哪间', icon: 'none', duration: 2600 })
+      return
+    }
+    if (await ask({ title: '已加入，现在开始盯这间吗？', content: '选“先不”的话，之后打开它右边的开关就行。', confirmText: '开始盯', cancelText: '先不', confirmColor: '#3f8f5b' })) {
+      await this.setWatch(r.id, true)
+      if (r.id) wx.navigateTo({ url: `/pages/room/room?id=${r.id}` })
+    }
   },
 
   resetDemo() {

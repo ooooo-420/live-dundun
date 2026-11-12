@@ -433,19 +433,15 @@ class Monitor:
         self.run_workers()
 
     def add_room(self, url: str) -> str:
-        """贴了新链接＝要盯这间：加进来并马上开始盯（监控是关的就先记着）。同一间重贴也会重新开始盯。"""
+        """贴了新链接：只加进清单，不自动开始盯。要不要盯由使用者在手机上决定（2026-11-12 使用者要求）。"""
         rid = store.room_id_from_url(url)
         if not rid:
             raise ValueError("看不懂这个网址，要是 live.douyin.com/数字 这种")
         if rid not in self.state["rooms"]:
             self.state["rooms"][rid] = {"url": f"https://live.douyin.com/{rid}", "targets": [], "snapshot": []}
-        self.state["rooms"][rid]["watch"] = True
-        self.state["rooms"][rid]["watch_since"] = time.time()
-        self.save()
+            self.save()
         if rid not in self.workers:
             self.spawn(rid)
-        elif not self.paused:
-            self.run_workers()
         return rid
 
     async def remove_room(self, rid: str) -> None:
