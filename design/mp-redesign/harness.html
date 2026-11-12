@@ -48,7 +48,7 @@ function makeEnv(){const env={wx:{getWindowInfo:()=>({windowWidth:W}),getSystemI
 function setPath(obj,path,v){const ks=path.replace(/\[(\d+)\]/g,'.$1').split('.');let o=obj;for(let i=0;i<ks.length-1;i++)o=o[ks[i]];o[ks[ks.length-1]]=v}
 async function runPage(name,api,query){
  const js=await txt(`pages/${name}/${name}.js`);let def;const env=makeEnv();
- const require=p=>p.includes('brand')?{NAME:'直播蹲蹲'}:api;const Page=d=>{def=d};
+ const require=p=>p.includes('brand')?{NAME:'目候'}:api;const Page=d=>{def=d};
  Function('require','Page','wx','setTimeout','setInterval',js)(require,Page,env.wx,(f,ms)=>0,()=>0);
  const inst=Object.assign({},def);inst.data=JSON.parse(JSON.stringify(def.data));
  inst.setData=p=>{for(const k in p)setPath(inst.data,k,p[k])};

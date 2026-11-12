@@ -311,12 +311,26 @@ Page({
     }
   },
 
+  // 熊猫就是监控开关：关着时点它＝打开（它会爬出来）；开着时点它，问要不要关
+  tapPanda() {
+    if (this.switching) return
+    if (!this.data.monitoring) {
+      this.toggleMonitoring()
+      return
+    }
+    wx.showActionSheet({
+      itemList: ['关闭监控'],
+      itemColor: '#d9534a',
+      success: (r) => { if (r.tapIndex === 0) this.toggleMonitoring() },
+    })
+  },
+
   async toggleMonitoring() {
     if (this.switching) return
     const on = !this.data.monitoring
     this.switching = true
-    this.setData({ monitoring: on, switching: true })  // 先动开关，再等电脑
-    wx.showLoading({ title: on ? '电脑准备中' : '正在关闭监控' })
+    this.setData({ monitoring: on, switching: true })  // 熊猫先动，再等电脑
+    if (!on) wx.showLoading({ title: '正在关闭监控' })  // 打开时熊猫爬出来就是回馈，不用转圈
     try {
       const r = await api.setMonitoring(on)
       wx.hideLoading()
@@ -327,6 +341,7 @@ Page({
       }
     } catch (err) {
       wx.hideLoading()
+      this.setData({ monitoring: !on })  // 没成功：熊猫退回原来的样子
       wx.showToast({ title: err.message, icon: 'none' })
     }
     this.switching = false

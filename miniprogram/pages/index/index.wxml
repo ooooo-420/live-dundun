@@ -1,8 +1,7 @@
 <wxs src="../../utils/text.wxs" module="tx" />
-<!-- 自订导航栏：名字和监控开关放在微信胶囊按钮那一行，顶部不留空 -->
+<!-- 自订导航栏：名字放在微信胶囊按钮那一行，顶部不留空 -->
 <view class="topbar" style="padding-top: {{nav.top}}px; height: {{nav.h}}px">
   <view class="brand" style="line-height: {{nav.h}}px">{{brand}}</view>
-  <view wx:if="{{!demo && !needJoin}}" class="toggle sm top-toggle {{monitoring ? 'on' : ''}} {{switching ? 'busy' : ''}}" style="right: {{nav.right}}px; top: {{nav.togTop}}px" hover-class="press" hover-stay-time="80" bindtap="toggleMonitoring"><view class="knob"></view></view>
 </view>
 <view wx:if="{{demo}}" class="banner warn">示范数据，还没连到电脑。<text class="link" bindtap="resetDemo">重设</text></view>
 <view wx:elif="{{!needJoin && !pcOk && !loading}}" class="banner warn">电脑上次回报：{{pcText}}。电脑可能关了，或黑色窗口没在跑。</view>
@@ -23,11 +22,14 @@
 </view>
 
 <view wx:else class="page-body">
-  <!-- 号码票：正在盯的那一间 -->
+  <!-- 熊猫就是监控开关：关着时缩在卡片后面只露头顶，点一下先伸出双手、再爬出来 -->
   <view class="wrap">
-    <view class="peek hero enter" wx:if="{{hero}}">
-      <image class="panda-head {{hero.hot ? 'hot' : (hero.bump ? 'go' : 'idle')}}" src="{{hero.hot ? '/images/panda_hot.png' : '/images/panda_head.png'}}" />
-      <view class="peek-card ticket {{hero.hot ? 'hot' : ''}}" hover-class="press-row" hover-stay-time="100" bindtap="openHero" bindlongpress="heroMenu">
+    <view class="peek hero enter {{monitoring ? '' : 'asleep'}}">
+      <view class="panda-head"><image class="pimg {{hero && hero.hot ? 'hot' : (hero && hero.bump ? 'go-head' : (monitoring ? 'idle' : ''))}}" src="{{hero && hero.hot ? '/images/panda_hot.png' : '/images/panda_head.png'}}" /></view>
+      <view wx:if="{{!demo}}" class="panda-tap" bindtap="tapPanda"></view>
+
+      <!-- 号码票：正在盯的那一间 -->
+      <view wx:if="{{hero}}" class="peek-card ticket {{hero.hot ? 'hot' : ''}}" hover-class="press-row" hover-stay-time="100" bindtap="openHero" bindlongpress="heroMenu">
         <view class="stub">
           <view class="stub-clip"><view class="stub-in {{hero.bump ? 'rise' : ''}}">
             <view class="r1"><text class="live-pill">{{hero.pill}}</text><text class="t-name">{{hero.name}}</text></view>
@@ -53,17 +55,14 @@
           <view class="eta">{{hero.eta}}</view>
         </view>
       </view>
-      <image wx:if="{{!hero.hot}}" class="panda-paws {{hero.bump ? 'go' : ''}}" src="/images/panda_paws.png" />
-    </view>
 
-    <!-- 没有在盯的：熊猫扒在一张空票上 -->
-    <view class="peek hero enter" wx:elif="{{!loading}}">
-      <image class="panda-head idle" src="/images/panda_head.png" />
-      <view class="peek-card card empty-ticket">
-        <view class="e-title">{{monitoring ? (rooms.length ? '选一间来盯' : '还没有直播间') : '监控关着'}}</view>
-        <view class="soft e-sub">{{monitoring ? (rooms.length ? '打开下面直播间的开关，电脑就开始帮你盯。' : '在抖音直播间按分享 →“复制链接”，再按下面的按钮。') : '打开右上角的开关，电脑会先准备好。'}}</view>
+      <!-- 没有在盯的：一张空白的票 -->
+      <view wx:else class="peek-card card empty-ticket">
+        <view class="e-title">{{!monitoring ? '点一下熊猫，开始帮你盯' : (rooms.length ? '选一间来盯' : '还没有直播间')}}</view>
+        <view class="soft e-sub" wx:if="{{monitoring}}">{{rooms.length ? '打开下面直播间右边的开关' : '在抖音直播间点“分享 → 复制链接”，再按下面的按钮'}}</view>
       </view>
-      <image class="panda-paws" src="/images/panda_paws.png" />
+
+      <view wx:if="{{!(hero && hero.hot)}}" class="panda-paws"><image class="pimg {{hero && hero.bump ? 'go-paws' : ''}}" src="/images/panda_paws.png" /></view>
     </view>
   </view>
 

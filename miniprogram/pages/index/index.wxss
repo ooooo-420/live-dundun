@@ -6,7 +6,20 @@
 /* 自订导航栏：和微信胶囊同一行；padding-top/height/开关位置由 JS 依胶囊位置算 */
 .topbar { position: relative; padding-left: 44rpx; box-sizing: content-box; }
 .brand { font-size: 44rpx; font-weight: 900; letter-spacing: -0.01em; }
-.top-toggle { position: absolute; }
+
+/* 熊猫：头、爪子各包一层（外层管“缩回去／爬出来”，里面的图管呼吸、抬手、跳） */
+.pimg { display: block; width: 100%; height: 100%; }
+.pimg.idle { animation: breathe 4.8s ease-in-out infinite; transform-origin: 50% 100%; }
+.pimg.go-head { animation: hop 1.05s cubic-bezier(0.3, 0.7, 0.3, 1) both; }
+.pimg.go-paws { animation: paws 1.05s cubic-bezier(0.3, 0.7, 0.3, 1) both; }
+.pimg.hot { animation: jump 0.7s cubic-bezier(0.3, 1.5, 0.5, 1) both; }
+.panda-tap { position: absolute; z-index: 5; left: 72%; width: 284rpx; margin-left: -142rpx; top: -198rpx; height: 198rpx; }
+/* 爬出来：先伸手（没有延迟），头再冒上来（晚一点、带回弹） */
+.hero .panda-head { transition: transform 0.62s cubic-bezier(0.3, 1.35, 0.5, 1) 0.26s; }
+.hero .panda-paws { transition: transform 0.36s cubic-bezier(0.3, 1.4, 0.5, 1), opacity 0.18s; }
+/* 缩回去：头先沉下去只剩耳朵和头顶，手再收回 */
+.hero.asleep .panda-head { transform: translateY(112rpx); transition: transform 0.4s cubic-bezier(0.5, 0, 0.75, 0); }
+.hero.asleep .panda-paws { transform: translateY(72rpx); opacity: 0; transition: transform 0.3s ease-in 0.28s, opacity 0.2s 0.34s; }
 
 /* 号码票 */
 .hero { margin-top: 200rpx; }
