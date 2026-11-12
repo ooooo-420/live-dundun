@@ -39,8 +39,8 @@ Page({
   remove(e) {
     const index = e.currentTarget.dataset.index
     wx.showModal({
-      title: '移除這個成員？',
-      content: '移除後，那個微信號就打不開這裡的資料，要重新輸入邀請碼才能加入。',
+      title: '移除这个成员？',
+      content: '移除后，那个微信号就打不开这里的数据，要重新输入邀请码才能加入。',
       confirmText: '移除',
       confirmColor: '#c43333',
       success: async (r) => {

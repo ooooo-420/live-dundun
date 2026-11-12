@@ -1,13 +1,13 @@
-"""通知規則。純邏輯，不碰瀏覽器和網路，方便單獨測試。
+"""通知规则。纯逻辑，不碰浏览器和网络，方便单独测试。
 
-用語：
-- 快照：使用者設定目標時，購物車當下的商品順序（商品 ID 清單）。
-- pos：商品在快照裡排第幾（從 1 起）。B 型直播間的 pos 就是畫面號碼。
+用语：
+- 快照：用户设置目标时，购物车当下的商品顺序（商品 ID 清单）。
+- pos：商品在快照里排第几（从 1 起）。B 型直播间的 pos 就是画面号码。
 """
 
 from __future__ import annotations
 
-MISSED_MAX_STEP = 3  # 上一件和這件在快照裡相差超過這個數，就當作跳著講，不發錯過提醒
+MISSED_MAX_STEP = 3  # 上一件和这件在快照里相差超过这个数，就当作跳着讲，不发错过提醒
 
 
 def snapshot_pos(snapshot: list[str], pid: str | None) -> int | None:
@@ -17,9 +17,9 @@ def snapshot_pos(snapshot: list[str], pid: str | None) -> int | None:
 
 
 def evaluate(room: dict, explained_pid: str) -> list[tuple[dict, str, str]]:
-    """主播換講解到 explained_pid 時呼叫。回傳要發的通知 [(目標, 種類, 狀態文字)]，並更新目標的已發記錄。
+    """主播换讲解到 explained_pid 时调用。回传要发的通知 [(目标, 种类, 状态文本)]，并更新目标的已发记录。
 
-    room 需要的欄位：snapshot、targets、last_pos（上一件講解商品的快照位置，可為 None）。
+    room 需要的字段：snapshot、targets、last_pos（上一件讲解商品的快照位置，可为 None）。
     """
     snapshot = room.get("snapshot", [])
     pos_now = snapshot_pos(snapshot, explained_pid)
@@ -34,7 +34,7 @@ def evaluate(room: dict, explained_pid: str) -> list[tuple[dict, str, str]]:
             t["explained"] = True
             if t.get("arrive", True) and not sent.get("arrive"):
                 sent["arrive"] = True
-                out.append((t, "arrive", "正在講解，快去搶"))
+                out.append((t, "arrive", "正在讲解，快去抢"))
             continue
 
         if pos_now is None or t.get("explained"):
@@ -45,13 +45,13 @@ def evaluate(room: dict, explained_pid: str) -> list[tuple[dict, str, str]]:
             d = tpos - pos_now
             if 0 < d <= ahead:
                 sent["ahead"] = True
-                out.append((t, "ahead", f"快到了，還差 {d} 件"))
+                out.append((t, "ahead", f"快到了，还差 {d} 件"))
 
         if t.get("missed") and not sent.get("missed"):
-            # 只有「一件件往後講」時越過目標才算錯過；一下跳很遠表示是跳著講，不算
+            # 只有“一件件往后讲”时越过目标才算错过；一下跳很远表示是跳着讲，不算
             if pos_now > tpos and prev is not None and prev < tpos and pos_now - prev <= MISSED_MAX_STEP:
                 sent["missed"] = True
-                out.append((t, "missed", "可能被跳過了"))
+                out.append((t, "missed", "可能被跳过了"))
 
     if pos_now is not None:
         room["last_pos"] = pos_now
@@ -59,7 +59,7 @@ def evaluate(room: dict, explained_pid: str) -> list[tuple[dict, str, str]]:
 
 
 def detect_type(prev_index: int | None, new_index: int | None) -> str | None:
-    """換講解後判斷直播間類型。A：講解中的商品被置頂成 1 號；B：號碼不變。"""
+    """换讲解后判断直播间类型。A：讲解中的商品被置顶成 1 号；B：号码不变。"""
     if prev_index is None or new_index is None:
         return None
     if prev_index != 1 and new_index == 1:

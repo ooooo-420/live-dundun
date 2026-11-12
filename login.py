@@ -1,4 +1,4 @@
-"""第一次使用：打開監控專用的 Edge，讓你登入抖音。登入後關掉視窗即可，登入狀態會保留。
+"""第一次使用：打开监控专用的 Edge，让你登录抖音。登录后关掉窗口即可，登录状态会保留。
 
     .venv\\Scripts\\python.exe login.py
 """
@@ -17,11 +17,11 @@ async def main() -> None:
                                                         viewport={"width": 1400, "height": 850})
         page = ctx.pages[0] if ctx.pages else await ctx.new_page()
         await page.goto("https://www.douyin.com/", wait_until="domcontentloaded", timeout=60000)
-        print("請在打開的 Edge 視窗登入抖音，登入完成後直接關掉那個視窗。", flush=True)
+        print("请在打开的 Edge 窗口登录抖音，登录完成后直接关掉那个窗口。", flush=True)
         closed = asyncio.Event()
         ctx.on("close", lambda _: closed.set())
         await closed.wait()
-        print("視窗已關閉，登入狀態已存在 browser-profile。")
+        print("窗口已关闭，登录状态已存在 browser-profile。")
 
 
 asyncio.run(main())

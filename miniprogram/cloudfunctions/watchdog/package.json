@@ -1,7 +1,7 @@
 {
   "name": "watchdog",
   "version": "1.0.0",
-  "description": "直播商品提醒：電腦掉線看門狗（定時檢查心跳，掉線就發微信）",
+  "description": "直播商品提醒：电脑掉线看门狗（定时检查心跳，掉线就发微信）",
   "main": "index.js",
   "dependencies": {
     "wx-server-sdk": "~3.0.1"

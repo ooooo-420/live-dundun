@@ -1,26 +1,26 @@
-// 資料介面。頁面只呼叫這裡的函式，不直接碰雲端或本機儲存。
-// MODE（在 utils/config.js）：'cloud' 走雲函數 api；'demo' 用示範資料，只存在手機本機。
+// 数据接口。页面只调用这里的函数，不直接碰云端或本机保存。
+// MODE（在 utils/config.js）：'cloud' 走云函数 api；'demo' 用示范数据，只存在手机本机。
 //
-// 雲端模式的寫入（加入、移除、設目標）不是直接改資料，而是送一筆「指令」給電腦，
-// 電腦處理完才會更新。所以這些函式會等一下電腦的回覆，等不到就回 { pending: true }。
+// 云端模式的写入（加入、移除、设目标）不是直接改数据，而是送一笔“指令”给电脑，
+// 电脑处理完才会更新。所以这些函数会等一下电脑的回复，等不到就回 { pending: true }。
 
 const { MODE } = require('./config')
 
 const DEMO = MODE !== 'cloud'
 
 const STATUS_TEXT = {
-  starting: '啟動中',
-  offline: '沒開播',
+  starting: '启动中',
+  offline: '没开播',
   live: '直播中',
-  no_cart: '沒有小黃車',
-  error: '出錯了',
-  need_login: '要先登入抖音',
-  captcha: '要人機驗證',
-  paused: '監控關閉中',
-  idle: '沒在盯',
+  no_cart: '没有小黄车',
+  error: '出错了',
+  need_login: '要先登录抖音',
+  captcha: '要人机验证',
+  paused: '监控关闭中',
+  idle: '没在盯',
 }
 
-// 從分享文字或網址裡找出直播間連結
+// 从分享文本或网址里找出直播间链接
 function parseRoom(text) {
   const t = String(text || '')
   const m = t.match(/live\.douyin\.com\/(\d+)/)
@@ -32,14 +32,14 @@ function parseRoom(text) {
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms))
 
-// ---------------- 雲端 ----------------
+// ---------------- 云端 ----------------
 
 async function call(action, data) {
   const res = await wx.cloud.callFunction({ name: 'api', data: { action, ...(data || {}) } })
   const r = res.result || {}
   if (!r.ok) {
-    const err = new Error(r.error || '雲端出錯了')
-    err.code = r.code || ''  // 'not_member'：還沒加入，要輸入邀請碼
+    const err = new Error(r.error || '云端出错了')
+    err.code = r.code || ''  // 'not_member'：还没加入，要输入邀请码
     throw err
   }
   return r.data
@@ -52,7 +52,7 @@ async function command(type, room, payload, waitMs = 25000) {
     await sleep(2000)
     const r = await call('command_result', { id })
     if (r.done) {
-      if (!r.result || !r.result.ok) throw new Error((r.result && r.result.message) || '電腦處理失敗')
+      if (!r.result || !r.result.ok) throw new Error((r.result && r.result.message) || '电脑处理失败')
       return r.result
     }
   }
@@ -69,7 +69,7 @@ const cloudApi = {
       paused: !!d.paused,
     }
   },
-  // 監控開關。關著的時候電腦每分鐘才同步一次，所以「開」要等久一點
+  // 监控开关。关着的时候电脑每分钟才同步一次，所以“开”要等久一点
   async setMonitoring(on) {
     return command(on ? 'resume' : 'pause', null, null, on ? 75000 : 25000)
   },
@@ -79,29 +79,29 @@ const cloudApi = {
   },
   async addRoom(text) {
     const p = parseRoom(text)
-    if (!p) throw new Error('看不懂這個連結，請貼直播間的分享連結')
+    if (!p) throw new Error('看不懂这个链接，请贴直播间的分享链接')
     const r = await command('add_room', p.id || null, { text: p.text })
     return { id: r.room || p.id || null, pending: !!r.pending }
   },
   async removeRoom(id) {
     return command('remove_room', id, null)
   },
-  // targets: [{id, ahead, missed}]，電腦會以它當下的購物車重新對號碼
+  // targets: [{id, ahead, missed}]，电脑会以它当下的购物车重新对号码
   async setTargets(id, targets) {
     return command('set_targets', id, { targets })
   },
-  // 盯／不盯某一間
+  // 盯／不盯某一间
   async setWatch(id, on) {
     return command(on ? 'watch' : 'unwatch', id, null)
   },
-  // 人機驗證：拿電腦截的驗證框圖；把使用者在手機上的手勢送回電腦
+  // 人机验证：拿电脑截的验证框图；把用户在手机上的手势送回电脑
   async getCaptcha(id) {
     return (await call('captcha', { id })).shot
   },
   async captchaInput(id, payload) {
     return command('captcha_input', id, payload, 15000)
   },
-  // 成員：產生邀請碼、用邀請碼加入、列出和移除成員
+  // 成员：生成邀请码、用邀请码加入、列出和移除成员
   async invite() {
     return call('invite')
   },
@@ -117,13 +117,13 @@ const cloudApi = {
   resetDemo() {},
 }
 
-// ---------------- 示範資料 ----------------
+// ---------------- 示范数据 ----------------
 
 const KEY = 'demo_state_v1'
 
 function demoCart(prefix, n) {
-  const names = ['復古羊毛毛衣', '水洗原色牛仔褲', '粗針翻領短毛衣', '頭層牛皮皮帶', '重磅假兩件帽衫',
-    '竹節棉白牛仔褲', '水洗機車夾克', '叢林工裝褲', '灰藍捲邊衛褲', '翻領拉鍊夾克']
+  const names = ['复古羊毛毛衣', '水洗原色牛仔裤', '粗针翻领短毛衣', '头层牛皮皮带', '重磅假两件帽衫',
+    '竹节棉白牛仔裤', '水洗机车夹克', '丛林工装裤', '灰蓝卷边卫裤', '翻领拉链夹克']
   const out = []
   for (let i = 1; i <= n; i++) {
     out.push({
@@ -141,7 +141,7 @@ function initial() {
     rooms: [
       {
         id: '470703347283', name: 'Anniehall Official', status: 'live', type: 'B',
-        explaining: { id: 'a2', index: 2, title: '水洗原色牛仔褲' },
+        explaining: { id: 'a2', index: 2, title: '水洗原色牛仔裤' },
         targets: [3, 5, 8].map(i => ({ id: `a${i}`, pos: i, arrive: true, ahead: 0, missed: false })),
       },
       { id: '516466932480', name: '贾乃亮', status: 'offline', type: 'A', explaining: null, targets: [] },
@@ -171,11 +171,11 @@ const demoApi = {
   },
   async addRoom(text) {
     const p = parseRoom(text)
-    if (!p) throw new Error('看不懂這個連結，請貼直播間的分享連結')
+    if (!p) throw new Error('看不懂这个链接，请贴直播间的分享链接')
     const s = load()
     const id = p.id || ('short-' + Date.now())
     if (!s.rooms.find(r => r.id === id)) {
-      s.rooms.unshift({ id, name: p.id ? `直播間 ${p.id}` : '（等電腦轉換短連結）', status: 'starting', type: null, explaining: null, targets: [] })
+      s.rooms.unshift({ id, name: p.id ? `直播间 ${p.id}` : '（等电脑转换短链接）', status: 'starting', type: null, explaining: null, targets: [] })
       save(s)
     }
     return wait({ id, pending: false })
@@ -211,7 +211,7 @@ const demoApi = {
     return wait(null)
   },
   async captchaInput() {
-    return wait({ message: '驗證完成' })
+    return wait({ message: '验证完成' })
   },
   async invite() {
     return wait({ code: '123456', minutes: 30 })

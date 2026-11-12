@@ -1,20 +1,16 @@
 <view class="wrap enter">
-  <view class="section-label">邀請另一個微信號</view>
-  <view class="soft intro">產生邀請碼後，讓對方打開小程序、輸入這組數字。只能用一次，30 分鐘內有效。</view>
+  <view class="title">邀请另一个微信号</view>
   <view wx:if="{{code}}" class="code-box" bindtap="copyCode">
     <view class="code num-font">{{code}}</view>
-    <view class="muted">{{expiresText}} 前有效　·　點一下複製</view>
+    <view class="muted">{{expiresText}} 前有效　·　点一下复制</view>
   </view>
-  <view class="btn {{code ? 'ghost' : ''}}" hover-class="press" hover-stay-time="80" bindtap="makeCode">{{code ? '重新產生' : '產生邀請碼'}}</view>
+  <view class="btn {{code ? 'ghost' : ''}}" hover-class="press" hover-stay-time="80" bindtap="makeCode">{{code ? '重新生成' : '生成邀请码'}}</view>
 
-  <view class="section-label">目前成員　{{list.length}}</view>
+  <view class="section-label">目前成员　{{list.length}}</view>
 </view>
 <view class="list">
   <view wx:for="{{list}}" wx:key="index" class="member">
-    <text>成員 {{index + 1}}<text class="muted">　…{{item.tail}}</text><text wx:if="{{item.me}}" class="me">你</text></text>
+    <text>成员 {{index + 1}}<text class="muted">　…{{item.tail}}</text><text wx:if="{{item.me}}" class="me">你</text></text>
     <view wx:if="{{!item.me}}" class="danger-link" hover-class="press-link" data-index="{{item.index}}" bindtap="remove">移除</view>
   </view>
-</view>
-<view class="wrap">
-  <view class="muted note">所有成員看到同一份直播間和目標。微信通知發給誰，是在電腦上設定的。</view>
 </view>

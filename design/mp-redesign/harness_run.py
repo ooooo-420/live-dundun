@@ -24,7 +24,7 @@ srv = http.server.ThreadingHTTPServer(("127.0.0.1", 8799), Handler)
 threading.Thread(target=srv.serve_forever, daemon=True).start()
 with sync_playwright() as p:
     b = p.chromium.launch(channel="msedge", headless=True)
-    pg = b.new_page(viewport={"width": 2100, "height": 920})
+    pg = b.new_page(viewport={"width": 2500, "height": 920})
     errs = []
     pg.on("pageerror", lambda e: errs.append(str(e)))
     pg.goto("http://127.0.0.1:8799/design/mp-redesign/harness.html")

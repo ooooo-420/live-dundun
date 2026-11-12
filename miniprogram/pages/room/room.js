@@ -1,6 +1,6 @@
 const api = require('../../utils/api')
 
-// 「2-10」「3 5 8」「2-5,9」→ [2,3,...]
+// “2-10”“3 5 8”“2-5,9”→ [2,3,...]
 function parseNums(text) {
   const out = new Set()
   for (const part of String(text).split(/[\s,，、]+/)) {
@@ -37,7 +37,7 @@ Page({
   },
 
   onShow() {
-    // 每 15 秒只更新「講解中」和狀態，不碰購物車和你正在勾的東西
+    // 每 15 秒只更新“讲解中”和状态，不碰购物车和你正在勾的东西
     this.timer = setInterval(() => this.refreshLive(), 15000)
   },
 
@@ -75,7 +75,7 @@ Page({
       return
     }
     if (!room) {
-      wx.showToast({ title: '找不到這個直播間', icon: 'none' })
+      wx.showToast({ title: '找不到这个直播间', icon: 'none' })
       return
     }
     wx.setNavigationBarTitle({ title: room.name })
@@ -126,7 +126,7 @@ Page({
       else miss++
     }
     this.setData({ picked, pickedCount: Object.keys(picked).length, dirty: true })
-    wx.showToast({ title: miss ? `已選 ${nums.length - miss} 件，${miss} 個號碼不存在` : `已選 ${nums.length} 件`, icon: 'none' })
+    wx.showToast({ title: miss ? `已选 ${nums.length - miss} 件，${miss} 个号码不存在` : `已选 ${nums.length} 件`, icon: 'none' })
   },
 
   clearAll() {
@@ -148,36 +148,36 @@ Page({
     const targets = this.data.cart
       .filter(it => this.data.picked[it.id])
       .map(it => ({ id: it.id, ahead, missed: this.data.missed }))
-    wx.showLoading({ title: '電腦處理中' })
+    wx.showLoading({ title: '电脑处理中' })
     try {
       const r = await api.setTargets(this.data.id, targets)
       wx.hideLoading()
       if (r.pending) {
-        wx.showModal({ title: '已送出', content: '電腦還沒處理完，等一下回來看。電腦要開著、監控程式要在跑。', showCancel: false })
+        wx.showModal({ title: '已送出', content: '电脑还没处理完，等一下回来看。电脑要开着、监控程序要在跑。', showCancel: false })
       } else {
-        wx.showToast({ title: r.message || (targets.length ? `已設 ${targets.length} 件` : '已清空目標'), icon: 'none' })
+        wx.showToast({ title: r.message || (targets.length ? `已设 ${targets.length} 件` : '已清空目标'), icon: 'none' })
         await this.load()
       }
     } catch (e) {
       wx.hideLoading()
-      wx.showModal({ title: '沒設成', content: e.message, showCancel: false })
+      wx.showModal({ title: '没设成', content: e.message, showCancel: false })
     }
     this.busy = false
   },
 
   remove() {
     wx.showModal({
-      title: '不監控這間了？',
-      content: '目標設定會一起刪掉。',
+      title: '不监控这间了？',
+      content: '目标设置会一起删掉。',
       confirmText: '移除',
       confirmColor: '#c43333',
       success: async (r) => {
         if (!r.confirm) return
-        wx.showLoading({ title: '電腦處理中' })
+        wx.showLoading({ title: '电脑处理中' })
         try {
           const res = await api.removeRoom(this.data.id)
           wx.hideLoading()
-          if (res.pending) wx.showToast({ title: '已送出，電腦稍後處理', icon: 'none' })
+          if (res.pending) wx.showToast({ title: '已送出，电脑稍后处理', icon: 'none' })
           wx.navigateBack()
         } catch (e) {
           wx.hideLoading()

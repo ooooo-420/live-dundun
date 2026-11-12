@@ -1,4 +1,4 @@
-"""本機設定網頁：http://127.0.0.1:8765（只綁本機，外面連不進來）。"""
+"""本机设置网页：http://127.0.0.1:8765（只绑本机，外面连不进来）。"""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from .monitor import Monitor
 STATIC = Path(__file__).resolve().parent / "static"
 ROOT = Path(__file__).resolve().parent.parent
 
-# 找出頁面上所有「看起來像商品」的 React props：記下 prop 名稱和欄位，看抖音這間用的是哪種結構
+# 找出页面上所有“看起来像商品”的 React props：记下 prop 名称和字段，看抖音这间用的是哪种结构
 DEBUG_JS = r"""
 () => {
   const fiberOf = el => { const k = Object.keys(el).find(k => k.startsWith('__reactFiber')); return k ? el[k] : null; };
@@ -63,7 +63,7 @@ def make_app(mon: Monitor) -> web.Application:
     async def cart(req):
         w = mon.workers.get(req.match_info["rid"])
         if not w:
-            return web.json_response({"error": "沒有這個直播間"}, status=404)
+            return web.json_response({"error": "没有这个直播间"}, status=404)
         items = await w.load_cart_now()
         return web.json_response({"status": w.status, "items": items})
 
@@ -76,10 +76,10 @@ def make_app(mon: Monitor) -> web.Application:
         return web.json_response({"ok": True})
 
     async def debug(req):
-        """開發用：把直播間分頁截圖存到 logs/，並回報頁面上帶商品資料的 React props 長什麼樣子。只綁本機。"""
+        """开发用：把直播间分页截屏存到 logs/，并回报页面上带商品数据的 React props 长什么样子。只绑本机。"""
         w = mon.workers.get(req.match_info["rid"])
         if not w or not w.page:
-            return web.json_response({"error": "沒有這個直播間"}, status=404)
+            return web.json_response({"error": "没有这个直播间"}, status=404)
         shot = ROOT / "logs" / f"debug_{w.rid}.png"
         async with w.lock:
             await w.page.screenshot(path=str(shot))

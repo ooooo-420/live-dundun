@@ -1,8 +1,7 @@
 .wrap.enter { padding-top: 24rpx; }
 .title { font-size: 48rpx; font-weight: 900; }
-.intro { font-size: 26rpx; margin: 10rpx 0 0; line-height: 1.7; }
-.shot-peek { margin-top: 210rpx; }
-/* 熊貓扒在截圖卡的右上緣，不要擋到圖 */
+.shot-peek { margin-top: 190rpx; }
+/* 熊猫扒在截屏卡的右上缘，不要挡到图 */
 .shot-peek .panda-head, .shot-peek .panda-paws { left: 80%; }
 .shot-card { background: #fff; border-radius: 44rpx; overflow: hidden; box-shadow: var(--shadow); min-height: 300rpx; transition: opacity 0.2s; }
 .shot-card.busy { opacity: 0.55; }

@@ -1,14 +1,14 @@
-<view wx:if="{{demo}}" class="banner warn">示範資料，還沒連到電腦。<text class="link" bindtap="resetDemo">重設</text></view>
-<view wx:elif="{{!needJoin && !pcOk && !loading}}" class="banner warn">電腦上次回報：{{pcText}}。電腦可能關了，或黑色視窗沒在跑。</view>
-<view wx:if="{{error}}" class="banner err">連不上雲端：{{error}}</view>
+<view wx:if="{{demo}}" class="banner warn">示范数据，还没连到电脑。<text class="link" bindtap="resetDemo">重设</text></view>
+<view wx:elif="{{!needJoin && !pcOk && !loading}}" class="banner warn">电脑上次回报：{{pcText}}。电脑可能关了，或黑色窗口没在跑。</view>
+<view wx:if="{{error}}" class="banner err">连不上云端：{{error}}</view>
 
-<!-- 還沒加入：輸入邀請碼 -->
+<!-- 还没加入：输入邀请码 -->
 <view class="wrap join" wx:if="{{needJoin}}">
   <view class="peek join-peek">
     <image class="panda-head idle" src="/images/panda_head.png" />
     <view class="peek-card card join-card">
-      <view class="join-title">輸入邀請碼</view>
-      <view class="soft join-sub">請已經在用的帳號打開「成員與邀請」，產生一組 6 位數字，30 分鐘內有效。</view>
+      <view class="join-title">输入邀请码</view>
+      <view class="soft join-sub">请已经在用的帐号打开“成员与邀请”，产生一组 6 位数字，30 分钟内有效。</view>
       <input class="input code-input num-font" type="number" maxlength="6" placeholder="000000" placeholder-class="ph" value="{{code}}" bindinput="onCode" />
       <view class="btn" hover-class="press" hover-stay-time="80" bindtap="joinNow">加入</view>
     </view>
@@ -17,16 +17,13 @@
 </view>
 
 <view wx:else class="page-body">
-  <!-- 標題＋監控開關 -->
+  <!-- 标题＋监控开关 -->
   <view class="wrap head enter">
-    <view>
-      <view class="brand">直播蹲蹲</view>
-      <view class="sub">{{headline}}</view>
-    </view>
+    <view class="brand">{{brand}}</view>
     <view wx:if="{{!demo}}" class="toggle {{monitoring ? 'on' : ''}} {{switching ? 'busy' : ''}}" hover-class="press" hover-stay-time="80" bindtap="toggleMonitoring"><view class="knob"></view></view>
   </view>
 
-  <!-- 號碼票：正在盯的那一間 -->
+  <!-- 号码票：正在盯的那一间 -->
   <view class="wrap">
     <view class="peek hero enter" wx:if="{{hero}}">
       <image class="panda-head {{hero.hot ? 'hot' : (hero.bump ? 'go' : 'idle')}}" src="{{hero.hot ? '/images/panda_hot.png' : '/images/panda_head.png'}}" />
@@ -36,19 +33,19 @@
             <view class="r1"><text class="live-pill">{{hero.pill}}</text><text class="t-name">{{hero.name}}</text></view>
             <view class="now" wx:if="{{hero.explaining && hero.explaining.index}}">
               <text class="t-num num-font">{{hero.explaining.index}}</text>
-              <view class="t-side"><text>號 {{hero.hot ? '到了！' : '講解中'}}</text><text class="t-title">{{hero.explaining.title}}</text></view>
+              <view class="t-side"><text>号 {{hero.hot ? '到了！' : '讲解中'}}</text><text class="t-title">{{hero.explaining.title}}</text></view>
             </view>
             <view class="now idle-now" wx:else><text class="t-wait">{{hero.waitText}}</text></view>
           </view></view>
-          <!-- 被撕走的舊存根 -->
+          <!-- 被撕走的旧存根 -->
           <view wx:if="{{fly}}" class="fly {{fly.hot ? 'hot' : ''}}">
             <view class="r1"><text class="live-pill">{{fly.pill}}</text><text class="t-name">{{fly.name}}</text></view>
-            <view class="now"><text class="t-num num-font">{{fly.index}}</text><view class="t-side"><text>號 講解中</text><text class="t-title">{{fly.title}}</text></view></view>
+            <view class="now"><text class="t-num num-font">{{fly.index}}</text><view class="t-side"><text>号 讲解中</text><text class="t-title">{{fly.title}}</text></view></view>
           </view>
         </view>
         <view class="perf"><view class="hole l"></view><view class="hole r"></view></view>
         <view class="tbody">
-          <view wx:if="{{hero.status === 'captcha'}}" class="verify-pill" hover-class="press" catchtap="goVerifyHero">抖音要人機驗證 · 點這裡在手機上完成 ›</view>
+          <view wx:if="{{hero.status === 'captcha'}}" class="verify-pill" hover-class="press" catchtap="goVerifyHero">抖音要人机验证 · 点这里在手机上完成 ›</view>
           <view class="chips" wx:if="{{hero.chips.length}}">
             <text wx:for="{{hero.chips}}" wx:for-item="c" wx:key="key" class="chip num-font {{c.cls}}">{{c.text}}</text>
           </view>
@@ -59,24 +56,24 @@
       <image wx:if="{{!hero.hot}}" class="panda-paws {{hero.bump ? 'go' : ''}}" src="/images/panda_paws.png" />
     </view>
 
-    <!-- 沒有在盯的：熊貓扒在一張空票上 -->
+    <!-- 没有在盯的：熊猫扒在一张空票上 -->
     <view class="peek hero enter" wx:elif="{{!loading}}">
       <image class="panda-head idle" src="/images/panda_head.png" />
       <view class="peek-card card empty-ticket">
-        <view class="e-title">{{monitoring ? (rooms.length ? '選一間來盯' : '還沒有直播間') : '監控關著'}}</view>
-        <view class="soft e-sub">{{monitoring ? (rooms.length ? '打開下面直播間的開關，電腦就開始幫你盯。' : '在抖音直播間按分享 →「複製連結」，再按下面的按鈕。') : '打開右上角的開關，電腦會先準備好。'}}</view>
+        <view class="e-title">{{monitoring ? (rooms.length ? '选一间来盯' : '还没有直播间') : '监控关着'}}</view>
+        <view class="soft e-sub">{{monitoring ? (rooms.length ? '打开下面直播间的开关，电脑就开始帮你盯。' : '在抖音直播间按分享 →“复制链接”，再按下面的按钮。') : '打开右上角的开关，电脑会先准备好。'}}</view>
       </view>
       <image class="panda-paws" src="/images/panda_paws.png" />
     </view>
   </view>
 
-  <!-- 其他直播間 -->
+  <!-- 其他直播间 -->
   <view class="wrap" wx:if="{{others.length}}">
-    <view class="section-label">{{hero ? '其他直播間' : '直播間'}}</view>
+    <view class="section-label">{{hero ? '其他直播间' : '直播间'}}</view>
   </view>
   <view class="wrap rooms">
     <view wx:for="{{others}}" wx:key="id" class="room-row enter" style="animation-delay: {{index < 6 ? index * 50 : 300}}ms">
-      <view class="del {{item.x || item.drag ? 'show' : ''}}" style="width: {{delPx}}px" hover-class="press-link" data-id="{{item.id}}" catchtap="askRemove">刪除</view>
+      <view class="del {{item.x || item.drag ? 'show' : ''}}" style="width: {{delPx}}px" hover-class="press-link" data-id="{{item.id}}" catchtap="askRemove">删除</view>
       <view class="room {{item.drag ? '' : 'snap'}}" style="transform: translateX({{item.x}}px)"
         hover-class="{{item.drag || item.x ? 'none' : 'press-row'}}" hover-start-time="60" hover-stay-time="100"
         data-i="{{index}}" bindtap="open" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" bindtouchcancel="touchEnd">
@@ -90,11 +87,11 @@
     </view>
   </view>
 
-  <view wx:if="{{pending}}" class="wrap muted tip">有 {{pending}} 個指令等電腦處理</view>
-  <view class="foot"><text class="foot-link" bindtap="openMembers">成員與邀請</text></view>
+  <view wx:if="{{pending}}" class="wrap muted tip">有 {{pending}} 个指令等电脑处理</view>
+  <view class="foot"><text class="foot-link" bindtap="openMembers">成员与邀请</text></view>
   <view class="spacer"></view>
 
   <view class="bottom">
-    <view class="btn dark paste {{busy ? 'off' : ''}}" hover-class="press" hover-stay-time="80" bindtap="pasteAdd"><text class="plus">＋</text>貼上抖音直播連結</view>
+    <view class="btn dark paste {{busy ? 'off' : ''}}" hover-class="press" hover-stay-time="80" bindtap="pasteAdd"><text class="plus">＋</text>粘贴抖音直播链接</view>
   </view>
 </view>

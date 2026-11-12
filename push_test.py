@@ -1,9 +1,9 @@
-"""第 0 階段：用微信接口測試號推一則模板消息給自己，確認通知管道能用。
+"""第 0 阶段：用微信接口测试号推一则模板消息给自己，确认通知管道能用。
 
-用法（在項目資料夾）：
+用法（在项目文件夹）：
     .venv\\Scripts\\python.exe push_test.py
 
-讀取 config.local.json 的 wechat 區塊。不會印出任何密鑰。
+读取 config.local.json 的 wechat 区块。不会印出任何密钥。
 """
 
 import json
@@ -19,11 +19,11 @@ API = "https://api.weixin.qq.com/cgi-bin"
 
 def load_config() -> dict:
     if not CONFIG.exists():
-        sys.exit(f"找不到 {CONFIG.name}。請把 config.example.json 複製成 config.local.json 並填好。")
+        sys.exit(f"找不到 {CONFIG.name}。请把 config.example.json 复制成 config.local.json 并填好。")
     wx = json.loads(CONFIG.read_text(encoding="utf-8"))["wechat"]
     missing = [k for k in ("appid", "appsecret", "openid", "template_id") if not wx.get(k) or wx[k].startswith("填")]
     if missing:
-        sys.exit(f"config.local.json 還沒填：{', '.join(missing)}")
+        sys.exit(f"config.local.json 还没填：{', '.join(missing)}")
     return wx
 
 
@@ -34,7 +34,7 @@ def get_token(wx: dict) -> str:
         timeout=15,
     ).json()
     if "access_token" not in r:
-        sys.exit(f"取得 access_token 失敗：errcode={r.get('errcode')} errmsg={r.get('errmsg')}")
+        sys.exit(f"取得 access_token 失败：errcode={r.get('errcode')} errmsg={r.get('errmsg')}")
     return r["access_token"]
 
 
@@ -57,11 +57,11 @@ def send(wx: dict, token: str, room: str, product: str, status: str) -> None:
         timeout=15,
     ).json()
     if r.get("errcode") == 0:
-        print("推送成功，請看微信。")
+        print("推送成功，请看微信。")
     else:
-        sys.exit(f"推送失敗：errcode={r.get('errcode')} errmsg={r.get('errmsg')}")
+        sys.exit(f"推送失败：errcode={r.get('errcode')} errmsg={r.get('errmsg')}")
 
 
 if __name__ == "__main__":
     wx = load_config()
-    send(wx, get_token(wx), "測試直播間", "37 號 測試商品（中文顯示測試）", "這是一則測試通知")
+    send(wx, get_token(wx), "测试直播间", "37 号 测试商品（中文显示测试）", "这是一则测试通知")

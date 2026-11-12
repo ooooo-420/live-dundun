@@ -24,7 +24,7 @@ def test_ahead_sequential():
     r = room([{"id": "p37", "pos": 37, "arrive": True, "ahead": 3}])
     assert kinds(evaluate(r, "p30")) == []
     assert kinds(evaluate(r, "p34")) == ["ahead"]
-    assert kinds(evaluate(r, "p35")) == []  # 只發一次
+    assert kinds(evaluate(r, "p35")) == []  # 只发一次
     assert kinds(evaluate(r, "p37")) == ["arrive"]
 
 
@@ -35,7 +35,7 @@ def test_missed_when_crossing():
 
 
 def test_no_missed_on_big_jump():
-    # 2026-11-09 實測：從 1 號直接跳到 8 號，不該說 4 號被跳過
+    # 2026-11-09 实测：从 1 号直接跳到 8 号，不该说 4 号被跳过
     r = room([{"id": "p4", "pos": 4, "missed": True}])
     evaluate(r, "p1")
     assert kinds(evaluate(r, "p8")) == []

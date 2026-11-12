@@ -1,4 +1,4 @@
-"""通知的重試和多管道：不連網路。"""
+"""通知的重试和多管道：不连网络。"""
 
 import sys
 from pathlib import Path
@@ -7,7 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app import notify  # noqa: E402
 
-notify.RETRY_WAIT = (0, 0)  # 測試不要真的等
+notify.RETRY_WAIT = (0, 0)  # 测试不要真的等
 
 CFG = {"wechat": {"appid": "a", "appsecret": "b", "openid": "c", "template_id": "d"},
        "bark": {"url": "https://api.day.app/key"}}
@@ -20,7 +20,7 @@ class Flaky:
     def send(self, *a):
         self.calls += 1
         if self.calls <= self.fail_times:
-            raise RuntimeError("網路抖")
+            raise RuntimeError("网络抖")
 
 
 def make(wechat_fail=0, bark_fail=None):
@@ -41,7 +41,7 @@ def test_all_fail_raises():
     n = make(wechat_fail=99, bark_fail=99)
     try:
         n.send("r", "p", "s")
-        assert False, "應該要拋錯"
+        assert False, "应该要抛错"
     except RuntimeError as e:
         assert "wechat" in str(e) and "bark" in str(e)
 
@@ -55,7 +55,7 @@ def test_one_channel_ok_is_success():
 def test_bark_only_when_filled():
     assert len(notify.Notifier(CFG).channels) == 2
     assert len(notify.Notifier({"wechat": CFG["wechat"]}).channels) == 1
-    assert len(notify.Notifier({"wechat": CFG["wechat"], "bark": {"url": "選填。..."}}).channels) == 1
+    assert len(notify.Notifier({"wechat": CFG["wechat"], "bark": {"url": "选填。..."}}).channels) == 1
 
 
 def test_credentials():

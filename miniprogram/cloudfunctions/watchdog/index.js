@@ -1,11 +1,11 @@
-// 雲函數 watchdog：電腦掉線看門狗。由定時觸發器每 5 分鐘跑一次（config.json）。
+// 云函数 watchdog：电脑掉线看门狗。由定时触发器每 5 分钟跑一次（config.json）。
 //
-// 電腦活著時每分鐘寫一次心跳到 config/pc.time。這裡檢查：
-// - 心跳超過 OFFLINE_MINUTES 沒更新，而且監控不是「關」的 → 用公眾號測試號發「電腦掉線」到微信，記下 alerted
-// - 之後心跳又回來了 → 發一條「電腦回來了」，清掉 alerted
-// 這是唯一一個電腦死掉也能叫人的機制，因為它跑在雲端。
+// 电脑活着时每分钟写一次心跳到 config/pc.time。这里检查：
+// - 心跳超过 OFFLINE_MINUTES 没更新，而且监控不是“关”的 → 用公众号测试号发“电脑掉线”到微信，记下 alerted
+// - 之后心跳又回来了 → 发一条“电脑回来了”，清掉 alerted
+// 这是唯一一个电脑死掉也能叫人的机制，因为它跑在云端。
 //
-// 公眾號的 appid / appsecret / openid / template_id 由電腦在心跳時送上來，存在 config/notify（資料表只有管理端可讀）。
+// 公众号的 appid / appsecret / openid / template_id 由电脑在心跳时送上来，存在 config/notify（数据表只有管理端可读）。
 
 const cloud = require('wx-server-sdk')
 const https = require('https')
@@ -13,7 +13,7 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 
 const OFFLINE_MINUTES = 10
-const REMIND_HOURS = 6  // 一直沒回來的話，每隔幾小時再提醒一次
+const REMIND_HOURS = 6  // 一直没回来的话，每隔几小时再提醒一次
 
 function request(method, url, body) {
   return new Promise((resolve, reject) => {
@@ -29,7 +29,7 @@ function request(method, url, body) {
 }
 
 function fmtTime(ms) {
-  const d = new Date(ms + 8 * 3600000)  // 北京時間
+  const d = new Date(ms + 8 * 3600000)  // 北京时间
   const p = n => String(n).padStart(2, '0')
   return `${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())}:${p(d.getUTCSeconds())}`
 }
@@ -41,7 +41,7 @@ async function sendWeChat(cfg, product, status) {
     touser: cfg.openid,
     template_id: cfg.template_id,
     data: {
-      room: { value: '電腦' },
+      room: { value: '电脑' },
       product: { value: product.slice(0, 20) },
       status: { value: status.slice(0, 20) },
       time: { value: fmtTime(Date.now()) },
@@ -68,12 +68,12 @@ exports.main = async () => {
   if (offline && !pc.paused) {
     if (pc.alerted && now - pc.alerted < REMIND_HOURS * 3600000) return { skip: 'already alerted' }
     const mins = Math.round(silent / 60000)
-    await sendWeChat(cfg, '監控程式沒有回報', `已經 ${mins} 分鐘沒心跳，去看看電腦`)
+    await sendWeChat(cfg, '监控程序没有回报', `已经 ${mins} 分钟没心跳，去看看电脑`)
     await col.update({ data: { alerted: now, alertCount: (pc.alertCount || 0) + 1 } })
     return { alerted: true, mins }
   }
   if (!offline && pc.alerted) {
-    await sendWeChat(cfg, '監控程式回來了', '電腦已恢復回報，監控繼續')
+    await sendWeChat(cfg, '监控程序回来了', '电脑已恢复回报，监控继续')
     await col.update({ data: { alerted: null, alertCount: 0 } })
     return { recovered: true }
   }

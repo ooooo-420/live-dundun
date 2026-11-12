@@ -1,4 +1,4 @@
-/* 直播蹲蹲：叫號單。奶油紙底、竹青主色、到號變番茄橘；圓角、帶顏色的淡陰影；吉祥物是扒在票上的熊貓。 */
+/* 直播蹲蹲：叫号单。奶油纸底、竹青主色、到号变番茄橘；圆角、带颜色的淡阴影；吉祥物是扒在票上的熊猫。 */
 page {
   --bg: #f3efe3;
   --card: #fffdf8;
@@ -27,7 +27,7 @@ page {
 .section-label { color: var(--soft); font-size: 28rpx; font-weight: 700; margin: 48rpx 8rpx 20rpx; }
 .row-between { display: flex; justify-content: space-between; align-items: center; }
 
-/* 按鈕：膠囊形 */
+/* 按钮：胶囊形 */
 .btn {
   background: var(--bam); color: #fff; font-size: 30rpx; font-weight: 700;
   height: 100rpx; line-height: 100rpx; border-radius: 50rpx; text-align: center;
@@ -38,13 +38,13 @@ page {
 .btn.ghost { background: var(--card); color: var(--soft); box-shadow: inset 0 0 0 3rpx var(--line); }
 .btn.off { opacity: 0.45; box-shadow: none; }
 
-/* 按下去的回饋（微信原生 hover-class） */
+/* 按下去的回馈（微信原生 hover-class） */
 .press { transform: scale(0.96); opacity: 0.88; }
 .press-row { transform: scale(0.985); }
 .press-link { opacity: 0.5; }
 .link-btn { display: inline-block; padding: 16rpx 24rpx; }
 
-/* 第一次出現：由下往上淡入 */
+/* 第一次出现：由下往上淡入 */
 .enter { animation: enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
 @keyframes enter { from { opacity: 0; transform: translateY(24rpx); } to { opacity: 1; transform: none; } }
 
@@ -62,7 +62,7 @@ page {
 /* 卡片 */
 .card { background: var(--card); border-radius: 44rpx; box-shadow: var(--shadow); }
 
-/* 開關 */
+/* 开关 */
 .toggle {
   width: 104rpx; height: 62rpx; flex: none; position: relative; box-sizing: border-box;
   border-radius: 31rpx; background: #d9d3c4; transition: background 0.22s ease;
@@ -79,7 +79,7 @@ page {
 .toggle.sm .knob { width: 38rpx; height: 38rpx; left: 6rpx; top: 6rpx; }
 .toggle.sm.on .knob { transform: translateX(34rpx); }
 
-/* 號碼標籤（膠囊） */
+/* 号码标签（胶囊） */
 .chip {
   min-width: 80rpx; height: 64rpx; padding: 0 24rpx; box-sizing: border-box; border-radius: 32rpx;
   display: inline-flex; align-items: center; justify-content: center;
@@ -90,21 +90,21 @@ page {
 .chip.pop { animation: pop 0.5s 0.8s cubic-bezier(0.3, 1.6, 0.5, 1) both; }
 @keyframes pop { from { transform: scale(0.6); } to { transform: none; } }
 
-/* 熊貓：頭和爪子分兩張圖，爪子扒在卡片上緣、蓋在卡片前面 */
+/* 熊猫：头和爪子分两张图，爪子扒在卡片上缘、盖在卡片前面 */
 .peek { position: relative; }
-/* 284×241rpx（設計稿 148px）；卡片上緣對在熊貓圖的 y=140/170 → 往上 198rpx */
+/* 284×241rpx（设计稿 148px）；卡片上缘对在熊猫图的 y=140/170 → 往上 198rpx */
 .panda-head, .panda-paws { position: absolute; width: 284rpx; height: 241rpx; left: 72%; margin-left: -142rpx; top: -198rpx; pointer-events: none; }
 .panda-head { z-index: 1; }
 .panda-paws { z-index: 4; }
 .peek-card { position: relative; z-index: 2; }
-/* 平常：慢慢眨眼不好做成圖片，改成頭輕輕呼吸 */
+/* 平常：慢慢眨眼不好做成图片，改成头轻轻呼吸 */
 .panda-head.idle { animation: breathe 4.8s ease-in-out infinite; transform-origin: 50% 100%; }
 @keyframes breathe { 0%, 100% { transform: none; } 50% { transform: translateY(-4rpx) scaleY(1.015); } }
-/* 換號：兩手舉起讓位、頭彈一下，然後爬回來扒好 */
+/* 换号：两手举起让位、头弹一下，然后爬回来扒好 */
 .panda-paws.go { animation: paws 1.05s cubic-bezier(0.3, 0.7, 0.3, 1) both; }
 @keyframes paws { 0% { transform: none; } 16% { transform: translateY(-50rpx) scaleY(1.05); } 62% { transform: translateY(-50rpx); } 80% { transform: translateY(8rpx) scaleY(0.94); } 90% { transform: translateY(-3rpx); } 100% { transform: none; } }
 .panda-head.go { animation: hop 1.05s cubic-bezier(0.3, 0.7, 0.3, 1) both; }
 @keyframes hop { 0% { transform: none; } 16% { transform: translateY(-20rpx); } 62% { transform: translateY(-20rpx); } 80% { transform: translateY(4rpx); } 100% { transform: none; } }
-/* 到號：跳起來 */
+/* 到号：跳起来 */
 .panda-head.hot { animation: jump 0.7s cubic-bezier(0.3, 1.5, 0.5, 1) both; }
 @keyframes jump { from { transform: translateY(40rpx); } to { transform: translateY(-24rpx); } }

@@ -1,15 +1,15 @@
-// 雲函數 api：小程序和電腦都只透過它讀寫資料庫。資料表一律設成「僅管理端可讀寫」。
+// 云函数 api：小程序和电脑都只通过它读写数据库。数据表一律设成“仅管理端可读写”。
 //
-// 誰在呼叫：
-// - 小程序：有 OPENID。第一個呼叫的人自動成為成員（config/members），
-//   其他帳號要輸入成員產生的邀請碼才能加入。所有成員看到同一份資料。
-// - 電腦：用 AppSecret 換的 access_token 走 HTTP API 呼叫，沒有 OPENID，視為電腦。
+// 谁在调用：
+// - 小程序：有 OPENID。第一个调用的人自动成为成员（config/members），
+//   其他帐号要输入成员产生的邀请码才能加入。所有成员看到同一份数据。
+// - 电脑：用 AppSecret 换的 access_token 走 HTTP API 调用，没有 OPENID，视为电脑。
 //
-// 資料表：
-// - rooms     電腦寫：每間直播間的狀態、講解中、目標（_id = 直播間號碼）
-// - carts     電腦寫：購物車清單 { items: [{id,index,title,price}] }（_id = 直播間號碼）
-// - commands  小程序寫：要電腦做的事 { type, room, payload, done, result, created }
-// - config    members（成員 openid、邀請碼）、pc（電腦心跳）
+// 数据表：
+// - rooms     电脑写：每间直播间的状态、讲解中、目标（_id = 直播间号码）
+// - carts     电脑写：购物车清单 { items: [{id,index,title,price}] }（_id = 直播间号码）
+// - commands  小程序写：要电脑做的事 { type, room, payload, done, result, created }
+// - config    members（成员 openid、邀请码）、pc（电脑心跳）
 
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
@@ -23,14 +23,14 @@ let ensured = false
 async function ensure() {
   if (ensured) return
   for (const name of COLLECTIONS) {
-    try { await db.createCollection(name) } catch (e) { /* 已經有了 */ }
+    try { await db.createCollection(name) } catch (e) { /* 已经有了 */ }
   }
   ensured = true
 }
 
-// ---------- 成員 ----------
+// ---------- 成员 ----------
 // config/members：{ list: [openid...], invite: { code, expires, fails } }
-// 第一個用的人自動成為成員；之後要由成員產生邀請碼，新帳號輸入邀請碼才能加入。
+// 第一个用的人自动成为成员；之后要由成员生成邀请码，新帐号输入邀请码才能加入。
 
 const INVITE_MINUTES = 30
 const INVITE_MAX_FAILS = 5
@@ -40,7 +40,7 @@ async function getMembers() {
   let doc = null
   try { doc = (await col.doc('members').get()).data } catch (e) { doc = null }
   if (!doc) {
-    // 舊版只記主人（config/owner），搬過來
+    // 旧版只记主人（config/owner），搬过来
     let owner = null
     try { owner = (await col.doc('owner').get()).data } catch (e) {}
     doc = { list: owner && owner.openid ? [owner.openid] : [], invite: null }
@@ -74,15 +74,15 @@ async function join(openid, code) {
   const doc = await getMembers()
   if (doc.list.includes(openid)) return { joined: true }
   const inv = doc.invite
-  if (!inv || Date.now() > inv.expires) throw new Error('沒有有效的邀請碼，請主人重新產生')
+  if (!inv || Date.now() > inv.expires) throw new Error('没有有效的邀请码，请主人重新生成')
   if (String(code).trim() !== inv.code) {
     inv.fails = (inv.fails || 0) + 1
     if (inv.fails >= INVITE_MAX_FAILS) doc.invite = null
     await saveMembers(doc)
-    throw new Error(doc.invite ? '邀請碼不對' : '錯太多次，邀請碼已作廢，請主人重新產生')
+    throw new Error(doc.invite ? '邀请码不对' : '错太多次，邀请码已作废，请主人重新生成')
   }
   doc.list.push(openid)
-  doc.invite = null  // 用過就作廢
+  doc.invite = null  // 用过就作废
   await saveMembers(doc)
   return { joined: true }
 }
@@ -90,7 +90,7 @@ async function join(openid, code) {
 async function removeMember(openid, index) {
   const doc = await getMembers()
   const target = doc.list[index]
-  if (!target) throw new Error('沒有這個成員')
+  if (!target) throw new Error('没有这个成员')
   if (target === openid) throw new Error('不能移除自己')
   doc.list.splice(index, 1)
   await saveMembers(doc)
@@ -127,7 +127,7 @@ async function fromApp(event) {
     }
     case 'command': {
       const { type, room, payload } = event
-      if (!COMMANDS.includes(type)) throw new Error('不認得的指令')
+      if (!COMMANDS.includes(type)) throw new Error('不认得的指令')
       const r = await db.collection('commands').add({
         data: { type, room: room || null, payload: payload || null, done: false, result: null, created: Date.now() },
       })
@@ -138,7 +138,7 @@ async function fromApp(event) {
       return { done: r.data.done, result: r.data.result }
     }
     case 'captcha': {
-      // 人機驗證截圖：電腦截下驗證框，手機上由使用者本人操作
+      // 人机验证截屏：电脑截下验证框，手机上由用户本人操作
       let shot = null
       try { shot = (await db.collection('captcha').doc(event.id).get()).data } catch (e) {}
       return { shot: shot && shot.img ? shot : null }
@@ -152,7 +152,7 @@ async function fromApp(event) {
     case 'remove_member':
       return removeMember(event.__openid, event.index)
     default:
-      throw new Error('不認得的動作')
+      throw new Error('不认得的动作')
   }
 }
 
@@ -165,12 +165,12 @@ async function pcInfo() {
   }
 }
 
-// ---------- 電腦 ----------
+// ---------- 电脑 ----------
 // event: { action:'pc_sync', rooms?:[...], carts?:{id:[items]}, results?:[{id, ok, message, room}] }
-// 回傳：還沒處理的指令
+// 回传：还没处理的指令
 
 async function fromPc(event) {
-  if (event.action !== 'pc_sync') throw new Error('不認得的動作')
+  if (event.action !== 'pc_sync') throw new Error('不认得的动作')
   const now = Date.now()
 
   if (Array.isArray(event.rooms)) {
@@ -195,7 +195,7 @@ async function fromPc(event) {
     }
   }
 
-  // 驗證截圖：{ 直播間: {img,w,h,v,t} 或 null（驗證完成） }
+  // 验证截屏：{ 直播间: {img,w,h,v,t} 或 null（验证完成） }
   if (event.captchas) {
     for (const id of Object.keys(event.captchas)) {
       const sh = event.captchas[id]
@@ -204,7 +204,7 @@ async function fromPc(event) {
     }
   }
 
-  // result 原本是 null，直接 update 成物件會被當成「在 null 裡建欄位」而失敗，所以要用 _.set 整個換掉
+  // result 原本是 null，直接 update 成对象会被当成“在 null 里建字段”而失败，所以要用 _.set 整个换掉
   const resultErrors = []
   for (const res of event.results || []) {
     try {
@@ -216,8 +216,8 @@ async function fromPc(event) {
     }
   }
 
-  // 心跳：讓小程序知道電腦還活著。電腦大約每分鐘才帶一次，省資料庫寫入次數。
-  // 用 update 不用 set：看門狗（watchdog 雲函數）記在同一份文件裡的 alerted 不能被洗掉。
+  // 心跳：让小程序知道电脑还活着。电脑大约每分钟才带一次，省数据库写入次数。
+  // 用 update 不用 set：看门狗（watchdog 云函数）记在同一份文档里的 alerted 不能被洗掉。
   if (event.heartbeat) {
     const data = { time: now, paused: !!(event.pc && event.pc.paused) }
     try {
@@ -226,11 +226,11 @@ async function fromPc(event) {
     } catch (e) {
       await db.collection('config').doc('pc').set({ data })
     }
-    // 清掉一天前已完成的指令，免得越積越多
+    // 清掉一天前已完成的指令，免得越积越多
     try { await db.collection('commands').where({ done: true, created: _.lt(now - 86400000) }).remove() } catch (e) {}
   }
 
-  // 公眾號測試號的資料（電腦有變才送）：存在 config/notify，給 watchdog 在電腦掉線時代發通知用
+  // 公众号测试号的数据（电脑有变才送）：存在 config/notify，给 watchdog 在电脑掉线时代发通知用
   if (event.notify && event.notify.appid) {
     await db.collection('config').doc('notify').set({ data: { ...event.notify, updated: now } })
   }
@@ -245,7 +245,7 @@ exports.main = async (event) => {
   try {
     if (OPENID) {
       if (event.action === 'join') return { ok: true, data: await join(OPENID, event.code) }
-      if (!(await isMember(OPENID))) return { ok: false, code: 'not_member', error: '還沒加入，請輸入邀請碼' }
+      if (!(await isMember(OPENID))) return { ok: false, code: 'not_member', error: '还没加入，请输入邀请码' }
       return { ok: true, data: await fromApp({ ...event, __openid: OPENID }) }
     }
     return { ok: true, data: await fromPc(event) }

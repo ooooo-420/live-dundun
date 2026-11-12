@@ -1,4 +1,4 @@
-"""結束監控程式（run.py）和它開的專用 Edge。雙擊 stop.bat 執行。"""
+"""结束监控程序（run.py）和它开的专用 Edge。双击 stop.bat 运行。"""
 
 import subprocess
 import time
@@ -13,9 +13,9 @@ PS = (
 out = subprocess.run(["powershell", "-NoProfile", "-Command", PS], capture_output=True, text=True).stdout
 names = [x for x in out.split() if x]
 if any(n.lower() == "python.exe" for n in names):
-    print("監控已結束，專用 Edge 也關了。")
+    print("监控已结束，专用 Edge 也关了。")
 elif names:
-    print("監控本來就沒在跑，順便關掉了剩下的專用 Edge。")
+    print("监控本来就没在跑，顺便关掉了剩下的专用 Edge。")
 else:
-    print("監控本來就沒在跑。")
+    print("监控本来就没在跑。")
 time.sleep(3)

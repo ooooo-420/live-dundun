@@ -1,4 +1,4 @@
-"""小程序同步的邏輯測試：雲端和監控都用假的，不連網路、不開瀏覽器。"""
+"""小程序同步的逻辑测试：云端和监控都用假的，不连网络、不开浏览器。"""
 
 import asyncio
 import sys
@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from app import cloud, store  # noqa: E402
 from app.cloud import HEARTBEAT_EVERY  # noqa: E402
 
-store.log = lambda *a, **k: None  # 測試不寫記錄檔
+store.log = lambda *a, **k: None  # 测试不写记录档
 
 
 class FakeWorker:
@@ -44,7 +44,7 @@ class FakeMonitor:
     def set_targets(self, rid, targets):
         w = self.workers[rid]
         if targets and not w.cart:
-            raise ValueError("還沒有購物車清單")
+            raise ValueError("还没有购物车清单")
         ids = {i["id"] for i in w.cart}
         self.state["rooms"][rid]["targets"] = [t for t in targets if t["id"] in ids]
 
@@ -78,7 +78,7 @@ def test_only_send_changes():
     assert "rooms" not in fc.calls[1] and "carts" not in fc.calls[1]
     mon.workers["111"].cart = [{"id": "p1", "index": 1, "title": "a", "price": 1}]
     run(s.tick())
-    assert "111" in fc.calls[2]["carts"] and "rooms" in fc.calls[2]  # cart_count 變了
+    assert "111" in fc.calls[2]["carts"] and "rooms" in fc.calls[2]  # cart_count 变了
 
 
 def test_failed_sync_resends():
@@ -103,15 +103,15 @@ def test_commands_and_results():
     fc.queue = [
         {"_id": "c1", "type": "add_room", "room": None, "payload": {"text": "看直播 https://live.douyin.com/222?from=x"}},
         {"_id": "c2", "type": "set_targets", "room": "222", "payload": {"targets": [{"id": "p1"}]}},
-        {"_id": "c3", "type": "add_room", "room": None, "payload": {"text": "亂打的"}},
+        {"_id": "c3", "type": "add_room", "room": None, "payload": {"text": "乱打的"}},
     ]
     assert run(s.tick()) == 3
     r = {x["id"]: x for x in s.results}
     assert r["c1"]["ok"] and r["c1"]["room"] == "222"
-    assert not r["c2"]["ok"] and "購物車" in r["c2"]["message"]  # 沒開播不能設
+    assert not r["c2"]["ok"] and "购物车" in r["c2"]["message"]  # 没开播不能设
     assert not r["c3"]["ok"]
     run(s.tick())
-    assert len(fc.calls[-1]["results"]) == 3  # 結果送上去了
+    assert len(fc.calls[-1]["results"]) == 3  # 结果送上去了
     assert s.results == []
 
 
@@ -121,7 +121,7 @@ def test_set_targets_reports_missing():
     mon.workers["333"].cart = [{"id": "p1", "index": 1, "title": "a", "price": 1}]
     fc.queue = [{"_id": "c1", "type": "set_targets", "room": "333", "payload": {"targets": [{"id": "p1"}, {"id": "gone"}]}}]
     run(s.tick())
-    assert s.results[0]["ok"] and "1 件已不在購物車" in s.results[0]["message"]
+    assert s.results[0]["ok"] and "1 件已不在购物车" in s.results[0]["message"]
 
 
 def test_remove_room_drops_cart_cache():
@@ -138,7 +138,7 @@ def test_remove_room_drops_cart_cache():
 
 
 def test_same_command_not_applied_twice():
-    # 2026-11-10 實測：雲端沒把指令標成完成，電腦一直重做同一個指令
+    # 2026-11-10 实测：云端没把指令标成完成，电脑一直重做同一个指令
     mon, fc, s = make()
     mon.add_room("https://live.douyin.com/555")
     mon.workers["555"].cart = [{"id": "p1", "index": 1, "title": "a", "price": 1}]
@@ -148,10 +148,10 @@ def test_same_command_not_applied_twice():
     mon.set_targets = lambda rid, t: (calls.append(rid), real(rid, t))
     fc.queue = [cmd]
     assert run(s.tick()) == 1
-    fc.queue = [cmd]  # 雲端又送來同一個
+    fc.queue = [cmd]  # 云端又送来同一个
     assert run(s.tick()) == 0
     assert len(calls) == 1
-    assert s.results and s.results[0]["id"] == "c1"  # 只重送結果
+    assert s.results and s.results[0]["id"] == "c1"  # 只重送结果
 
 
 def test_pause_resume_commands():
@@ -165,21 +165,21 @@ def test_pause_resume_commands():
         mon.paused = False
 
     mon.pause, mon.resume = pause, resume
-    run(s.tick())  # 第一次帶心跳
+    run(s.tick())  # 第一次带心跳
     fc.queue = [{"_id": "c1", "type": "pause", "room": None, "payload": None}]
     run(s.tick())
     assert mon.paused and s.results[0]["ok"]
     run(s.tick())
-    assert fc.calls[-1]["pc"] == {"paused": True} and fc.calls[-1]["heartbeat"]  # 關著時每次都帶心跳
+    assert fc.calls[-1]["pc"] == {"paused": True} and fc.calls[-1]["heartbeat"]  # 关着时每次都带心跳
     fc.queue = [{"_id": "c2", "type": "resume", "room": None, "payload": None}]
     run(s.tick())
     assert not mon.paused
     run(s.tick())
-    assert fc.calls[-1]["pc"] == {"paused": False}  # 開關一變馬上回報
+    assert fc.calls[-1]["pc"] == {"paused": False}  # 开关一变马上回报
 
 
 def test_notify_credentials_sent_once():
-    # 公眾號資料只隨心跳送一次，有變才再送；送失敗下次重送
+    # 公众号数据只随心跳送一次，有变才再送；送失败下次重送
     mon, fc, s = make()
     mon.creds = {"appid": "a", "appsecret": "b", "openid": "c", "template_id": "d"}
     run(s.tick())
@@ -207,7 +207,7 @@ def test_watch_and_captcha_commands():
 
     async def remote_input(payload):
         calls.append(("input", payload["kind"]))
-        return "驗證完成"
+        return "验证完成"
 
     w.remote_input = remote_input
     fc.queue = [{"_id": "c1", "type": "watch", "room": "666", "payload": None},
@@ -215,7 +215,7 @@ def test_watch_and_captcha_commands():
                 {"_id": "c3", "type": "captcha_input", "room": "666", "payload": {"kind": "drag", "points": [[0, 0, 0]]}}]
     run(s.tick())
     assert calls == [("666", True), ("666", False), ("input", "drag")]
-    assert all(r["ok"] for r in s.results) and s.results[2]["message"] == "驗證完成"
+    assert all(r["ok"] for r in s.results) and s.results[2]["message"] == "验证完成"
 
 
 def test_captcha_shot_sent_once_then_cleared():
@@ -229,10 +229,10 @@ def test_captcha_shot_sent_once_then_cleared():
     run(s.tick())
     assert fc.calls[-1]["captchas"]["777"]["v"] == 1
     run(s.tick())
-    assert "captchas" not in fc.calls[-1]  # 沒換就不重送
+    assert "captchas" not in fc.calls[-1]  # 没换就不重送
     w.shot = None
     run(s.tick())
-    assert fc.calls[-1]["captchas"] == {"777": None}  # 驗證完成要告訴雲端
+    assert fc.calls[-1]["captchas"] == {"777": None}  # 验证完成要告诉云端
 
 
 def test_resolve_room_url():
