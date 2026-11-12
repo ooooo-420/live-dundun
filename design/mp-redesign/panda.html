@@ -1,0 +1,131 @@
+<!doctype html><html lang="zh-Hans"><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Bricolage+Grotesque:opsz,wght@12..96,800&display=swap">
+<style>
+body{margin:0;background:#dcd9d2;font-family:"Noto Sans SC",sans-serif;padding:32px;color:#2a241d}
+h2{font:900 22px "Noto Sans SC";margin:0 0 14px}
+.row{display:flex;gap:28px;margin-bottom:40px;align-items:flex-start}
+.tile{width:260px;height:260px;border-radius:32px;background:#f5efe4;display:grid;place-items:center;box-shadow:0 14px 40px rgba(60,40,20,.12)}
+.cap{font-size:14px;margin-top:10px;font-weight:700}.cap span{display:block;font-weight:400;color:#6b6357;font-size:12px;margin-top:2px}
+.num{font-family:"Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums}
+/* phone */
+.phone{width:360px;height:640px;border-radius:44px;overflow:hidden;position:relative;box-shadow:0 26px 70px rgba(40,30,20,.22)}
+.top{padding:46px 22px 0;display:flex;justify-content:space-between;align-items:center}
+.brand{font:900 24px "Noto Sans SC";letter-spacing:-.02em}
+.sw{width:54px;height:32px;border-radius:16px;position:relative}
+.sw:after{content:"";position:absolute;right:4px;top:4px;width:24px;height:24px;border-radius:50%;background:#fff}
+.ticket{margin:70px 22px 0;border-radius:28px;padding:20px;position:relative;color:#fff}
+.ticket .peek{position:absolute;right:96px;top:-64px}
+.ticket .room{font-weight:700;display:flex;justify-content:space-between;font-size:15px}
+.ticket .room i{font-style:normal;font-size:11px;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.22)}
+.now{display:flex;align-items:flex-end;gap:10px;margin-top:4px}
+.now .num{font-size:88px;font-weight:800;line-height:.95;letter-spacing:-.04em}
+.now small{font-size:13px;padding-bottom:10px;line-height:1.4;opacity:.92}
+.perf{position:absolute;left:20px;right:20px;top:146px;border-top:2px dashed rgba(255,255,255,.45)}
+.hole{position:absolute;top:136px;width:22px;height:22px;border-radius:50%}
+.chips{display:flex;gap:8px;margin-top:30px}
+.chip{min-width:40px;height:32px;padding:0 12px;border-radius:16px;background:rgba(255,255,255,.2);display:grid;place-items:center;font:800 14px "Bricolage Grotesque"}
+.chip.next{background:#fff}
+.chip.done{opacity:.45;text-decoration:line-through}
+.eta{margin-top:12px;font-size:12px;opacity:.95}
+.card2{margin:16px 22px 0;background:#fff;border-radius:22px;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.card2 .n{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font:800 20px "Bricolage Grotesque"}
+.card2 b{display:block;font-weight:700;font-size:14px}.card2 span{font-size:12px;color:#8a8175}
+.card2 .go{margin-left:auto;font-size:12px;font-weight:700;padding:7px 12px;border-radius:14px}
+.add{position:absolute;left:22px;right:22px;bottom:30px;height:54px;border-radius:27px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#fff}
+.sw{background:var(--acc)}
+.phone{background:var(--bg);color:var(--ink)}
+.ticket{background:var(--acc);box-shadow:0 18px 40px var(--glow)}
+.hole{background:var(--bg)}
+.hole.l{left:-11px}.hole.r{right:-11px}
+.chip.next{color:var(--acc)}
+.card2{box-shadow:0 10px 26px var(--soft)}
+.card2 .n{background:var(--bg);color:var(--mute)}
+.card2 .go{color:var(--acc);background:var(--tint)}
+.add{background:var(--ink)}
+</style>
+
+<h2>熊貓的三種畫法（只露頭，從號碼票後面探出來）</h2>
+<div class="row">
+ <div><div class="tile">
+  <!-- 1 卡通：圓、粗描邊、腮紅 -->
+  <svg width="180" height="150" viewBox="0 0 180 150">
+   <circle cx="42" cy="40" r="24" fill="#231f1c"/><circle cx="138" cy="40" r="24" fill="#231f1c"/>
+   <path d="M18 150c-4-62 24-112 72-112s76 50 72 112z" fill="#fff" stroke="#231f1c" stroke-width="5"/>
+   <ellipse cx="62" cy="92" rx="18" ry="23" transform="rotate(-22 62 92)" fill="#231f1c"/>
+   <ellipse cx="118" cy="92" rx="18" ry="23" transform="rotate(22 118 92)" fill="#231f1c"/>
+   <circle cx="66" cy="92" r="7" fill="#fff"/><circle cx="114" cy="92" r="7" fill="#fff"/>
+   <circle cx="68" cy="94" r="3.5" fill="#231f1c"/><circle cx="112" cy="94" r="3.5" fill="#231f1c"/>
+   <ellipse cx="90" cy="114" rx="9" ry="6" fill="#231f1c"/>
+   <path d="M82 124q8 7 16 0" stroke="#231f1c" stroke-width="4" fill="none" stroke-linecap="round"/>
+   <ellipse cx="40" cy="120" rx="10" ry="6" fill="#ffb3a3" opacity=".8"/><ellipse cx="140" cy="120" rx="10" ry="6" fill="#ffb3a3" opacity=".8"/>
+  </svg></div><div class="cap">① 圓滾卡通<span>粗描邊、大眼斑、腮紅。最親切，和樣品的點單小程序同類</span></div></div>
+
+ <div><div class="tile">
+  <!-- 2 像素：16x14 格 -->
+  <svg id="px" width="176" height="154" viewBox="0 0 16 14" shape-rendering="crispEdges"></svg>
+  </div><div class="cap">② 像素風<span>16×14 格。有遊戲感、很好認，換號時可以做「眨眼」逐格動畫</span></div></div>
+
+ <div><div class="tile">
+  <!-- 3 手繪線稿：只用線，像樣品裡的 HereWe -->
+  <svg width="180" height="150" viewBox="0 0 180 150" fill="none" stroke="#231f1c" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+   <path d="M30 46c-10-14 6-32 22-20"/><path d="M150 46c10-14-6-32-22-20"/>
+   <path d="M20 150c-2-60 26-108 70-108s74 48 70 108"/>
+   <path d="M50 96c2-16 20-22 28-10 6 10-4 22-16 22-8 0-13-5-12-12z" fill="#231f1c"/>
+   <path d="M130 96c-2-16-20-22-28-10-6 10 4 22 16 22 8 0 13-5 12-12z" fill="#231f1c"/>
+   <circle cx="66" cy="94" r="3" fill="#fff" stroke="none"/><circle cx="114" cy="94" r="3" fill="#fff" stroke="none"/>
+   <path d="M84 112q6 5 12 0"/><path d="M90 116v6"/><path d="M80 126q10 6 20 0"/>
+   <path d="M150 20l4 8M160 30l-8 2M146 16l-1 6" stroke-width="2.4"/>
+  </svg></div><div class="cap">③ 手繪線稿<span>只有黑線＋黑眼斑，像隨手畫的。最有個性、最不像模板</span></div></div>
+</div>
+
+<h2>熊貓是黑白的，配什麼主色？（同一個叫號單首頁）</h2>
+<div class="row" id="phones"></div>
+
+<template id="tpl">
+ <div><div class="phone">
+  <div class="top"><div class="brand">直播蹲蹲</div><div class="sw"></div></div>
+  <div class="ticket">
+   <div class="peek"></div>
+   <div class="room">Hypeyourself<i>直播中</i></div>
+   <div class="now"><span class="num">27</span><small>号 讲解中<br>植绒全棉牛仔夹克</small></div>
+   <div class="perf"></div><div class="hole l"></div><div class="hole r"></div>
+   <div class="chips"><span class="chip done">12</span><span class="chip next">31</span><span class="chip">36</span><span class="chip">42</span></div>
+   <div class="eta">还差 4 件到 31 号 · 大约 9 分钟</div>
+  </div>
+  <div class="card2"><div class="n num">—</div><div><b>Anniehall Official</b><span>链接已过期</span></div><div class="go">粘贴</div></div>
+  <div class="add">＋ 粘贴抖音直播链接</div>
+ </div><div class="cap"></div></div>
+</template>
+
+<script>
+// 像素熊貓
+const P=[
+"..KK........KK..",
+".KKKK......KKKK.",
+".KKKWWWWWWWWKKK.",
+"..WWWWWWWWWWWW..",
+".WWWWWWWWWWWWWW.",
+".WKKKWWWWWWKKKW.",
+"WWKWKKWWWWKKWKWW",
+"WWKKKKWWWWKKKKWW",
+"WWWKKWWWWWWKKWWW",
+"WWPWWWWKKWWWWPWW",
+"WWWWWWWKKWWWWWWW",
+"WWWWWWKWWKWWWWWW",
+"WWWWWWWWWWWWWWWW",
+"WWWWWWWWWWWWWWWW"];
+const C={K:'#231f1c',W:'#fff',P:'#ffb3a3'},px=document.getElementById('px');
+P.forEach((r,y)=>[...r].forEach((c,x)=>{if(C[c]){const e=document.createElementNS('http://www.w3.org/2000/svg','rect');e.setAttribute('x',x);e.setAttribute('y',y);e.setAttribute('width',1);e.setAttribute('height',1);e.setAttribute('fill',C[c]);px.append(e)}}));
+// 外框：黑邊
+['M0 3h1v11h-1zM15 3h1v11h-1z'].forEach(d=>{});
+
+const cartoon=document.querySelector('.tile svg').outerHTML.replace('width="180" height="150"','width="108" height="90"');
+const pal=[
+ {name:'竹青',note:'奶油紙底＋竹子綠。熊貓配竹子最自然，綠色也代表「到了、可以搶了」',bg:'#f3efe3',acc:'#3f8f5b',ink:'#1f2a22',tint:'#e6f2ea',mute:'#a9b5a8',glow:'rgba(63,143,91,.32)',soft:'rgba(60,90,60,.10)'},
+ {name:'番茄（原 A）',note:'保留番茄橘。黑白熊貓在橘色票上最跳、最有活力，但和熊貓沒有故事上的關聯',bg:'#f5efe4',acc:'#ff6a3d',ink:'#2a241d',tint:'#fff1ea',mute:'#b9ae9f',glow:'rgba(255,106,61,.32)',soft:'rgba(150,110,60,.10)'},
+ {name:'腮紅',note:'取熊貓臉上的粉。柔和、最可愛，但「搶購」的緊迫感弱一點',bg:'#f8eeea',acc:'#e9776f',ink:'#2d2224',tint:'#fde8e5',mute:'#c7aaa5',glow:'rgba(233,119,111,.32)',soft:'rgba(140,80,70,.10)'}];
+const box=document.getElementById('phones'),tpl=document.getElementById('tpl');
+for(const p of pal){const n=tpl.content.cloneNode(true);const ph=n.querySelector('.phone');for(const k of ['bg','acc','ink','tint','mute','glow','soft'])ph.style.setProperty('--'+k,p[k]);
+ n.querySelector('.peek').innerHTML=cartoon;n.querySelector('.cap').innerHTML=p.name+'<span>'+p.note+'</span>';box.append(n)}
+</script>
+</html>

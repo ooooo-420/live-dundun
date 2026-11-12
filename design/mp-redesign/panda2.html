@@ -1,0 +1,66 @@
+<!doctype html><html lang="zh-Hans"><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=Bricolage+Grotesque:opsz,wght@12..96,800&display=swap">
+<style>
+body{margin:0;background:#e4e0d6;font-family:"Noto Sans SC",sans-serif;padding:28px;color:#2a241d}
+.row{display:flex;gap:26px;flex-wrap:wrap}
+.cell{width:300px}
+.stage{height:300px;border-radius:30px;background:#f3efe3;position:relative;overflow:hidden}
+.tk{position:absolute;left:24px;right:24px;top:178px;height:150px;border-radius:26px;background:#3f8f5b}
+.tk b{position:absolute;left:20px;top:26px;font:800 64px/1 "Bricolage Grotesque";color:#fff;letter-spacing:-.04em}
+.p{position:absolute;left:50%;top:44px;translate:-50% 0}
+.cap{font-weight:700;font-size:14px;margin-top:10px}.cap span{display:block;font-weight:400;font-size:12px;color:#6b6357;margin-top:2px}
+</style>
+<div class="row">
+
+<!-- A 扒著票：圓頭、下垂眼斑、兩隻爪子扒在票上緣 -->
+<div class="cell"><div class="stage">
+<svg class="p" width="200" height="170" viewBox="0 0 200 170">
+ <defs><radialGradient id="fa" cx="45%" cy="35%" r="70%"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#ece8e1"/></radialGradient></defs>
+ <circle cx="44" cy="44" r="22" fill="#2b2624"/><circle cx="156" cy="44" r="22" fill="#2b2624"/>
+ <circle cx="44" cy="46" r="10" fill="#4a423e"/><circle cx="156" cy="46" r="10" fill="#4a423e"/>
+ <ellipse cx="100" cy="100" rx="76" ry="64" fill="url(#fa)"/>
+ <ellipse cx="68" cy="98" rx="17" ry="23" transform="rotate(32 68 98)" fill="#2b2624"/>
+ <ellipse cx="132" cy="98" rx="17" ry="23" transform="rotate(-32 132 98)" fill="#2b2624"/>
+ <circle cx="72" cy="93" r="6.5" fill="#fff"/><circle cx="128" cy="93" r="6.5" fill="#fff"/>
+ <circle cx="73.5" cy="94" r="4" fill="#2b2624"/><circle cx="126.5" cy="94" r="4" fill="#2b2624"/>
+ <circle cx="75" cy="92" r="1.4" fill="#fff"/><circle cx="128" cy="92" r="1.4" fill="#fff"/>
+ <path d="M93 115q7-4 14 0q-2 7-7 8q-5-1-7-8z" fill="#2b2624"/>
+ <path d="M100 123v4M92 128q8 6 16 0" stroke="#2b2624" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+ <ellipse cx="50" cy="122" rx="11" ry="6" fill="#ff9e8f" opacity=".45"/><ellipse cx="150" cy="122" rx="11" ry="6" fill="#ff9e8f" opacity=".45"/>
+</svg>
+<div class="tk"><b>27</b></div>
+<svg class="p" width="200" height="170" viewBox="0 0 200 170" style="z-index:2">
+ <rect x="40" y="124" width="42" height="30" rx="15" fill="#2b2624"/><rect x="118" y="124" width="42" height="30" rx="15" fill="#2b2624"/>
+ <path d="M51 129v7M61 128v8M71 129v7M129 129v7M139 128v8M149 129v7" stroke="#554c47" stroke-width="2.6" stroke-linecap="round"/>
+</svg></div>
+<div class="cap">A 扒著票<span>軟漸層白臉、下垂的眼斑、兩隻爪子扒在票上。像真的蹲在那裡等</span></div></div>
+
+<!-- B 只露上半張臉：眼睛以上，最克制 -->
+<div class="cell"><div class="stage">
+<svg class="p" width="200" height="170" viewBox="0 0 200 170" style="top:78px">
+ <circle cx="48" cy="34" r="20" fill="#2b2624"/><circle cx="152" cy="34" r="20" fill="#2b2624"/>
+ <path d="M18 140c0-60 36-104 82-104s82 44 82 104z" fill="#fff"/>
+ <ellipse cx="70" cy="100" rx="16" ry="21" transform="rotate(30 70 100)" fill="#2b2624"/>
+ <ellipse cx="130" cy="100" rx="16" ry="21" transform="rotate(-30 130 100)" fill="#2b2624"/>
+ <circle cx="74" cy="96" r="6" fill="#fff"/><circle cx="126" cy="96" r="6" fill="#fff"/>
+ <circle cx="75.5" cy="97" r="3.6" fill="#2b2624"/><circle cx="124.5" cy="97" r="3.6" fill="#2b2624"/>
+</svg>
+<div class="tk" style="top:208px"><b>27</b></div></div>
+<div class="cap">B 偷看<span>只露出耳朵和眼睛，下半張臉藏在票後面。最安靜、最有設計感，表情全靠眼睛</span></div></div>
+
+<!-- C 幾何：圓＋圓角三角，扁平現代 -->
+<div class="cell"><div class="stage">
+<svg class="p" width="200" height="170" viewBox="0 0 200 170">
+ <circle cx="52" cy="50" r="24" fill="#2b2624"/><circle cx="148" cy="50" r="24" fill="#2b2624"/>
+ <rect x="26" y="44" width="148" height="130" rx="64" fill="#fff"/>
+ <path d="M58 92c10-8 26-4 28 8s-8 22-20 20-16-20-8-28z" fill="#2b2624"/>
+ <path d="M142 92c-10-8-26-4-28 8s8 22 20 20 16-20 8-28z" fill="#2b2624"/>
+ <circle cx="74" cy="102" r="4.5" fill="#fff"/><circle cx="126" cy="102" r="4.5" fill="#fff"/>
+ <rect x="92" y="122" width="16" height="10" rx="5" fill="#2b2624"/>
+ <circle cx="56" cy="134" r="7" fill="#ffb7a8"/><circle cx="144" cy="134" r="7" fill="#ffb7a8"/>
+</svg>
+<div class="tk"><b>27</b></div></div>
+<div class="cap">C 幾何扁平<span>用圓角方塊和簡單形狀拼出來，很現代、很乾淨，像貼紙或 App 圖示</span></div></div>
+
+</div>
+</html>

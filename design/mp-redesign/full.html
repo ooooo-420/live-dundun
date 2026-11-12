@@ -1,0 +1,204 @@
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+:root{--bg:#f3efe3;--card:#fffdf8;--ink:#1f2a22;--soft:#5e675f;--mute:#9aa39a;--line:#e6e0d1;--bam:#3f8f5b;--bam-tint:#e3f0e6;--tom:#ff6a3d;--tom-tint:#ffece4}
+body{margin:0;background:#d8d4ca;font-family:"Noto Sans TC",sans-serif;padding:32px;display:flex;gap:30px;align-items:flex-start;flex-wrap:wrap;width:1720px}
+.num{font-family:"Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.ph{width:390px;height:844px;border-radius:50px;overflow:hidden;position:relative;background:var(--bg);color:var(--ink);box-shadow:0 30px 80px rgba(40,50,30,.22)}
+.cap{font:700 15px "Noto Sans TC";color:#3a3630;margin:14px 0 0 8px}.cap span{display:block;font-weight:400;font-size:13px;color:#6b665d;margin-top:3px;max-width:380px}
+.bar{height:54px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 6px;font:600 15px "Bricolage Grotesque"}
+.nav{height:44px;display:flex;align-items:center;justify-content:center;position:relative;font-weight:700;font-size:16px}
+.nav .back{position:absolute;left:20px;font-size:22px;font-weight:400}
+.nav .cap2{position:absolute;right:14px;width:86px;height:32px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.6)}
+.pad{padding:0 22px}
+.head{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.brand{font:900 28px "Noto Sans TC";letter-spacing:-.02em}
+.sub{font-size:13px;color:var(--soft);margin-top:2px}
+.tg{width:58px;height:34px;border-radius:17px;background:var(--bam);position:relative;box-shadow:inset 0 1px 2px rgba(0,0,0,.1)}
+.tg:after{content:"";position:absolute;right:4px;top:4px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(20,60,30,.35)}
+.tg.off{background:#d9d3c4}.tg.off:after{right:auto;left:4px}
+.tg.sm{width:46px;height:28px;border-radius:14px}.tg.sm:after{width:20px;height:20px;top:4px}
+/* ticket */
+/* 熊貓縮到 0.74 倍：當配角，號碼才是主角。票的上緣對在熊貓 svg 的 y=140（×0.74≈104） */
+.tw{position:relative;margin-top:100px}
+.panda{position:absolute;left:72%;top:-104px;translate:-50% 0;z-index:1}
+.paws{position:absolute;left:72%;top:-104px;translate:-50% 0;z-index:3}
+.panda svg,.paws svg{width:148px;height:126px}
+.tk{position:relative;z-index:2;background:var(--bam);color:#fff;border-radius:30px;padding:26px 22px 18px;box-shadow:0 20px 40px rgba(63,143,91,.30)}
+.tk.hot{background:var(--tom);box-shadow:0 20px 44px rgba(255,106,61,.38)}
+.tk .r1{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:16px}
+.tk .r1 i{order:-1;margin-right:auto;font-style:normal;font-size:12px;font-weight:500;background:rgba(255,255,255,.2);padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:6px}
+.tk .r1 i:before{content:"";width:6px;height:6px;border-radius:50%;background:#fff}
+.tk .now{display:flex;align-items:flex-end;gap:10px;margin-top:8px}
+.tk .now .num{font-size:96px;font-weight:800;line-height:.9}
+.tk .now small{font-size:14px;line-height:1.45;padding-bottom:10px;opacity:.95}
+.tk .perf{margin:20px -22px 0;position:relative;border-top:2px dashed rgba(255,255,255,.4)}
+.tk .perf:before,.tk .perf:after{content:"";position:absolute;top:-12px;width:22px;height:22px;border-radius:50%;background:var(--bg)}
+.tk .perf:before{left:-11px}.tk .perf:after{right:-11px}
+.chips{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.chip{min-width:44px;height:34px;padding:0 12px;border-radius:17px;background:rgba(255,255,255,.18);display:grid;place-items:center;font:800 15px "Bricolage Grotesque"}
+.chip.next{background:#fff;color:var(--bam)}
+.tk.hot .chip.next{color:var(--tom)}
+.chip.done{opacity:.45;text-decoration:line-through}
+.eta{margin-top:12px;font-size:13px}
+.prog{height:6px;border-radius:3px;background:rgba(255,255,255,.22);margin-top:10px;overflow:hidden}.prog i{display:block;height:100%;width:72%;border-radius:3px;background:#fff}
+/* list */
+.lbl{margin:26px 4px 10px;font-size:14px;font-weight:700;color:var(--soft);display:flex;justify-content:space-between}
+.card{background:var(--card);border-radius:24px;padding:14px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 8px 24px rgba(70,90,60,.08);margin-bottom:10px}
+.card .n{width:50px;height:50px;border-radius:16px;background:var(--bg);display:grid;place-items:center;font-weight:800;font-size:20px;color:var(--mute)}
+.card .n.live{background:var(--bam-tint);color:var(--bam)}
+.card b{display:block;font-weight:700;font-size:15px}.card span{font-size:12px;color:var(--mute)}
+.card .end{margin-left:auto}
+.go{font-size:13px;font-weight:700;color:var(--bam);background:var(--bam-tint);padding:8px 14px;border-radius:16px}
+.paste{position:absolute;left:22px;right:22px;bottom:34px;height:60px;border-radius:30px;background:var(--ink);color:#f3efe3;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:16px;box-shadow:0 14px 30px rgba(31,42,34,.28)}
+.paste .plus{width:26px;height:26px;border-radius:50%;background:var(--bam);display:grid;place-items:center;font-size:18px;line-height:1}
+.foot{position:absolute;left:0;right:0;bottom:104px;text-align:center;font-size:13px;color:var(--soft)}
+/* toast */
+.notice{position:absolute;left:14px;right:14px;top:58px;z-index:9;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-radius:22px;padding:12px 14px;display:flex;gap:12px;align-items:center;box-shadow:0 14px 34px rgba(0,0,0,.18)}
+.notice .ic{width:38px;height:38px;border-radius:10px;background:var(--bam);display:grid;place-items:center}
+.notice b{display:block;font-size:14px}.notice span{font-size:12px;color:var(--soft)}
+/* room page */
+.hero{margin-top:8px;display:flex;align-items:flex-end;gap:12px}
+.hero .num{font-size:110px;font-weight:800;line-height:.9;color:var(--bam)}
+.hero small{font-size:14px;color:var(--soft);padding-bottom:12px;line-height:1.5}
+.hero small b{display:block;color:var(--ink);font-size:15px}
+.seg{display:flex;background:#e9e3d4;border-radius:18px;padding:4px;margin-top:20px}
+.seg span{flex:1;text-align:center;padding:9px 0;border-radius:14px;font-size:13px;font-weight:700;color:var(--soft)}
+.seg span.on{background:#fff;color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.pick{display:flex;gap:10px;margin-top:16px}
+.pick .in{flex:1;height:50px;border-radius:25px;background:var(--card);display:flex;align-items:center;padding:0 18px;color:var(--ink);font:600 16px "Bricolage Grotesque";box-shadow:inset 0 0 0 1.5px var(--bam)}
+.pick .btn{width:84px;height:50px;border-radius:25px;background:var(--bam);color:#fff;display:grid;place-items:center;font-weight:700}
+.opt{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);font-size:15px}
+.opt em{font-style:normal;color:var(--bam);font-weight:700}
+.items{margin-top:14px}
+.it{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:20px;padding:12px 14px;margin-bottom:8px}
+.it .i{width:40px;height:40px;border-radius:13px;background:var(--bg);display:grid;place-items:center;font-weight:800;font-size:16px;color:var(--soft)}
+.it.on .i{background:var(--bam);color:#fff}
+.it.exp{box-shadow:inset 0 0 0 2px var(--bam)}
+.it b{display:block;font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}.it span{font-size:12px;color:var(--mute)}
+.it .ck{margin-left:auto;width:24px;height:24px;border-radius:8px;border:2px solid #d4cdbd}
+.it.on .ck{background:var(--bam);border-color:var(--bam)}
+.save{position:absolute;left:22px;right:22px;bottom:34px;height:58px;border-radius:29px;background:var(--bam);color:#fff;display:grid;place-items:center;font-weight:700;font-size:16px;box-shadow:0 14px 30px rgba(63,143,91,.35)}
+/* verify */
+.shot{margin-top:18px;border-radius:24px;overflow:hidden;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.08);height:300px;position:relative;z-index:2}
+.shot .t{padding:18px;font-size:14px;color:#333}
+.shot .img{margin:0 18px;height:150px;border-radius:10px;background:linear-gradient(135deg,#a6c4d8,#e8d3b5 60%,#c6a98a)}
+.shot .sl{position:absolute;left:18px;right:18px;bottom:28px;height:40px;border-radius:20px;background:#eef0f2}
+.shot .kn{position:absolute;left:96px;bottom:28px;width:52px;height:40px;border-radius:20px;background:#2f7bff}
+.shot .fg{position:absolute;left:104px;bottom:20px;width:42px;height:42px;border-radius:50%;background:rgba(63,143,91,.3);border:3px solid var(--bam)}
+.shot .trail{position:absolute;left:40px;bottom:46px;width:80px;height:4px;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(63,143,91,.7))}
+.steps{margin-top:18px;display:flex;gap:8px}
+.steps span{flex:1;font-size:12px;text-align:center;padding:10px 4px;border-radius:14px;background:var(--card);color:var(--soft)}
+.steps span.on{background:var(--bam-tint);color:var(--bam);font-weight:700}
+.ghost{position:absolute;left:22px;right:22px;bottom:34px;height:54px;border-radius:27px;border:1.5px solid var(--line);display:grid;place-items:center;font-weight:700;color:var(--soft);background:var(--card)}
+</style>
+
+<template id="pandaHead"><svg width="200" height="170" viewBox="0 0 200 170">
+ <defs><radialGradient id="fa" cx="45%" cy="35%" r="70%"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#ece8e1"/></radialGradient></defs>
+ <circle cx="44" cy="44" r="22" fill="#2b2624"/><circle cx="156" cy="44" r="22" fill="#2b2624"/>
+ <circle cx="44" cy="46" r="10" fill="#4a423e"/><circle cx="156" cy="46" r="10" fill="#4a423e"/>
+ <ellipse cx="100" cy="100" rx="76" ry="64" fill="url(#fa)"/>
+ <ellipse cx="68" cy="98" rx="17" ry="23" transform="rotate(32 68 98)" fill="#2b2624"/>
+ <ellipse cx="132" cy="98" rx="17" ry="23" transform="rotate(-32 132 98)" fill="#2b2624"/>
+ <g class="eyes"><circle cx="72" cy="93" r="6.5" fill="#fff"/><circle cx="128" cy="93" r="6.5" fill="#fff"/>
+ <circle cx="73.5" cy="94" r="4" fill="#2b2624"/><circle cx="126.5" cy="94" r="4" fill="#2b2624"/>
+ <circle cx="75" cy="92" r="1.4" fill="#fff"/><circle cx="128" cy="92" r="1.4" fill="#fff"/></g>
+ <path d="M93 115q7-4 14 0q-2 7-7 8q-5-1-7-8z" fill="#2b2624"/>
+ <path class="mouth" d="M100 123v4M92 128q8 6 16 0" stroke="#2b2624" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+ <ellipse cx="50" cy="122" rx="11" ry="6" fill="#ff9e8f" opacity=".45"/><ellipse cx="150" cy="122" rx="11" ry="6" fill="#ff9e8f" opacity=".45"/>
+</svg></template>
+<template id="pandaPaws"><svg width="200" height="170" viewBox="0 0 200 170">
+ <rect x="40" y="124" width="42" height="30" rx="15" fill="#2b2624"/><rect x="118" y="124" width="42" height="30" rx="15" fill="#2b2624"/>
+ <path d="M51 129v7M61 128v8M71 129v7M129 129v7M139 128v8M149 129v7" stroke="#554c47" stroke-width="2.6" stroke-linecap="round"/>
+</svg></template>
+
+<!-- 1 首頁 -->
+<div><div class="ph">
+ <div class="bar"><span>9:41</span><span>●●● ▮</span></div>
+ <div class="nav"><span class="cap2"></span></div>
+ <div class="pad">
+  <div class="head"><div><div class="brand">直播蹲蹲</div><div class="sub">電腦在線 · 幫你盯著 1 間</div></div><div class="tg"></div></div>
+  <div class="tw"><div class="panda" data-p="head"></div>
+   <div class="tk">
+    <div class="r1">Hypeyourself<i>直播中</i></div>
+    <div class="now"><span class="num">27</span><small>號 講解中<br>植絨全棉牛仔夾克</small></div>
+    <div class="perf"></div>
+    <div class="chips"><span class="chip done">12</span><span class="chip next">31</span><span class="chip">36</span><span class="chip">42</span></div>
+    <div class="prog"><i></i></div>
+    <div class="eta">還差 4 件到 31 號 · 大約 9 分鐘</div>
+   </div><div class="paws" data-p="paws"></div></div>
+  <div class="lbl"><span>其他直播間</span></div>
+  <div class="card"><div class="n num">—</div><div><b>Anniehall Official</b><span>沒在盯 · 連結可能過期了</span></div><div class="end"><div class="tg sm off"></div></div></div>
+  <div class="card"><div class="n num">—</div><div><b>贾乃亮滋源專場</b><span>沒在盯</span></div><div class="end"><div class="tg sm off"></div></div></div>
+ </div>
+ <div class="paste"><span class="plus">＋</span>貼上抖音直播連結</div>
+</div><div class="cap">① 首頁 · 盯著的時候<span>正在盯的那間做成號碼票，熊貓扒在票上等。其他直播間收成小卡片，右邊開關決定盯不盯。往左滑可刪除。</span></div></div>
+
+<!-- 2 到號 -->
+<div><div class="ph">
+ <div class="bar"><span>9:52</span><span>●●● ▮</span></div>
+ <div class="notice"><div class="ic"><svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#fff"/></svg></div><div><b>直播蹲蹲 · 31 號到了</b><span>Hypeyourself 正在講解 寬鬆工裝褲，快去搶</span></div></div>
+ <div class="nav"><span class="cap2"></span></div>
+ <div class="pad">
+  <div class="head"><div><div class="brand">直播蹲蹲</div><div class="sub">電腦在線 · 幫你盯著 1 間</div></div><div class="tg"></div></div>
+  <div class="tw" style="margin-top:122px"><div class="panda" data-p="head" data-hot="1" style="top:-126px"></div>
+   <div class="tk hot">
+    <div class="r1">Hypeyourself<i>直播中</i></div>
+    <div class="now"><span class="num">31</span><small>號 到了！<br>寬鬆工裝褲</small></div>
+    <div class="perf"></div>
+    <div class="chips"><span class="chip done">12</span><span class="chip next">31</span><span class="chip">36</span><span class="chip">42</span></div>
+    <div class="eta">已經發微信提醒你 · 下一個 36 號還差 5 件</div>
+   </div></div>
+  <div class="lbl"><span>其他直播間</span></div>
+  <div class="card"><div class="n num">—</div><div><b>Anniehall Official</b><span>沒在盯</span></div><div class="end"><div class="tg sm off"></div></div></div>
+ </div>
+ <div class="paste"><span class="plus">＋</span>貼上抖音直播連結</div>
+</div><div class="cap">② 到號的那一刻<span>整張票從竹青變番茄橘，熊貓跳起來睜大眼，同時收到微信。平時安靜，到號才喊你。</span></div></div>
+
+<!-- 3 直播間頁 -->
+<div><div class="ph">
+ <div class="bar"><span>9:41</span><span>●●● ▮</span></div>
+ <div class="nav"><span class="back">‹</span>Hypeyourself<span class="cap2"></span></div>
+ <div class="pad">
+  <div class="hero"><span class="num">27</span><small>號 講解中<b>植絨全棉牛仔夾克</b>號碼不會變的直播間</small></div>
+  <div class="pick"><div class="in">31 36 42</div><div class="btn">選取</div></div>
+  <div class="seg"><span>到了才叫</span><span class="on">提前 1 件</span><span>提前 3 件</span></div>
+  <div class="opt"><span>錯過提醒</span><div class="tg sm"></div></div>
+  <div class="lbl" style="margin-top:18px"><span>購物車 95 件</span><span style="color:var(--bam)">已選 3</span></div>
+  <div class="items">
+   <div class="it exp"><div class="i num">27</div><div><b>Hypeyourself「臨序」植絨全棉牛仔夾克</b><span>¥928 · 講解中</span></div><div class="ck"></div></div>
+   <div class="it"><div class="i num">28</div><div><b>「沉墟」流蘇提花純羊毛開衫</b><span>¥986</span></div><div class="ck"></div></div>
+   <div class="it"><div class="i num">30</div><div><b>「沉墟」窄幅赤耳定製原牛</b><span>¥596</span></div><div class="ck"></div></div>
+   <div class="it on"><div class="i num">31</div><div><b>「臨序」寬鬆工裝褲</b><span>¥458</span></div><div class="ck"></div></div>
+  </div>
+ </div>
+ <div class="save">儲存目標 · 3 件</div>
+</div><div class="cap">③ 直播間頁<span>選號用圓角膠囊輸入框，提前通知改成分段按鈕。商品一列一張小卡，選中的號碼塊變竹青，講解中的描綠框。</span></div></div>
+
+<!-- 4 驗證頁 -->
+<div><div class="ph">
+ <div class="bar"><span>9:41</span><span>●●● ▮</span></div>
+ <div class="nav"><span class="back">‹</span>人機驗證<span class="cap2"></span></div>
+ <div class="pad">
+  <div class="brand" style="font-size:24px;margin-top:10px">幫電腦過一下驗證</div>
+  <div class="sub" style="font-size:14px;line-height:1.6;margin-top:6px">這是電腦上的驗證框。照它說的做，你的手指怎麼拖，電腦就怎麼拖。</div>
+  <div class="tw" style="margin-top:96px"><div class="panda" data-p="head" style="left:78%"></div>
+   <div class="shot" style="margin-top:0;z-index:2"><div class="t">請拖動滑塊完成拼圖</div><div class="img"></div><div class="sl"></div><div class="trail"></div><div class="kn"></div><div class="fg"></div></div>
+   <div class="paws" data-p="paws" style="left:78%"></div></div>
+  <div class="steps"><span class="on">① 照畫面操作</span><span>② 電腦照做</span><span>③ 看結果</span></div>
+ </div>
+ <div class="ghost">畫面不對？重新截圖</div>
+</div><div class="cap">④ 人機驗證<span>截圖放大成一張白卡，手指位置有竹青圓點和拖動尾跡。三步提示告訴你現在到哪一步。</span></div></div>
+
+<script>
+const head=document.getElementById('pandaHead').innerHTML,paws=document.getElementById('pandaPaws').innerHTML;
+document.querySelectorAll('[data-p]').forEach(el=>{
+ let h=el.dataset.p==='head'?head:paws;
+ if(el.dataset.hot){ // 到號：眼睛睜大、嘴巴張開、兩手舉起
+  h=h.replace('<g class="eyes">','<g class="eyes" transform="translate(0 -2)">').replace(/r="6.5"/g,'r="8"').replace(/r="4" fill/g,'r="5" fill')
+   .replace('<path class="mouth" d="M100 123v4M92 128q8 6 16 0" stroke="#2b2624" stroke-width="2.6" fill="none" stroke-linecap="round"/>','<ellipse cx="100" cy="132" rx="9" ry="8" fill="#2b2624"/><ellipse cx="100" cy="135" rx="5" ry="3.5" fill="#ff8f80"/>')
+   .replace('</svg>','<rect x="10" y="96" width="30" height="44" rx="15" fill="#2b2624" transform="rotate(-24 25 118)"/><rect x="160" y="96" width="30" height="44" rx="15" fill="#2b2624" transform="rotate(24 175 118)"/></svg>');
+ }
+ el.innerHTML=h});
+</script>
+</html>

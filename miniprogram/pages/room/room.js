@@ -21,8 +21,8 @@ Page({
     picked: {},        // { 商品id: true }
     pickedCount: 0,
     quick: '',
-    aheadOptions: ['不提前', '提前 1 件', '提前 2 件', '提前 3 件', '提前 5 件'],
-    aheadValues: [0, 1, 2, 3, 5],
+    aheadOptions: ['到了才叫', '提前 1 件', '提前 3 件', '提前 5 件'],
+    aheadValues: [0, 1, 3, 5],
     aheadIdx: 0,
     missed: false,
     statusText: '',
@@ -133,8 +133,8 @@ Page({
     this.setData({ picked: {}, pickedCount: 0, dirty: true })
   },
 
-  onAhead(e) {
-    this.setData({ aheadIdx: +e.detail.value, dirty: true })
+  onSeg(e) {
+    this.setData({ aheadIdx: +e.currentTarget.dataset.i, dirty: true })
   },
 
   onMissed() {

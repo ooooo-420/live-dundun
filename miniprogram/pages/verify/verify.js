@@ -3,7 +3,7 @@
 const api = require('../../utils/api')
 
 Page({
-  data: { id: '', shot: null, busy: false, msg: '', done: false, finger: null },
+  data: { id: '', shot: null, busy: false, msg: '', done: false, finger: null, stage: 0 },  // stage：0 照畫面操作、1 電腦照做、2 看結果
 
   onLoad(q) {
     this.setData({ id: q.id })
@@ -28,7 +28,7 @@ Page({
 
   finish() {
     clearInterval(this.timer)
-    this.setData({ done: true, shot: null, msg: '驗證完成，電腦繼續盯了' })
+    this.setData({ done: true, shot: null, stage: 2, msg: '過了！電腦繼續幫你盯' })
     setTimeout(() => wx.navigateBack({ fail: () => wx.reLaunch({ url: '/pages/index/index' }) }), 1400)
   },
 
@@ -40,6 +40,7 @@ Page({
     this.t0 = Date.now()
     this.raw = [[t.clientX, t.clientY, 0]]
     this.moved = 0
+    if (this.data.stage) this.setData({ stage: 0 })
     this.showFinger(t)
   },
 
@@ -74,7 +75,7 @@ Page({
 
   async send(payload) {
     if (this.data.busy || !this.data.shot) return
-    this.setData({ busy: true, msg: payload.kind === 'refresh' ? '請電腦重新截圖…' : '送到電腦…' })
+    this.setData({ busy: true, stage: 1, msg: payload.kind === 'refresh' ? '請電腦重新截圖…' : '電腦正在照你的手勢做…' })
     try {
       const res = await api.captchaInput(this.data.id, { ...payload, v: this.data.shot.v })
       if (res.pending) this.setData({ msg: '電腦還沒回應，等一下' })
@@ -83,7 +84,7 @@ Page({
     } catch (e) {
       this.setData({ msg: e.message })
     }
-    this.setData({ busy: false })
+    this.setData({ busy: false, stage: 2 })
     this.load()
   },
 })

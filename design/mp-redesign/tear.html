@@ -1,0 +1,124 @@
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>換號動畫</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Bricolage+Grotesque:opsz,wght@12..96,800&display=swap">
+<style>
+:root{--bg:#f3efe3;--bam:#3f8f5b;--tom:#ff6a3d;--ink:#1f2a22}
+body{margin:0;min-height:100vh;background:#d8d4ca;display:flex;gap:40px;align-items:center;justify-content:center;font-family:"Noto Sans TC",sans-serif}
+.ph{width:390px;height:560px;border-radius:44px;background:var(--bg);position:relative;overflow:hidden;box-shadow:0 30px 80px rgba(40,50,30,.22);padding:0 22px;box-sizing:border-box}
+.num{font-family:"Bricolage Grotesque",sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.tw{position:relative;margin-top:150px}
+.head,.paws{position:absolute;left:72%;top:-104px;translate:-50% 0;width:148px;height:126px}
+.head{z-index:1}.paws{z-index:4}
+.tk{position:relative;z-index:2;color:#fff}
+/* 票分兩段：上段（撕得下來的存根）＋下段 */
+.stub,.body{background:var(--bam);transition:background .3s}
+.stub{border-radius:30px 30px 0 0;padding:26px 22px 20px;position:relative;overflow:hidden;height:150px;box-sizing:border-box}
+.body{border-radius:0 0 30px 30px;padding:18px 22px 18px;position:relative;box-shadow:0 20px 40px rgba(63,143,91,.30)}
+.body:before{content:"";position:absolute;left:0;right:0;top:0;border-top:2px dashed rgba(255,255,255,.4)}
+.body .h{position:absolute;top:-11px;width:22px;height:22px;border-radius:50%;background:var(--bg)}
+.body .h.l{left:-11px}.body .h.r{right:-11px}
+.hot .stub,.hot .body,.hot .fly{background:var(--tom)}
+.r1{display:flex;align-items:center;font-weight:700;font-size:16px}
+.r1 i{font-style:normal;font-size:12px;font-weight:500;background:rgba(255,255,255,.2);padding:4px 10px;border-radius:20px;margin-right:auto}
+.now{display:flex;align-items:flex-end;gap:10px;margin-top:8px}
+.now .num{font-size:92px;font-weight:800;line-height:.9}
+.now small{font-size:14px;line-height:1.45;padding-bottom:8px;opacity:.95}
+.chips{display:flex;gap:8px}
+.chip{min-width:44px;height:34px;padding:0 12px;border-radius:17px;background:rgba(255,255,255,.18);display:grid;place-items:center;font:800 15px "Bricolage Grotesque";transition:all .3s}
+.chip.next{background:#fff;color:var(--bam)}.hot .chip.next{color:var(--tom)}
+.chip.done{opacity:.45;text-decoration:line-through}
+.eta{margin-top:12px;font-size:13px}
+/* 被撕走的那張存根 */
+.fly{position:absolute;left:0;right:0;top:0;height:150px;border-radius:30px 30px 6px 6px;padding:26px 22px 20px;box-sizing:border-box;z-index:3;pointer-events:none;
+ transform-origin:12% 100%;animation:tear .72s cubic-bezier(.55,0,.8,.2) forwards;box-shadow:0 18px 30px rgba(0,0,0,.18)}
+@keyframes tear{
+ 0%{transform:none}
+ 22%{transform:rotate(-4deg) translate(4px,-8px)}       /* 先從右邊翹起來，像被撕開 */
+ 70%{opacity:1}
+ 100%{transform:rotate(-28deg) translate(200px,-320px);opacity:0}}
+/* 新的存根從撕口下面冒上來 */
+.stub .in{animation:rise .5s .26s cubic-bezier(.22,1,.36,1) both}
+@keyframes rise{from{transform:translateY(120px)}to{transform:none}}
+/* 熊貓：兩手先舉起來讓位，存根飛走後爬回來扒好（帶一點回彈） */
+.paws.go{animation:paws 1.05s cubic-bezier(.3,.7,.3,1) both}
+@keyframes paws{
+ 0%{transform:none}
+ 16%{transform:translateY(-34px) scaleY(1.05)}
+ 62%{transform:translateY(-34px)}
+ 80%{transform:translateY(5px) scaleY(.94)}
+ 90%{transform:translateY(-2px)}
+ 100%{transform:none}}
+.head.go{animation:hop 1.05s cubic-bezier(.3,.7,.3,1) both}
+@keyframes hop{0%{transform:none}16%{transform:translateY(-14px)}62%{transform:translateY(-14px)}80%{transform:translateY(3px)}100%{transform:none}}
+/* 到號：整張票變番茄橘，目標標籤彈一下 */
+.chip.pop{animation:pop .5s .9s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes pop{from{transform:scale(.6)}to{transform:none}}
+.ctl{display:flex;flex-direction:column;gap:12px;width:220px}
+.ctl button{all:unset;cursor:pointer;background:var(--ink);color:#f3efe3;padding:14px 18px;border-radius:24px;font-weight:700;text-align:center}
+.ctl button.alt{background:#fff;color:var(--ink)}
+.ctl p{margin:0;font-size:13px;color:#555;line-height:1.6}
+</style>
+
+<div class="ph">
+ <div class="tw">
+  <svg class="head" viewBox="0 0 200 170">
+   <defs><radialGradient id="fa" cx="45%" cy="35%" r="70%"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#ece8e1"/></radialGradient></defs>
+   <circle cx="44" cy="44" r="22" fill="#2b2624"/><circle cx="156" cy="44" r="22" fill="#2b2624"/>
+   <circle cx="44" cy="46" r="10" fill="#4a423e"/><circle cx="156" cy="46" r="10" fill="#4a423e"/>
+   <ellipse cx="100" cy="100" rx="76" ry="64" fill="url(#fa)"/>
+   <ellipse cx="68" cy="98" rx="17" ry="23" transform="rotate(32 68 98)" fill="#2b2624"/>
+   <ellipse cx="132" cy="98" rx="17" ry="23" transform="rotate(-32 132 98)" fill="#2b2624"/>
+   <circle cx="72" cy="93" r="6.5" fill="#fff"/><circle cx="128" cy="93" r="6.5" fill="#fff"/>
+   <circle cx="73.5" cy="94" r="4" fill="#2b2624"/><circle cx="126.5" cy="94" r="4" fill="#2b2624"/>
+   <circle cx="75" cy="92" r="1.4" fill="#fff"/><circle cx="128" cy="92" r="1.4" fill="#fff"/>
+   <path d="M93 115q7-4 14 0q-2 7-7 8q-5-1-7-8z" fill="#2b2624"/>
+   <path d="M100 123v4M92 128q8 6 16 0" stroke="#2b2624" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+   <ellipse cx="50" cy="122" rx="11" ry="6" fill="#ff9e8f" opacity=".45"/><ellipse cx="150" cy="122" rx="11" ry="6" fill="#ff9e8f" opacity=".45"/>
+  </svg>
+  <div class="tk" id="tk">
+   <div class="stub" id="stub"><div class="in" id="stubIn"></div></div>
+   <div class="body"><span class="h l"></span><span class="h r"></span>
+    <div class="chips" id="chips"></div><div class="eta" id="eta"></div></div>
+  </div>
+  <svg class="paws" id="paws" viewBox="0 0 200 170">
+   <rect x="40" y="124" width="42" height="30" rx="15" fill="#2b2624"/><rect x="118" y="124" width="42" height="30" rx="15" fill="#2b2624"/>
+   <path d="M51 129v7M61 128v8M71 129v7M129 129v7M139 128v8M149 129v7" stroke="#554c47" stroke-width="2.6" stroke-linecap="round"/>
+  </svg>
+ </div>
+</div>
+<div class="ctl">
+ <button id="next">主播換下一件</button>
+ <button class="alt" id="auto">自動播放：關</button>
+ <p>熊貓兩手先舉起來讓位 → 存根沿著虛線被撕走、往右上飛 → 新號碼從撕口冒上來 → 熊貓爬回來扒好。到 31 號時整張票變番茄橘、標籤彈一下。全部約 1.2 秒。</p>
+</div>
+
+<script>
+const items=[[27,'植絨全棉牛仔夾克'],[28,'流蘇提花羊毛開衫'],[30,'窄幅赤耳原牛'],[31,'寬鬆工裝褲'],[32,'翻領拉鍊夾克'],[36,'灰藍捲邊衛褲']];
+const targets=[31,36];let k=0;
+const tk=document.getElementById('tk'),stub=document.getElementById('stub'),paws=document.getElementById('paws'),head=document.querySelector('.head');
+function stubHTML([n,t],hit){return `<div class="r1"><i>● 直播中</i>Hypeyourself</div><div class="now"><span class="num">${n}</span><small>號 ${hit?'到了！':'講解中'}<br>${t}</small></div>`}
+function render(anim){
+ const cur=items[k],hit=targets.includes(cur[0]),next=targets.find(x=>x>cur[0]);
+ tk.classList.toggle('hot',hit);
+ document.getElementById('chips').innerHTML=targets.map(x=>`<span class="chip ${x<cur[0]?'done':''} ${x===(hit?cur[0]:next)?'next':''} ${anim&&hit&&x===cur[0]?'pop':''}">${x}</span>`).join('');
+ document.getElementById('eta').textContent=hit?'已經發微信提醒你':next?`還差 ${next-cur[0]} 件到 ${next} 號`:'目標都講過了';
+ const inn=document.getElementById('stubIn');inn.innerHTML=stubHTML(cur,hit);
+ if(anim){inn.style.animation='none';void inn.offsetWidth;inn.style.animation=''}
+}
+let busy=false;
+function step(){
+ if(busy)return;busy=true;
+ const old=stub.cloneNode(true);old.removeAttribute('id');old.className='fly';old.querySelector('.in').style.animation='none';
+ old.style.background=getComputedStyle(stub).backgroundColor;  // 撕下來的是舊的那張，保留舊顏色
+ tk.append(old);
+ old.addEventListener('animationend',()=>old.remove());
+ k=(k+1)%items.length;render(true);
+ for(const el of [paws,head]){el.classList.remove('go');void el.getBoundingClientRect();el.classList.add('go')}
+ setTimeout(()=>busy=false,1300);
+}
+document.getElementById('next').onclick=step;
+let timer=0;document.getElementById('auto').onclick=e=>{if(timer){clearInterval(timer);timer=0;e.target.textContent='自動播放：關'}else{timer=setInterval(step,2400);e.target.textContent='自動播放：開';step()}};
+render(false);
+window.__step=step;
+</script>
+</html>

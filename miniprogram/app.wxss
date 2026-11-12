@@ -1,110 +1,110 @@
-/* 夜色琥珀：近黑底、米白字、只有一個強調色（琥珀）。方角，靠留白和細線分層，不用卡片套卡片。 */
+/* 直播蹲蹲：叫號單。奶油紙底、竹青主色、到號變番茄橘；圓角、帶顏色的淡陰影；吉祥物是扒在票上的熊貓。 */
 page {
-  --void: #07070b;
-  --panel: #111219;
-  --line: #22242d;
-  --text: #f4efe5;
-  --soft: #bdb8ae;
-  --mute: #807c75;
-  --ember: #ffb56b;
-  --ember-ink: #1c1206;
-  --ember-dim: rgba(255, 181, 107, 0.14);
-  --danger: #c2412b;
-  background: var(--void);
-  color: var(--text);
+  --bg: #f3efe3;
+  --card: #fffdf8;
+  --ink: #1f2a22;
+  --soft: #5e675f;
+  --mute: #9aa39a;
+  --line: #e6e0d1;
+  --bam: #3f8f5b;
+  --bam-tint: #e3f0e6;
+  --tom: #ff6a3d;
+  --tom-tint: #ffece4;
+  --danger: #d9534a;
+  --shadow: 0 16rpx 48rpx rgba(70, 90, 60, 0.09);
+  background: var(--bg);
+  color: var(--ink);
   font-size: 28rpx;
   line-height: 1.6;
-  font-family: -apple-system, "PingFang SC", "PingFang TC", "Noto Sans SC", sans-serif;
+  font-family: -apple-system, "PingFang TC", "PingFang SC", "Noto Sans TC", sans-serif;
 }
 
-.wrap { padding: 0 32rpx; box-sizing: border-box; }
+.wrap { padding: 0 44rpx; box-sizing: border-box; }
 .muted { color: var(--mute); font-size: 24rpx; }
 .soft { color: var(--soft); }
-.num-font { font-variant-numeric: tabular-nums; letter-spacing: -0.03em; }
+.num-font, .display-font { font-family: "LiveNum", "SF Pro Rounded", "Avenir Next", "DIN Alternate", -apple-system, sans-serif; font-variant-numeric: tabular-nums; letter-spacing: -0.03em; }
 
-.section-label { color: var(--soft); font-size: 26rpx; margin: 44rpx 0 16rpx; }
+.section-label { color: var(--soft); font-size: 28rpx; font-weight: 700; margin: 48rpx 8rpx 20rpx; }
+.row-between { display: flex; justify-content: space-between; align-items: center; }
 
+/* 按鈕：膠囊形 */
 .btn {
-  background: var(--ember);
-  color: var(--ember-ink);
-  font-size: 28rpx;
-  font-weight: 600;
-  line-height: 84rpx;
-  text-align: center;
-  transition: transform 0.12s ease-out, opacity 0.12s ease-out;
+  background: var(--bam); color: #fff; font-size: 30rpx; font-weight: 700;
+  height: 100rpx; line-height: 100rpx; border-radius: 50rpx; text-align: center;
+  box-shadow: 0 20rpx 44rpx rgba(63, 143, 91, 0.3);
+  transition: transform 0.14s ease-out, opacity 0.14s ease-out, background 0.2s;
 }
+.btn.dark { background: var(--ink); color: var(--bg); box-shadow: 0 20rpx 44rpx rgba(31, 42, 34, 0.26); }
+.btn.ghost { background: var(--card); color: var(--soft); box-shadow: inset 0 0 0 3rpx var(--line); }
+.btn.off { opacity: 0.45; box-shadow: none; }
 
-/* 按下去的回饋：用微信原生的 hover-class，手指一碰就有反應 */
-.press { transform: scale(0.97); opacity: 0.82; }
-.press-row { background: #101018 !important; }
+/* 按下去的回饋（微信原生 hover-class） */
+.press { transform: scale(0.96); opacity: 0.88; }
+.press-row { transform: scale(0.985); }
 .press-link { opacity: 0.5; }
 .link-btn { display: inline-block; padding: 16rpx 24rpx; }
 
-/* 第一次出現：由下往上淡入，列表依序錯開一點點 */
-.enter { animation: enter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both; }
-@keyframes enter { from { opacity: 0; transform: translateY(20rpx); } to { opacity: 1; transform: none; } }
-.btn.ghost { background: transparent; color: var(--text); border: 1rpx solid var(--line); font-weight: 400; }
-.btn.off { opacity: 0.4; }
+/* 第一次出現：由下往上淡入 */
+.enter { animation: enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes enter { from { opacity: 0; transform: translateY(24rpx); } to { opacity: 1; transform: none; } }
 
 .input {
-  background: var(--panel);
-  border: 1rpx solid var(--line);
-  color: var(--text);
-  padding: 0 24rpx;
-  height: 84rpx;
-  font-size: 28rpx;
+  background: var(--card); color: var(--ink); height: 100rpx; border-radius: 50rpx;
+  padding: 0 36rpx; font-size: 30rpx; box-shadow: inset 0 0 0 3rpx var(--line);
 }
-.ph { color: #5d5a55; }
+.input.focus { box-shadow: inset 0 0 0 3rpx var(--bam); }
+.ph { color: #b3ad9f; }
 
-.banner { padding: 18rpx 32rpx; font-size: 24rpx; color: var(--soft); border-bottom: 1rpx solid var(--line); }
-.banner.warn { color: var(--ember); }
-.banner.err { color: #ff8a73; }
+.banner { margin: 20rpx 44rpx 0; padding: 18rpx 28rpx; font-size: 24rpx; border-radius: 28rpx; background: var(--card); color: var(--soft); }
+.banner.warn { background: var(--tom-tint); color: #b4471f; }
+.banner.err { background: #fde8e6; color: var(--danger); }
 
-.tag {
-  display: inline-block;
-  padding: 2rpx 14rpx;
-  font-size: 22rpx;
-  border: 1rpx solid var(--line);
-  color: var(--soft);
-}
-.tag.on { border-color: var(--ember); color: var(--ember); }
-.tag.fill { background: var(--ember); border-color: var(--ember); color: var(--ember-ink); }
-.tag.done { opacity: 0.4; text-decoration: line-through; }
+/* 卡片 */
+.card { background: var(--card); border-radius: 44rpx; box-shadow: var(--shadow); }
 
-/* 招牌動效：監控中＝慢慢轉的小吸積盤；暫停時停住變暗 */
-.disk { width: 40rpx; height: 40rpx; position: relative; flex: none; }
-.disk .ring {
-  position: absolute; left: 0; top: 0; right: 0; bottom: 0; box-sizing: border-box; border-radius: 50%;
-  border: 4rpx solid rgba(255, 181, 107, 0.18);
-  border-top-color: var(--ember);
-  border-right-color: rgba(255, 181, 107, 0.55);
-  animation: spin 3.2s linear infinite;
-}
-.disk .core { position: absolute; left: 12rpx; top: 12rpx; width: 16rpx; height: 16rpx; border-radius: 50%; background: #020205; box-shadow: 0 0 0 2rpx rgba(255, 181, 107, 0.25); }
-.disk.off .ring { animation-play-state: paused; border-color: #3a3b45; }
-.disk.off .core { box-shadow: 0 0 0 2rpx #3a3b45; }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* 自訂開關：原生 switch 關掉時在深色底上只剩一顆白點，看不出是開關 */
+/* 開關 */
 .toggle {
-  width: 96rpx; height: 56rpx; flex: none; position: relative; box-sizing: border-box;
-  border-radius: 28rpx; background: #2a2b34; border: 1rpx solid #3a3b45;
-  transition: background 0.22s ease, border-color 0.22s ease;
+  width: 104rpx; height: 62rpx; flex: none; position: relative; box-sizing: border-box;
+  border-radius: 31rpx; background: #d9d3c4; transition: background 0.22s ease;
 }
 .toggle .knob {
-  position: absolute; left: 6rpx; top: 5rpx; width: 44rpx; height: 44rpx; border-radius: 50%;
-  background: #9a958c; transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), background 0.22s ease;
+  position: absolute; left: 7rpx; top: 7rpx; width: 48rpx; height: 48rpx; border-radius: 50%;
+  background: #fff; box-shadow: 0 4rpx 10rpx rgba(20, 40, 20, 0.22);
+  transition: transform 0.26s cubic-bezier(0.3, 1.4, 0.5, 1);
 }
-.toggle.on { background: var(--ember); border-color: var(--ember); }
-.toggle.on .knob { transform: translateX(38rpx); background: var(--ember-ink); }
-.toggle.busy { opacity: 0.5; }
+.toggle.on { background: var(--bam); }
+.toggle.on .knob { transform: translateX(42rpx); }
+.toggle.busy { opacity: 0.55; }
+.toggle.sm { width: 84rpx; height: 50rpx; border-radius: 25rpx; }
+.toggle.sm .knob { width: 38rpx; height: 38rpx; left: 6rpx; top: 6rpx; }
+.toggle.sm.on .knob { transform: translateX(34rpx); }
 
-/* 大號碼的字體：有載到展示字體就用它，沒有就用系統裡最接近的窄體 */
-.display-font { font-family: "LiveNum", "Avenir Next Condensed", "DIN Alternate", "Roboto Condensed", -apple-system, sans-serif; font-variant-numeric: tabular-nums; letter-spacing: -0.03em; }
+/* 號碼標籤（膠囊） */
+.chip {
+  min-width: 80rpx; height: 64rpx; padding: 0 24rpx; box-sizing: border-box; border-radius: 32rpx;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 28rpx; font-weight: 800; background: rgba(255, 255, 255, 0.2); color: #fff;
+}
+.chip.next { background: #fff; color: var(--bam); }
+.chip.done { opacity: 0.45; text-decoration: line-through; }
+.chip.pop { animation: pop 0.5s 0.8s cubic-bezier(0.3, 1.6, 0.5, 1) both; }
+@keyframes pop { from { transform: scale(0.6); } to { transform: none; } }
 
-/* 換號碼：舊號碼往上飛走、新號碼從下面頂上來（翻頁鐘）。這是整個 App 的招牌時刻。 */
-.big-wrap { position: relative; display: inline-block; overflow: hidden; }
-.flip-out { position: absolute; left: 0; top: 0; animation: flipOut 0.5s cubic-bezier(0.4, 0, 0.2, 1) both; }
-.flip-in { animation: flipIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
-@keyframes flipOut { from { transform: none; opacity: 1; } to { transform: translateY(-100%); opacity: 0; } }
-@keyframes flipIn { from { transform: translateY(100%); opacity: 0; } 40% { opacity: 1; } to { transform: none; opacity: 1; } }
+/* 熊貓：頭和爪子分兩張圖，爪子扒在卡片上緣、蓋在卡片前面 */
+.peek { position: relative; }
+/* 284×241rpx（設計稿 148px）；卡片上緣對在熊貓圖的 y=140/170 → 往上 198rpx */
+.panda-head, .panda-paws { position: absolute; width: 284rpx; height: 241rpx; left: 72%; margin-left: -142rpx; top: -198rpx; pointer-events: none; }
+.panda-head { z-index: 1; }
+.panda-paws { z-index: 4; }
+.peek-card { position: relative; z-index: 2; }
+/* 平常：慢慢眨眼不好做成圖片，改成頭輕輕呼吸 */
+.panda-head.idle { animation: breathe 4.8s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes breathe { 0%, 100% { transform: none; } 50% { transform: translateY(-4rpx) scaleY(1.015); } }
+/* 換號：兩手舉起讓位、頭彈一下，然後爬回來扒好 */
+.panda-paws.go { animation: paws 1.05s cubic-bezier(0.3, 0.7, 0.3, 1) both; }
+@keyframes paws { 0% { transform: none; } 16% { transform: translateY(-50rpx) scaleY(1.05); } 62% { transform: translateY(-50rpx); } 80% { transform: translateY(8rpx) scaleY(0.94); } 90% { transform: translateY(-3rpx); } 100% { transform: none; } }
+.panda-head.go { animation: hop 1.05s cubic-bezier(0.3, 0.7, 0.3, 1) both; }
+@keyframes hop { 0% { transform: none; } 16% { transform: translateY(-20rpx); } 62% { transform: translateY(-20rpx); } 80% { transform: translateY(4rpx); } 100% { transform: none; } }
+/* 到號：跳起來 */
+.panda-head.hot { animation: jump 0.7s cubic-bezier(0.3, 1.5, 0.5, 1) both; }
+@keyframes jump { from { transform: translateY(40rpx); } to { transform: translateY(-24rpx); } }
