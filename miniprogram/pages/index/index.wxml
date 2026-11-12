@@ -58,8 +58,9 @@
 
       <!-- 没有在盯的：一张空白的票 -->
       <view wx:else class="peek-card card empty-ticket">
-        <view class="e-title">{{!monitoring ? '点一下熊猫，开始帮你盯' : (rooms.length ? '选一间来盯' : '还没有直播间')}}</view>
-        <view class="soft e-sub" wx:if="{{monitoring}}">{{rooms.length ? '打开下面直播间右边的开关' : '在抖音直播间点“分享 → 复制链接”，再按下面的按钮'}}</view>
+        <view wx:if="{{!monitoring}}" class="e-title"><view>点一下熊猫，</view><view>开始帮你盯</view></view>
+        <view wx:else class="e-title">{{rooms.length ? '选一间来盯' : '还没有直播间'}}</view>
+        <view class="soft e-sub" wx:if="{{monitoring && !rooms.length}}">在抖音直播间点“分享 → 复制链接”，再按下面的按钮</view>
       </view>
 
       <view wx:if="{{!(hero && hero.hot)}}" class="panda-paws"><image class="pimg {{hero && hero.bump ? 'go-paws' : ''}}" src="/images/panda_paws.png" /></view>
