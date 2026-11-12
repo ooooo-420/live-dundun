@@ -12,7 +12,8 @@ function ago(ms) {
 function windowWidth() {
   try { return (wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync()).windowWidth } catch (e) { return 375 }
 }
-const DEL_PX = Math.round(160 * windowWidth() / 750)  // 删除键宽 160rpx
+const DEL_PX = Math.round(160 * windowWidth() / 750)  // 卡片往左滑开的距离 160rpx（删除键＋中间的缝）
+const GAP_PX = Math.round(16 * windowWidth() / 750)   // 卡片和删除键之间的缝 16rpx
 
 // 自订导航栏：对齐微信右上角的胶囊按钮（取不到就用 iPhone 常见的值）
 function navLayout() {
@@ -80,6 +81,7 @@ Page({
     monitoring: true,
     switching: false,
     delPx: DEL_PX,
+    gapPx: GAP_PX,
   },
 
   onLoad() {

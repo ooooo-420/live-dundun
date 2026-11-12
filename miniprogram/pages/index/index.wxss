@@ -67,13 +67,16 @@
 
 /* 其他直播间：小卡片，往左滑删除 */
 .rooms { display: flex; flex-direction: column; gap: 20rpx; }
-.room-row { position: relative; border-radius: 44rpx; overflow: hidden; }
+/* 删除键是一颗独立的圆角块，和卡片隔一道缝，跟着手指慢慢浮现；卡片本身不被裁切 */
+.room-row { position: relative; }
 .del {
-  position: absolute; right: 0; top: 0; bottom: 0; visibility: hidden;
+  position: absolute; right: 0; top: 0; bottom: 0; visibility: hidden; border-radius: 44rpx;
   background: var(--danger); color: #fff; font-size: 28rpx; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 12rpx 30rpx rgba(217, 83, 74, 0.28); transform-origin: 100% 50%;
 }
 .del.show { visibility: visible; }
+.del.snap { transition: opacity 0.3s, transform 0.3s cubic-bezier(0.3, 1.4, 0.5, 1); }
 .room { position: relative; background: var(--card); border-radius: 44rpx; padding: 26rpx 30rpx; display: flex; align-items: center; gap: 26rpx; box-shadow: var(--shadow); }
 .room.snap { transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
 .n { width: 96rpx; height: 96rpx; flex: none; border-radius: 30rpx; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 38rpx; font-weight: 800; color: var(--mute); }

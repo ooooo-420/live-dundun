@@ -1,0 +1,71 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+body{margin:0;background:#d8d4ca;display:flex;gap:24px;padding:24px;flex-wrap:wrap}
+svg{display:block}
+</style></head><body>
+<!-- 熊猫零件（viewBox 200×170，和小程序里的熊猫同一套） -->
+<svg width="0" height="0" style="position:absolute"><defs>
+ <radialGradient id="fa" cx="45%" cy="35%" r="70%"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#ece8e1"/></radialGradient>
+ <g id="head">
+  <circle cx="44" cy="44" r="22" fill="#2b2624"/><circle cx="156" cy="44" r="22" fill="#2b2624"/>
+  <circle cx="44" cy="46" r="10" fill="#4a423e"/><circle cx="156" cy="46" r="10" fill="#4a423e"/>
+  <ellipse cx="100" cy="100" rx="76" ry="64" fill="url(#fa)"/>
+  <ellipse cx="68" cy="98" rx="17" ry="23" transform="rotate(32 68 98)" fill="#2b2624"/>
+  <ellipse cx="132" cy="98" rx="17" ry="23" transform="rotate(-32 132 98)" fill="#2b2624"/>
+  <circle cx="72" cy="93" r="6.5" fill="#fff"/><circle cx="128" cy="93" r="6.5" fill="#fff"/>
+  <circle cx="73.5" cy="94" r="4" fill="#2b2624"/><circle cx="126.5" cy="94" r="4" fill="#2b2624"/>
+  <circle cx="75" cy="92" r="1.4" fill="#fff"/><circle cx="128" cy="92" r="1.4" fill="#fff"/>
+  <path d="M93 115q7-4 14 0q-2 7-7 8q-5-1-7-8z" fill="#2b2624"/>
+  <path d="M100 123v4M92 128q8 6 16 0" stroke="#2b2624" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  <ellipse cx="50" cy="122" rx="11" ry="6" fill="#ff9e8f" opacity=".45"/><ellipse cx="150" cy="122" rx="11" ry="6" fill="#ff9e8f" opacity=".45"/>
+ </g>
+ <g id="paws">
+  <rect x="40" y="124" width="42" height="30" rx="15" fill="#2b2624"/><rect x="118" y="124" width="42" height="30" rx="15" fill="#2b2624"/>
+  <path d="M51 129v7M61 128v8M71 129v7M129 129v7M139 128v8M149 129v7" stroke="#554c47" stroke-width="2.6" stroke-linecap="round"/>
+ </g>
+</defs></svg>
+
+<!-- A 扒着票：首页那一幕缩成头像 -->
+<svg id="a" width="512" height="512" viewBox="0 0 512 512">
+ <rect width="512" height="512" fill="#f3efe3"/>
+ <use href="#head" transform="translate(56 40) scale(2)"/>
+ <rect x="20" y="320" width="472" height="260" rx="72" fill="#3f8f5b"/>
+ <circle cx="20" cy="430" r="26" fill="#f3efe3"/><circle cx="492" cy="430" r="26" fill="#f3efe3"/>
+ <line x1="70" y1="430" x2="442" y2="430" stroke="#fff" stroke-opacity=".45" stroke-width="7" stroke-dasharray="18 16" stroke-linecap="round"/>
+ <use href="#paws" transform="translate(56 40) scale(2)"/>
+</svg>
+
+<!-- B 号码票：一张竹青的票，票上缘冒出熊猫耳朵和眼睛 -->
+<svg id="b" width="512" height="512" viewBox="0 0 512 512">
+ <rect width="512" height="512" fill="#3f8f5b"/>
+ <g transform="translate(256 262)">
+  <circle cx="-92" cy="-128" r="40" fill="#2b2624"/><circle cx="92" cy="-128" r="40" fill="#2b2624"/>
+  <path d="M-150 -60 Q-150 -150 0 -150 Q150 -150 150 -60 Z" fill="#fff"/>
+  <ellipse cx="-52" cy="-82" rx="26" ry="32" transform="rotate(30 -52 -82)" fill="#2b2624"/>
+  <ellipse cx="52" cy="-82" rx="26" ry="32" transform="rotate(-30 52 -82)" fill="#2b2624"/>
+  <circle cx="-47" cy="-88" r="10" fill="#fff"/><circle cx="47" cy="-88" r="10" fill="#fff"/>
+  <circle cx="-45" cy="-86" r="6" fill="#2b2624"/><circle cx="45" cy="-86" r="6" fill="#2b2624"/>
+  <path d="M-170 -64 H170 a24 24 0 0 1 24 24 V40 a26 26 0 0 0 0 52 V146 a24 24 0 0 1 -24 24 H-170 a24 24 0 0 1 -24 -24 V92 a26 26 0 0 0 0 -52 V-40 a24 24 0 0 1 24 -24 Z" fill="#fffdf8"/>
+  <line x1="-150" y1="66" x2="150" y2="66" stroke="#3f8f5b" stroke-opacity=".35" stroke-width="6" stroke-dasharray="14 12" stroke-linecap="round"/>
+  <rect x="-128" y="-46" width="44" height="30" rx="15" fill="#2b2624"/><rect x="84" y="-46" width="44" height="30" rx="15" fill="#2b2624"/>
+  <text x="0" y="46" text-anchor="middle" font-family="Bricolage Grotesque, Segoe UI, sans-serif" font-weight="800" font-size="112" fill="#3f8f5b" letter-spacing="-5">27</text>
+  <circle cx="-60" cy="122" r="12" fill="#3f8f5b" opacity=".35"/><circle cx="0" cy="122" r="12" fill="#ff6a3d"/><circle cx="60" cy="122" r="12" fill="#3f8f5b" opacity=".35"/>
+ </g>
+</svg>
+
+<!-- C 偷看：竹青底，只有一双眼睛和耳朵从下缘冒出来（像熊猫关着监控时那样） -->
+<svg id="c" width="512" height="512" viewBox="0 0 512 512">
+ <rect width="512" height="512" fill="#3f8f5b"/>
+ <g transform="translate(256 400)">
+  <circle cx="-118" cy="-200" r="56" fill="#2b2624"/><circle cx="118" cy="-200" r="56" fill="#2b2624"/>
+  <circle cx="-118" cy="-196" r="26" fill="#4a423e"/><circle cx="118" cy="-196" r="26" fill="#4a423e"/>
+  <path d="M-210 112 V-40 Q-210 -210 0 -210 Q210 -210 210 -40 V112 Z" fill="url(#fa)"/>
+  <ellipse cx="-74" cy="-64" rx="42" ry="56" transform="rotate(32 -74 -64)" fill="#2b2624"/>
+  <ellipse cx="74" cy="-64" rx="42" ry="56" transform="rotate(-32 74 -64)" fill="#2b2624"/>
+  <circle cx="-64" cy="-76" r="17" fill="#fff"/><circle cx="64" cy="-76" r="17" fill="#fff"/>
+  <circle cx="-60" cy="-72" r="10" fill="#2b2624"/><circle cx="60" cy="-72" r="10" fill="#2b2624"/>
+  <circle cx="-56" cy="-78" r="3.5" fill="#fff"/><circle cx="64" cy="-78" r="3.5" fill="#fff"/>
+  <rect x="-256" y="10" width="512" height="120" fill="#ff6a3d"/>
+  <line x1="-256" y1="10" x2="256" y2="10" stroke="#fff" stroke-opacity=".5" stroke-width="6" stroke-dasharray="16 14"/>
+ </g>
+</svg>
+</body></html>

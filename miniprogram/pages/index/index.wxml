@@ -73,7 +73,7 @@
   </view>
   <view class="wrap rooms">
     <view wx:for="{{others}}" wx:key="id" class="room-row enter" style="animation-delay: {{index < 6 ? index * 50 : 300}}ms">
-      <view class="del {{item.x || item.drag ? 'show' : ''}}" style="width: {{delPx}}px" hover-class="press-link" data-id="{{item.id}}" catchtap="askRemove">删除</view>
+      <view class="del {{item.x || item.drag ? 'show' : ''}} {{item.drag ? '' : 'snap'}}" style="width: {{delPx - gapPx}}px; opacity: {{-item.x / delPx}}; transform: scale({{0.7 + 0.3 * (-item.x / delPx)}})" hover-class="press-link" data-id="{{item.id}}" catchtap="askRemove">删除</view>
       <view class="room {{item.drag ? '' : 'snap'}}" style="transform: translateX({{item.x}}px)"
         hover-class="{{item.drag || item.x ? 'none' : 'press-row'}}" hover-start-time="60" hover-stay-time="100"
         data-i="{{index}}" bindtap="open" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" bindtouchcancel="touchEnd">
