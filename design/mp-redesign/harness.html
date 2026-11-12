@@ -44,7 +44,7 @@ function emit(n,ctx,out){
  if(tag==='div'||tag==='span'){if(tag==='div')el.style.display=el.style.display||'';}
  build(n,ctx,el);out.append(el);
 }
-function makeEnv(){const env={wx:{getWindowInfo:()=>({windowWidth:W}),getSystemInfoSync:()=>({windowWidth:W}),showToast(){},showModal(){},showLoading(){},hideLoading(){},navigateTo(){},stopPullDownRefresh(){},createSelectorQuery(){return{in(){return this},select(){return this},boundingClientRect(){return this},exec(){}}},getStorageSync(){},setStorageSync(){},setNavigationBarTitle(){},showActionSheet(){},navigateBack(){},setClipboardData(){},getClipboardData(){return Promise.resolve({data:''})}}};return env}
+function makeEnv(){const env={wx:{getWindowInfo:()=>({windowWidth:W}),getSystemInfoSync:()=>({windowWidth:W}),showToast(){},showModal(){},showLoading(){},hideLoading(){},navigateTo(){},stopPullDownRefresh(){},createSelectorQuery(){return{in(){return this},select(){return this},boundingClientRect(){return this},exec(){}}},getStorageSync(){},setStorageSync(){},setNavigationBarTitle(){},getMenuButtonBoundingClientRect(){return{top:52,height:32,left:291,width:87,right:378,bottom:84}},showActionSheet(){},navigateBack(){},setClipboardData(){},getClipboardData(){return Promise.resolve({data:''})}}};return env}
 function setPath(obj,path,v){const ks=path.replace(/\[(\d+)\]/g,'.$1').split('.');let o=obj;for(let i=0;i<ks.length-1;i++)o=o[ks[i]];o[ks[ks.length-1]]=v}
 async function runPage(name,api,query){
  const js=await txt(`pages/${name}/${name}.js`);let def;const env=makeEnv();
@@ -61,13 +61,17 @@ async function render(name,api,query,caption,after,label){
  const inst=await runPage(name,api,query);if(after)await after(inst);
  const [wxml,pageCss,appCss]=await Promise.all([txt(`pages/${name}/${name}.wxml`),txt(`pages/${name}/${name}.wxss`),txt('app.wxss')]);
  const box=document.createElement('div');const id='p'+Math.random().toString(36).slice(2);
- box.innerHTML=`<div class="phone"><div class="navbar">${caption}</div><div class="scroll ${id}"></div></div><div class="cap">${label||name}</div>`;
+ const custom=caption===null;
+ box.innerHTML=`<div class="phone">${custom?'<div style="position:absolute;z-index:20;left:291px;top:52px;width:87px;height:32px;border-radius:16px;border:1px solid rgba(0,0,0,.12);background:rgba(255,255,255,.7);box-sizing:border-box;display:flex;align-items:center;justify-content:space-around;font:700 14px sans-serif">··· ◉</div>':`<div class="navbar">${caption}</div>`}<div class="scroll ${id}" ${custom?'style="top:0"':''}></div></div><div class="cap">${label||name}</div>`;
  document.body.append(box);const scroll=box.querySelector('.scroll');
  const st=document.createElement('style');st.textContent=scopeCss(appCss,'.'+id)+scopeCss(pageCss,'.'+id)+`.${id}{display:block;min-height:100%;box-sizing:border-box} .${id} div{display:block} .${id} span{display:inline} .${id} [class*="btn"],.${id} input{box-sizing:border-box} .${id} input{border:0;outline:0;font:inherit;width:100%}`;
  document.head.append(st);
  const doc=new DOMParser().parseFromString('<root xmlns:wx="wx">'+wxml.replace(/&/g,'&amp;').replace(/\{\{[\s\S]*?\}\}/g,m=>m.replace(/</g,'&lt;').replace(/>/g,'&gt;')).replace(/(\s)wx:else(?=[\s\/>])/g,'$1wx:else=""')+'</root>','text/xml');
  if(doc.querySelector('parsererror'))throw new Error(name+' wxml parse: '+doc.querySelector('parsererror').textContent.slice(0,200));
- build(doc.documentElement,inst.data,scroll);
+ // <wxs src module>：載入模組放進範本的變數裡
+ const ctx=Object.create(inst.data);
+ for(const w of doc.documentElement.querySelectorAll('wxs')){const src=w.getAttribute('src').replace('../../','');const m={exports:{}};Function('module',await txt(src))(m);ctx[w.getAttribute('module')]=m.exports}
+ build(doc.documentElement,ctx,scroll);
  // fixed 元素：相對手機框
  const phone=box.querySelector('.phone');
  const ov=document.createElement('div');ov.className=id;ov.setAttribute('style','position:absolute;left:0;right:0;top:0;bottom:0;background:transparent;pointer-events:none;min-height:0;padding:0');phone.append(ov);

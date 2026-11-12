@@ -26,6 +26,8 @@ page {
 
 .section-label { color: var(--soft); font-size: 28rpx; font-weight: 700; margin: 48rpx 8rpx 20rpx; }
 .row-between { display: flex; justify-content: space-between; align-items: center; }
+/* 标点悬挂（配合 utils/text.wxs）：开头的全角引号往左挪半格 */
+.hang { text-indent: -0.5em; }
 
 /* 按钮：胶囊形 */
 .btn {

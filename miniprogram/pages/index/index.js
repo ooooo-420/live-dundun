@@ -14,6 +14,17 @@ function windowWidth() {
 }
 const DEL_PX = Math.round(160 * windowWidth() / 750)  // 删除键宽 160rpx
 
+// 自订导航栏：对齐微信右上角的胶囊按钮（取不到就用 iPhone 常见的值）
+function navLayout() {
+  const ww = windowWidth()
+  const tog = 50 * ww / 750  // 小开关高 50rpx
+  try {
+    const m = wx.getMenuButtonBoundingClientRect()
+    if (m && m.height) return { top: m.top, h: m.height, right: Math.round(ww - m.left + 12), togTop: Math.round(m.top + (m.height - tog) / 2) }
+  } catch (e) {}
+  return { top: 50, h: 32, right: 110, togTop: Math.round(50 + (32 - tog) / 2) }
+}
+
 const PILL = { live: '● 直播中', captcha: '要验证', starting: '打开中', offline: '没开播', no_cart: '没有小黄车', need_login: '要登录', error: '出错了', idle: '没在盯', paused: '监控关着' }
 const WAIT = {
   starting: '电脑正在打开直播间…',
@@ -52,6 +63,7 @@ Page({
   data: {
     demo: api.DEMO,
     brand: NAME,
+    nav: navLayout(),
     rooms: [],
     hero: null,
     others: [],

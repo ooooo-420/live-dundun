@@ -1,3 +1,4 @@
+<wxs src="../../utils/text.wxs" module="tx" />
 <view wx:if="{{room}}">
   <!-- 现况（淡入不要放最外层：会让底下固定的保存键跟着位移） -->
   <view class="wrap head enter">
@@ -9,7 +10,7 @@
       </view>
       <view class="now-side">
         <text>号 讲解中</text>
-        <text class="now-title">{{room.explaining.title}}</text>
+        <text class="now-title {{tx.hang(room.explaining.title) ? 'hang' : ''}}">{{room.explaining.title}}</text>
       </view>
     </view>
     <view wx:else class="state-big">{{statusText}}</view>
@@ -45,7 +46,7 @@
       <view wx:for="{{cart}}" wx:key="id" class="item {{picked[item.id] ? 'on' : ''}} {{room.explaining && room.explaining.id === item.id ? 'exp' : ''}}" hover-class="press-row" hover-start-time="40" hover-stay-time="80" data-id="{{item.id}}" bindtap="toggle">
         <view class="idx num-font">{{item.index}}</view>
         <view class="grow">
-          <view class="t">{{item.title}}</view>
+          <view class="t {{tx.hang(item.title) ? 'hang' : ''}}">{{item.title}}</view>
           <view class="muted">¥{{item.price}}<text wx:if="{{room.explaining && room.explaining.id === item.id}}" class="exp-tag"> · 讲解中</text></view>
         </view>
         <view class="check"><view class="tick"></view></view>

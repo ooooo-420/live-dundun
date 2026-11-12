@@ -1,0 +1,7 @@
+// 标点悬挂：标题开头是引号、括号这类全角标点时，标点本身左边有半格空白，看起来像缩进。
+// 这种标题加 .hang（往左挪半格），文字的左边才会和上一行对齐。
+var OPEN = '“‘「『（《【〔';
+function hang(s) {
+  return !!s && OPEN.indexOf(s.charAt(0)) >= 0;
+}
+module.exports = { hang: hang };

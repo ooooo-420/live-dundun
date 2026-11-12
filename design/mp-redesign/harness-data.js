@@ -19,9 +19,9 @@ const mk = (expIdx, extra) => ({
   ...(extra || {}),
 })
 ;(async () => {
-  await harness.render('index', mk(27), {}, '', null, '首页 · 直播蹲蹲')
-  await harness.render('index', mk(27), {}, '', async inst => { inst.setData({ brand: '目候' }) }, '首页 · 目候')
-  await harness.render('index', mk(31), {}, '', null, '首页 · 到号')
+  await harness.render('index', mk(27), {}, null, null, '首页 · 直播蹲蹲')
+  await harness.render('index', mk(27), {}, null, async inst => { inst.setData({ brand: '目候' }) }, '首页 · 目候')
+  await harness.render('index', mk(31), {}, null, null, '首页 · 到号')
   await harness.render('room', mk(27), { id: '875426677831' }, 'Hypeyourself', async inst => { inst.setData({ picked: { p31: true, p36: true }, pickedCount: 2, dirty: true, quick: '31 36' }) })
   await harness.render('verify', mk(27), { id: '875426677831' }, '人机验证', async inst => { inst.setData({ shot: { img: SHOT, v: 1 }, stage: 0 }) })
   await harness.render('members', { ...mk(27), async invite() { return { code: '483920', minutes: 30 } }, async members() { return [{ index: 0, me: true, tail: '9x2k' }, { index: 1, me: false, tail: 'a81c' }] } }, {}, '成员与邀请', async inst => { inst.setData({ code: '483920', expiresText: '10:42', list: [{ index: 0, me: true, tail: '9x2k' }, { index: 1, me: false, tail: 'a81c' }] }) })

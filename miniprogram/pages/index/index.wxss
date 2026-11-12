@@ -3,8 +3,10 @@
 .tip { margin-top: 10rpx; }
 
 /* 标题 */
-.head { display: flex; justify-content: space-between; align-items: center; padding-top: 12rpx; }
-.brand { font-size: 64rpx; font-weight: 900; letter-spacing: -0.02em; line-height: 1.15; }
+/* 自订导航栏：和微信胶囊同一行；padding-top/height/开关位置由 JS 依胶囊位置算 */
+.topbar { position: relative; padding-left: 44rpx; box-sizing: content-box; }
+.brand { font-size: 44rpx; font-weight: 900; letter-spacing: -0.01em; }
+.top-toggle { position: absolute; }
 
 /* 号码票 */
 .hero { margin-top: 200rpx; }

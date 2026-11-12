@@ -1,3 +1,9 @@
+<wxs src="../../utils/text.wxs" module="tx" />
+<!-- 自订导航栏：名字和监控开关放在微信胶囊按钮那一行，顶部不留空 -->
+<view class="topbar" style="padding-top: {{nav.top}}px; height: {{nav.h}}px">
+  <view class="brand" style="line-height: {{nav.h}}px">{{brand}}</view>
+  <view wx:if="{{!demo && !needJoin}}" class="toggle sm top-toggle {{monitoring ? 'on' : ''}} {{switching ? 'busy' : ''}}" style="right: {{nav.right}}px; top: {{nav.togTop}}px" hover-class="press" hover-stay-time="80" bindtap="toggleMonitoring"><view class="knob"></view></view>
+</view>
 <view wx:if="{{demo}}" class="banner warn">示范数据，还没连到电脑。<text class="link" bindtap="resetDemo">重设</text></view>
 <view wx:elif="{{!needJoin && !pcOk && !loading}}" class="banner warn">电脑上次回报：{{pcText}}。电脑可能关了，或黑色窗口没在跑。</view>
 <view wx:if="{{error}}" class="banner err">连不上云端：{{error}}</view>
@@ -8,7 +14,7 @@
     <image class="panda-head idle" src="/images/panda_head.png" />
     <view class="peek-card card join-card">
       <view class="join-title">输入邀请码</view>
-      <view class="soft join-sub">请已经在用的帐号打开“成员与邀请”，产生一组 6 位数字，30 分钟内有效。</view>
+      <view class="soft join-sub">请已经在用的帐号打开“成员与邀请”，生成一组 6 位数字，30 分钟内有效。</view>
       <input class="input code-input num-font" type="number" maxlength="6" placeholder="000000" placeholder-class="ph" value="{{code}}" bindinput="onCode" />
       <view class="btn" hover-class="press" hover-stay-time="80" bindtap="joinNow">加入</view>
     </view>
@@ -17,12 +23,6 @@
 </view>
 
 <view wx:else class="page-body">
-  <!-- 标题＋监控开关 -->
-  <view class="wrap head enter">
-    <view class="brand">{{brand}}</view>
-    <view wx:if="{{!demo}}" class="toggle {{monitoring ? 'on' : ''}} {{switching ? 'busy' : ''}}" hover-class="press" hover-stay-time="80" bindtap="toggleMonitoring"><view class="knob"></view></view>
-  </view>
-
   <!-- 号码票：正在盯的那一间 -->
   <view class="wrap">
     <view class="peek hero enter" wx:if="{{hero}}">
@@ -33,14 +33,14 @@
             <view class="r1"><text class="live-pill">{{hero.pill}}</text><text class="t-name">{{hero.name}}</text></view>
             <view class="now" wx:if="{{hero.explaining && hero.explaining.index}}">
               <text class="t-num num-font">{{hero.explaining.index}}</text>
-              <view class="t-side"><text>号 {{hero.hot ? '到了！' : '讲解中'}}</text><text class="t-title">{{hero.explaining.title}}</text></view>
+              <view class="t-side"><text>号 {{hero.hot ? '到了！' : '讲解中'}}</text><text class="t-title {{tx.hang(hero.explaining.title) ? 'hang' : ''}}">{{hero.explaining.title}}</text></view>
             </view>
             <view class="now idle-now" wx:else><text class="t-wait">{{hero.waitText}}</text></view>
           </view></view>
           <!-- 被撕走的旧存根 -->
           <view wx:if="{{fly}}" class="fly {{fly.hot ? 'hot' : ''}}">
             <view class="r1"><text class="live-pill">{{fly.pill}}</text><text class="t-name">{{fly.name}}</text></view>
-            <view class="now"><text class="t-num num-font">{{fly.index}}</text><view class="t-side"><text>号 讲解中</text><text class="t-title">{{fly.title}}</text></view></view>
+            <view class="now"><text class="t-num num-font">{{fly.index}}</text><view class="t-side"><text>号 讲解中</text><text class="t-title {{tx.hang(fly.title) ? 'hang' : ''}}">{{fly.title}}</text></view></view>
           </view>
         </view>
         <view class="perf"><view class="hole l"></view><view class="hole r"></view></view>
