@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-Hans"><head><meta charset="utf-8"><title>三格栏位＋票根 草图</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3efe3;--card:#fffdf8;--ink:#1f2a22;--soft:#5e675f;--mute:#9aa39a;--line:#e6e0d1;--bam:#34794c;--tint:#e3f0e6;--tom:#ff6a3d}
+*{box-sizing:border-box}body{margin:0;background:#d9d5ca;font-family:"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);padding:36px;width:1640px}
+h1{font-size:24px;margin:0 0 24px}.row{display:flex;gap:30px;align-items:flex-start}
+.col{width:375px}.cap{margin:14px 6px 0;font-size:15px;font-weight:700}.note{margin:4px 6px 0;font-size:13px;color:#5e675f;line-height:1.6}
+.phone{width:375px;height:780px;background:var(--bg);border-radius:44px;overflow:hidden;position:relative;box-shadow:0 20px 50px rgba(0,0,0,.18)}
+.top{display:flex;justify-content:space-between;align-items:center;padding:50px 22px 0}.brand{font-size:22px;font-weight:900}
+.cap-btn{width:86px;height:32px;border-radius:16px;background:#fff;box-shadow:inset 0 0 0 1px #e6e0d1}
+.nav{padding:50px 22px 0;font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px}
+.hero{position:relative;margin:100px 22px 0}
+.panda{position:absolute;width:142px;height:120px;left:72%;margin-left:-71px;top:-99px}.panda.h{z-index:1}.panda.p{z-index:4}
+.ticket{position:relative;z-index:2;background:var(--bam);color:#fff;border-radius:30px;box-shadow:0 20px 40px rgba(52,121,76,.3)}
+.ticket.hot{background:var(--tom);box-shadow:0 20px 44px rgba(255,106,61,.38)}
+.stub{padding:26px 22px 0;height:150px}
+.r1{display:flex;align-items:center;font-size:15px;font-weight:700}.pill{font-size:11px;background:rgba(255,255,255,.22);padding:3px 10px;border-radius:15px}.r1 b{margin-left:auto}
+.now{display:flex;align-items:flex-end;gap:10px;margin-top:2px}.num{font-family:"Baloo 2";font-weight:800;font-size:103px;line-height:.9;letter-spacing:-.03em}
+.side{font-size:13.5px;line-height:1.45;padding-bottom:12px}
+.perf{position:relative;margin:0 22px;border-top:2px dashed rgba(255,255,255,.4)}
+.perf i{position:absolute;top:-12px;width:22px;height:22px;border-radius:50%;background:var(--bg)}.perf i:first-child{left:-33px}.perf i:last-child{right:-33px}
+.sec{padding:16px 22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:"Baloo 2";font-weight:800;min-width:40px;height:32px;padding:0 12px;border-radius:16px;background:rgba(255,255,255,.2);display:inline-flex;align-items:center;justify-content:center;font-size:15px}
+.chip.next{background:#fff;color:var(--bam)}.hot .chip.next{color:var(--tom)}.chip.done{opacity:.45;text-decoration:line-through}
+.fields{display:flex;gap:0}.f{flex:1}.f+.f{padding-left:14px;border-left:1.5px solid rgba(255,255,255,.22);margin-left:2px}
+.f small{display:block;font-size:11.5px;font-weight:600;opacity:.82;letter-spacing:.04em}
+.f b{display:block;font-size:19px;font-weight:800;margin-top:1px;white-space:nowrap}.f b em{font-family:"Baloo 2";font-style:normal;font-size:24px;letter-spacing:-.02em}
+.prog{height:6px;border-radius:3px;background:rgba(255,255,255,.22);margin-top:12px;overflow:hidden}.prog i{display:block;height:100%;width:87%;background:#fff;border-radius:3px}
+/* 票根：撕下来的存根，叠在票下面 */
+.stubs{position:relative;margin:18px 22px 0;height:74px}
+.sb{position:absolute;top:0;width:150px;height:66px;border-radius:16px 16px 6px 6px;color:#fff;padding:9px 14px;box-shadow:0 8px 18px rgba(0,0,0,.14);display:flex;align-items:center;gap:8px}
+.sb .n{font-family:"Baloo 2";font-weight:800;font-size:34px;line-height:1}.sb span{font-size:11.5px;line-height:1.35;opacity:.95}
+.sb::after{content:"";position:absolute;left:10px;right:10px;bottom:-1px;border-bottom:2px dashed rgba(255,255,255,.55)}
+.sb.t{background:var(--tom)}.sb.g{background:#5a9a70}
+.stubs-l{position:absolute;right:4px;top:22px;font-size:13px;font-weight:700;color:var(--soft)}
+.label{margin:22px 26px 10px;color:var(--soft);font-size:14px;font-weight:700}
+.room{margin:0 22px 10px;background:var(--card);border-radius:22px;padding:13px 15px;display:flex;align-items:center;gap:13px;box-shadow:0 8px 24px rgba(70,90,60,.09)}
+.room .n{width:48px;height:48px;border-radius:15px;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--mute);font-weight:800}
+.room b{font-size:15px}.room small{display:block;color:var(--mute);font-size:11.5px}
+.tg{margin-left:auto;width:42px;height:25px;border-radius:13px;background:#d9d3c4;position:relative}.tg::after{content:"";position:absolute;left:3px;top:3px;width:19px;height:19px;border-radius:50%;background:#fff}
+.paste{position:absolute;left:22px;right:22px;bottom:26px;height:58px;border-radius:29px;background:var(--ink);color:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+/* 票根页 */
+.day{margin:22px 26px 12px;font-size:26px;font-weight:900}.day small{font-size:14px;color:var(--soft);font-weight:700;margin-left:8px}
+.hs{margin:0 22px 12px;display:flex;border-radius:22px;overflow:hidden;background:var(--card);box-shadow:0 8px 24px rgba(70,90,60,.09)}
+.hs .l{width:92px;flex:none;background:var(--tom);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 0;position:relative}
+.hs .l.g{background:#5a9a70}
+.hs .l .n{font-family:"Baloo 2";font-weight:800;font-size:44px;line-height:.95}.hs .l small{font-size:11px;font-weight:700;opacity:.92}
+.hs .l::after{content:"";position:absolute;right:-1px;top:10px;bottom:10px;border-right:2px dashed rgba(255,255,255,.6)}
+.hs .r{padding:12px 16px;min-width:0;flex:1}.hs .r b{display:block;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hs .r span{display:block;font-size:12px;color:var(--soft);margin-top:3px}
+</style></head><body>
+<h1>票面三格栏位 ＋ 票根（草图）</h1>
+<div class="row">
+
+<div class="col"><div class="phone">
+ <div class="top"><div class="brand">目候</div><div class="cap-btn"></div></div>
+ <div class="hero"><img class="panda h" src="../../miniprogram/images/panda_head.png">
+  <div class="ticket">
+   <div class="stub"><div class="r1"><span class="pill">● 直播中</span><b>Hypeyourself</b></div>
+    <div class="now"><span class="num">27</span><span class="side">号 讲解中<br>植绒全棉牛仔夹克</span></div></div>
+   <div class="perf"><i></i><i></i></div>
+   <div class="sec"><div class="chips"><span class="chip done">12</span><span class="chip next">31</span><span class="chip">36</span><span class="chip">42</span></div></div>
+   <div class="perf"><i></i><i></i></div>
+   <div class="sec"><div class="fields">
+     <div class="f"><small>下一个</small><b><em>31</em> 号</b></div>
+     <div class="f"><small>还差</small><b><em>4</em> 件</b></div>
+     <div class="f"><small>大约</small><b><em>6–10</em> 分</b></div></div>
+    <div class="prog"><i></i></div></div>
+  </div><img class="panda p" src="../../miniprogram/images/panda_paws.png"></div>
+ <div class="stubs"><div class="sb t" style="left:0;transform:rotate(-3deg)"><span class="n">12</span><span>到了<br>21:04</span></div><div class="stubs-l">票根 1 ›</div></div>
+ <div class="label">其他直播间</div>
+ <div class="room"><div class="n">—</div><div><b>Anniehall Official</b><small>没在盯</small></div><div class="tg"></div></div>
+ <div class="paste">＋ 粘贴抖音直播链接</div>
+</div><div class="cap">① 直播中：三段式票面</div><div class="note">上：现在讲几号。中：你的目标。下：三格——下一个、还差、大约。原本那句“还差 4 件到 31 号”拆进格子里。票下面是已经叫过你的票根。</div></div>
+
+<div class="col"><div class="phone">
+ <div class="top"><div class="brand">目候</div><div class="cap-btn"></div></div>
+ <div class="hero"><img class="panda h" src="../../miniprogram/images/panda_hot.png" style="top:-112px">
+  <div class="ticket hot">
+   <div class="stub"><div class="r1"><span class="pill">● 直播中</span><b>Hypeyourself</b></div>
+    <div class="now"><span class="num">31</span><span class="side">号 到了！<br>宽松工装裤</span></div></div>
+   <div class="perf"><i></i><i></i></div>
+   <div class="sec"><div class="chips"><span class="chip done">12</span><span class="chip next">31</span><span class="chip">36</span><span class="chip">42</span></div></div>
+   <div class="perf"><i></i><i></i></div>
+   <div class="sec"><div class="fields">
+     <div class="f"><small>已叫你</small><b>微信 ✓</b></div>
+     <div class="f"><small>下一个</small><b><em>36</em> 号</b></div>
+     <div class="f"><small>还差</small><b><em>5</em> 件</b></div></div></div>
+  </div></div>
+ <div class="stubs"><div class="sb t" style="left:0;transform:rotate(-3deg)"><span class="n">12</span><span>到了<br>21:04</span></div><div class="stubs-l">票根 1 ›</div></div>
+ <div class="label">其他直播间</div>
+ <div class="room"><div class="n">—</div><div><b>Anniehall Official</b><small>没在盯</small></div><div class="tg"></div></div>
+ <div class="paste">＋ 粘贴抖音直播链接</div>
+</div><div class="cap">② 到号：整张变橘</div><div class="note">第一格换成“已叫你 · 微信 ✓”。等主播换下一件时，这张 31 号的存根被撕下，不再飞走，而是落到下面叠在 12 号上（见 ③）。</div></div>
+
+<div class="col"><div class="phone">
+ <div class="top"><div class="brand">目候</div><div class="cap-btn"></div></div>
+ <div class="hero"><img class="panda h" src="../../miniprogram/images/panda_head.png">
+  <div class="ticket">
+   <div class="stub"><div class="r1"><span class="pill">● 直播中</span><b>Hypeyourself</b></div>
+    <div class="now"><span class="num">32</span><span class="side">号 讲解中<br>翻领拉链夹克</span></div></div>
+   <div class="perf"><i></i><i></i></div>
+   <div class="sec"><div class="chips"><span class="chip done">12</span><span class="chip done">31</span><span class="chip next">36</span><span class="chip">42</span></div></div>
+   <div class="perf"><i></i><i></i></div>
+   <div class="sec"><div class="fields">
+     <div class="f"><small>下一个</small><b><em>36</em> 号</b></div>
+     <div class="f"><small>还差</small><b><em>4</em> 件</b></div>
+     <div class="f"><small>大约</small><b><em>5–8</em> 分</b></div></div>
+    <div class="prog"><i style="width:89%"></i></div></div>
+  </div><img class="panda p" src="../../miniprogram/images/panda_paws.png"></div>
+ <div class="stubs"><div class="sb t" style="left:0;transform:rotate(-4deg);opacity:.92"><span class="n">12</span><span>到了<br>21:04</span></div>
+  <div class="sb t" style="left:62px;top:4px;transform:rotate(3deg)"><span class="n">31</span><span>到了<br>21:26</span></div><div class="stubs-l">票根 2 ›</div></div>
+ <div class="label">其他直播间</div>
+ <div class="room"><div class="n">—</div><div><b>Anniehall Official</b><small>没在盯</small></div><div class="tg"></div></div>
+ <div class="paste">＋ 粘贴抖音直播链接</div>
+</div><div class="cap">③ 换下一件后：票根多一张</div><div class="note">只有叫过你的号才留票根，其他的照旧撕走就消失。票根一多就叠着，只露最近两三张。</div></div>
+
+<div class="col"><div class="phone">
+ <div class="nav">‹ <span>票根</span></div>
+ <div class="day">今晚<small>叫了你 3 次</small></div>
+ <div class="hs"><div class="l"><span class="n">31</span><small>到了</small></div><div class="r"><b>“临序”宽松工装裤</b><span>Hypeyourself · 21:26</span><span>微信已送达</span></div></div>
+ <div class="hs"><div class="l g"><span class="n">31</span><small>快到了</small></div><div class="r"><b>“临序”宽松工装裤</b><span>Hypeyourself · 21:19 · 还差 3 件</span><span>微信已送达</span></div></div>
+ <div class="hs"><div class="l"><span class="n">12</span><small>到了</small></div><div class="r"><b>灰蓝卷边卫裤</b><span>Hypeyourself · 21:04</span><span>微信已送达</span></div></div>
+ <div class="day" style="font-size:18px;margin-top:26px">昨天<small>1 次</small></div>
+ <div class="hs" style="opacity:.75"><div class="l"><span class="n">3</span><small>到了</small></div><div class="r"><b>防脱洗发水套装</b><span>贾乃亮滋源专场 · 13:58</span><span>微信已送达</span></div></div>
+</div><div class="cap">④ 点“票根”：通知记录</div><div class="note">每张票根＝一次提醒：几号、哪件、几点、有没有送到。橘色是“到了”，浅绿是“快到了”。漏看微信时回来查。</div></div>
+
+</div></body></html>
