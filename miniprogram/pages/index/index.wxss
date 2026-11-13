@@ -21,9 +21,20 @@
 .hero.asleep .panda-head { transform: translateY(112rpx); transition: transform 0.4s cubic-bezier(0.5, 0, 0.75, 0); }
 .hero.asleep .panda-paws { transform: translateY(72rpx); opacity: 0; transition: transform 0.3s ease-in 0.28s, opacity 0.2s 0.34s; }
 
+/* 电脑没回报：头歪着趴在卡片上睡，手还扒着；呼吸放慢放大，z 一个接一个飘上去 */
+.hero.dozing .panda-head { transform: translateY(30rpx) rotate(5deg); transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+.pimg.doze { animation: doze 5.6s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes doze { 0%, 100% { transform: none; } 50% { transform: translateY(-6rpx) scaleY(1.03); } }
+.zzz { position: absolute; z-index: 3; left: 72%; margin-left: 96rpx; top: -250rpx; width: 120rpx; height: 130rpx; pointer-events: none; }
+.z { position: absolute; left: 0; bottom: 0; font-weight: 900; color: var(--mute); opacity: 0; animation: zfloat 3.6s ease-out infinite; }
+.z1 { font-size: 26rpx; }
+.z2 { font-size: 34rpx; animation-delay: 1.2s; }
+.z3 { font-size: 44rpx; animation-delay: 2.4s; }
+@keyframes zfloat { 0% { transform: translate(0, 0) rotate(-8deg); opacity: 0; } 20% { opacity: 0.9; } 100% { transform: translate(56rpx, -96rpx) rotate(10deg); opacity: 0; } }
+
 /* 号码票 */
 .hero { margin-top: 200rpx; }
-.ticket { color: #fff; border-radius: 60rpx; background: var(--bam); box-shadow: 0 40rpx 80rpx rgba(63, 143, 91, 0.3); transition: background 0.35s, box-shadow 0.35s; }
+.ticket { color: #fff; border-radius: 60rpx; background: var(--bam); box-shadow: 0 40rpx 80rpx rgba(52, 121, 76, 0.3); transition: background 0.35s, box-shadow 0.35s; }
 .ticket.hot { background: var(--tom); box-shadow: 0 40rpx 88rpx rgba(255, 106, 61, 0.38); }
 /* 存根：新号码在 stub-clip 里从撕口冒上来（被裁掉）；撕走的 fly 在 clip 外面，才飞得出票 */
 .stub { position: relative; height: 300rpx; }
@@ -36,7 +47,7 @@
 @keyframes tear { 0% { transform: none; } 22% { transform: rotate(-4deg) translate(8rpx, -16rpx); } 70% { opacity: 1; } 100% { transform: rotate(-28deg) translate(400rpx, -640rpx); opacity: 0; } }
 
 .r1 { display: flex; align-items: center; gap: 16rpx; font-size: 30rpx; font-weight: 700; }
-.live-pill { flex: none; font-size: 22rpx; font-weight: 500; background: rgba(255, 255, 255, 0.22); padding: 6rpx 20rpx; border-radius: 30rpx; }
+.live-pill { flex: none; font-size: 22rpx; font-weight: 700; background: rgba(255, 255, 255, 0.22); padding: 6rpx 20rpx; border-radius: 30rpx; }
 .t-name { margin-left: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .now { display: flex; align-items: flex-end; gap: 20rpx; margin-top: 16rpx; }
 .t-num { font-size: 184rpx; font-weight: 800; line-height: 0.9; }
@@ -56,7 +67,7 @@
 .ticket.hot .chip.next { color: var(--tom); }
 .t-prog { height: 12rpx; border-radius: 6rpx; background: rgba(255, 255, 255, 0.22); margin-top: 22rpx; overflow: hidden; }
 .t-prog-bar { height: 100%; border-radius: 6rpx; background: #fff; transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
-.eta { margin-top: 20rpx; font-size: 25rpx; }
+.eta { margin-top: 20rpx; font-size: 26rpx; font-weight: 600; }
 .verify-pill { margin-bottom: 24rpx; background: #fff; color: var(--tom); font-weight: 700; font-size: 26rpx; padding: 18rpx 26rpx; border-radius: 30rpx; }
 
 /* 空票 */

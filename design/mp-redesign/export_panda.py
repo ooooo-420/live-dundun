@@ -36,8 +36,13 @@ ARMS = ('<rect x="10" y="96" width="30" height="44" rx="15" fill="#2b2624" trans
 PAWS = """<rect x="40" y="124" width="42" height="30" rx="15" fill="#2b2624"/><rect x="118" y="124" width="42" height="30" rx="15" fill="#2b2624"/>
  <path d="M51 129v7M61 128v8M71 129v7M129 129v7M139 128v8M149 129v7" stroke="#554c47" stroke-width="2.6" stroke-linecap="round"/>"""
 
+# 睡著：眼睛閉成兩道弧、嘴巴微張
+EYES_SLEEP = '<path d="M64 95q8 7 16 0M120 95q8 7 16 0" stroke="#f1ede6" stroke-width="3.2" fill="none" stroke-linecap="round"/>'
+MOUTH_SLEEP = '<ellipse cx="100" cy="129" rx="4.2" ry="3.4" fill="#2b2624"/>'
+
 ART = {
     "panda_head": HEAD.replace("EYES", EYES).replace("MOUTH", MOUTH).replace("EXTRA", ""),
+    "panda_sleep": HEAD.replace("EYES", EYES_SLEEP).replace("MOUTH", MOUTH_SLEEP).replace("EXTRA", ""),
     "panda_hot": HEAD.replace("EYES", EYES_HOT).replace("MOUTH", MOUTH_HOT).replace("EXTRA", ARMS),
     "panda_paws": PAWS,
 }

@@ -6,7 +6,7 @@ page {
   --soft: #5e675f;
   --mute: #9aa39a;
   --line: #e6e0d1;
-  --bam: #3f8f5b;
+  --bam: #34794c;  /* 比原本的 #3f8f5b 深一点：白色小字的对比从约 4.0 提到 5.3 */
   --bam-tint: #e3f0e6;
   --tom: #ff6a3d;
   --tom-tint: #ffece4;
@@ -33,7 +33,7 @@ page {
 .btn {
   background: var(--bam); color: #fff; font-size: 30rpx; font-weight: 700;
   height: 100rpx; line-height: 100rpx; border-radius: 50rpx; text-align: center;
-  box-shadow: 0 20rpx 44rpx rgba(63, 143, 91, 0.3);
+  box-shadow: 0 20rpx 44rpx rgba(52, 121, 76, 0.3);
   transition: transform 0.14s ease-out, opacity 0.14s ease-out, background 0.2s;
 }
 .btn.dark { background: var(--ink); color: var(--bg); box-shadow: 0 20rpx 44rpx rgba(31, 42, 34, 0.26); }

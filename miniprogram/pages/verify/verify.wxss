@@ -7,7 +7,7 @@
 .shot-card.busy { opacity: 0.55; }
 .shot { display: block; width: 100%; }
 .touch { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
-.finger { position: absolute; width: 64rpx; height: 64rpx; margin: -32rpx 0 0 -32rpx; border-radius: 50%; background: rgba(63, 143, 91, 0.28); border: 5rpx solid var(--bam); pointer-events: none; }
+.finger { position: absolute; width: 64rpx; height: 64rpx; margin: -32rpx 0 0 -32rpx; border-radius: 50%; background: rgba(52, 121, 76, 0.28); border: 5rpx solid var(--bam); pointer-events: none; }
 .wait { padding: 120rpx 0; text-align: center; color: var(--soft); font-size: 30rpx; font-weight: 700; }
 .steps { display: flex; gap: 14rpx; margin-top: 30rpx; }
 .step { flex: 1; text-align: center; padding: 20rpx 6rpx; border-radius: 28rpx; background: var(--card); color: var(--soft); font-size: 24rpx; transition: background 0.2s, color 0.2s; }

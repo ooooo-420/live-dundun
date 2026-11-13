@@ -19,8 +19,9 @@
   <!-- 选号 -->
   <view class="wrap">
     <view class="quick">
-      <input class="input grow num-font {{quick ? 'focus' : ''}}" placeholder="输入号码：2-10 或 3 5 8" placeholder-class="ph" value="{{quick}}" bindinput="onQuick" confirm-type="done" bindconfirm="applyQuick" />
-      <view class="btn pick-btn {{quick ? '' : 'ghost'}}" hover-class="press" hover-stay-time="80" bindtap="applyQuick">选取</view>
+      <input class="input grow {{search ? '' : 'num-font'}} {{quick ? 'focus' : ''}}" placeholder="号码 2-10，或商品名" placeholder-class="ph" value="{{quick}}" bindinput="onQuick" confirm-type="done" bindconfirm="applyQuick" />
+      <view wx:if="{{search}}" class="btn pick-btn ghost" hover-class="press" hover-stay-time="80" bindtap="clearQuick">清除</view>
+      <view wx:else class="btn pick-btn {{quick ? '' : 'ghost'}}" hover-class="press" hover-stay-time="80" bindtap="applyQuick">选取</view>
     </view>
 
     <view class="seg">
@@ -39,11 +40,16 @@
   <view class="wrap">
     <view class="section-label list-head">
       <text>购物车 {{cart.length}} 件</text>
-      <view class="picked"><text>已选 {{pickedCount}}</text><text wx:if="{{pickedCount}}" class="clear" bindtap="clearAll">全部取消</text></view>
+      <view class="picked">
+        <text wx:if="{{pickedCount}}" class="clear" bindtap="clearAll">全部取消</text>
+        <view wx:if="{{pickedCount}}" class="only {{onlyPicked ? 'on' : ''}}" hover-class="press" hover-stay-time="80" bindtap="toggleOnly">只看已选 {{pickedCount}}</view>
+        <text wx:else>已选 0</text>
+      </view>
     </view>
     <view wx:if="{{cart.length === 0}}" class="card empty">还没有购物车清单。直播开始后，电脑会自动读取。</view>
+    <view wx:elif="{{noMatch}}" class="card empty">没有符合“{{search}}”的商品</view>
     <view class="list" wx:if="{{cart.length}}">
-      <view wx:for="{{cart}}" wx:key="id" class="item {{picked[item.id] ? 'on' : ''}} {{room.explaining && room.explaining.id === item.id ? 'exp' : ''}}" hover-class="press-row" hover-start-time="40" hover-stay-time="80" data-id="{{item.id}}" bindtap="toggle">
+      <view wx:for="{{cart}}" wx:key="id" class="item {{hide[item.id] ? 'gone' : ''}} {{picked[item.id] ? 'on' : ''}} {{room.explaining && room.explaining.id === item.id ? 'exp' : ''}}" hover-class="press-row" hover-start-time="40" hover-stay-time="80" data-id="{{item.id}}" bindtap="toggle">
         <view class="idx num-font">{{item.index}}</view>
         <view class="grow">
           <view class="t {{tx.hang(item.title) ? 'hang' : ''}}">{{item.title}}</view>

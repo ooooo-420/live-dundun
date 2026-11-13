@@ -31,5 +31,7 @@ const mk = (state, expIdx, extra) => ({
   await harness.render('index', mk('live', 27), {}, null, null, '④ 直播中')
   await harness.render('index', mk('live', 31), {}, null, null, '⑤ 到号')
   await harness.render('index', mk('live', 27), {}, null, async inst => { inst.setData({ 'others[0].x': -inst.data.delPx, 'others[1].x': -Math.round(inst.data.delPx * 0.45), 'others[1].drag': true }) }, '⑥ 往左滑（全开／一半）')
+  const live = mk('live', 27)
+  await harness.render('index', { ...live, async getRooms() { return { ...(await live.getRooms()), synced: Date.now() - 3 * 3600 * 1000 } } }, {}, null, null, '⑦ 电脑没回报：熊猫睡觉')
   document.title = 'done'
 })().catch(e => { document.title = 'ERR ' + e.message })

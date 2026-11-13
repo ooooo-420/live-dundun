@@ -1,5 +1,6 @@
 const api = require('../../utils/api')
 const { NAME } = require('../../utils/brand')
+const buzz = require('../../utils/buzz')
 
 function ago(ms) {
   if (!ms) return '从没连上'
@@ -74,6 +75,7 @@ Page({
     busy: false,
     pcText: '',
     pcOk: true,
+    sleep: false,
     pending: 0,
     error: '',
     needJoin: false,
@@ -118,11 +120,14 @@ Page({
       watch: !!r.watch,
     }))
     const monitoring = this.switching ? this.data.monitoring : !d.paused
+    const pcOk = api.DEMO || !!(d.synced && Date.now() - d.synced < 3 * 60 * 1000)
+    const sleep = !pcOk  // 电脑超过 3 分钟没回报：熊猫睡觉，不显示可能过期的号码
 
     // 号码票：正在盯的那一间（直播中的优先，其次是等验证的）
     const watched = rooms.filter(r => r.watch && r.status !== 'idle' && r.status !== 'paused')
     const rank = r => (r.status === 'live' ? 0 : r.status === 'captcha' ? 1 : 2)
-    const pick = monitoring ? watched.sort((a, b) => rank(a) - rank(b))[0] : null
+    const pick = monitoring && !sleep ? watched.sort((a, b) => rank(a) - rank(b))[0] : null
+    if (monitoring && !sleep) watched.forEach(buzz.check)  // 到号／快到号：震动
     let hero = null
     let fly = null
     if (pick) {
@@ -159,7 +164,7 @@ Page({
       pending: d.pending,
       monitoring,
       pcText: api.DEMO ? '' : ago(d.synced),
-      pcOk: api.DEMO || (d.synced && Date.now() - d.synced < 3 * 60 * 1000),
+      pcOk, sleep,
       headline: !monitoring ? '监控关着 · 不盯直播、不发通知' : n ? `电脑在线 · 帮你盯着 ${n} 间` : '电脑准备好了 · 选一间来盯',
       rooms, hero, others, fly,
     })
@@ -316,6 +321,10 @@ Page({
   // 熊猫就是监控开关：关着时点它＝打开（它会爬出来）；开着时点它，问要不要关
   tapPanda() {
     if (this.switching) return
+    if (this.data.sleep) {
+      wx.showModal({ title: '电脑睡着了', content: `上次回报：${this.data.pcText}。电脑可能关机、睡眠或断网了，或者监控程序没在运行。电脑一回来，熊猫就会醒。`, showCancel: false, confirmText: '知道了' })
+      return
+    }
     if (!this.data.monitoring) {
       this.toggleMonitoring()
       return
@@ -365,7 +374,7 @@ Page({
       return
     }
     const ask = (o) => new Promise(r => wx.showModal({ ...o, success: x => r(x.confirm), fail: () => r(false) }))
-    if (!await ask({ title: '加入这个直播间？', content: text.length > 60 ? text.slice(0, 60) + '…' : text, confirmText: '加入', confirmColor: '#3f8f5b' })) return
+    if (!await ask({ title: '加入这个直播间？', content: text.length > 60 ? text.slice(0, 60) + '…' : text, confirmText: '加入', confirmColor: '#34794c' })) return
     this.setData({ busy: true })
     wx.showLoading({ title: '电脑处理中' })
     let r = null
@@ -387,7 +396,7 @@ Page({
       wx.showToast({ title: '已加入。点熊猫打开监控后，再选要盯哪间', icon: 'none', duration: 2600 })
       return
     }
-    if (await ask({ title: '已加入，现在开始盯这间吗？', content: '选“先不”的话，之后打开它右边的开关就行。', confirmText: '开始盯', cancelText: '先不', confirmColor: '#3f8f5b' })) {
+    if (await ask({ title: '已加入，现在开始盯这间吗？', content: '选“先不”的话，之后打开它右边的开关就行。', confirmText: '开始盯', cancelText: '先不', confirmColor: '#34794c' })) {
       await this.setWatch(r.id, true)
       if (r.id) wx.navigateTo({ url: `/pages/room/room?id=${r.id}` })
     }

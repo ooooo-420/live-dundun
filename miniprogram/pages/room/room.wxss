@@ -24,8 +24,12 @@
 .opt { display: flex; justify-content: space-between; align-items: center; gap: 24rpx; padding: 28rpx 8rpx; border-bottom: 2rpx solid var(--line); }
 
 .list-head { display: flex; justify-content: space-between; align-items: center; }
-.picked { color: var(--bam); }
-.clear { color: var(--mute); margin-left: 20rpx; font-weight: 400; }
+.picked { color: var(--bam); display: flex; align-items: center; gap: 20rpx; }
+.clear { color: var(--mute); font-weight: 400; font-size: 26rpx; }
+/* “只看已选”：小胶囊，开着时实心 */
+.only { font-size: 24rpx; font-weight: 700; padding: 8rpx 24rpx; border-radius: 30rpx; color: var(--bam); background: var(--bam-tint); transition: background 0.2s, color 0.2s, transform 0.14s; }
+.only.on { background: var(--bam); color: #fff; }
+.item.gone { display: none; }
 .empty { padding: 40rpx; color: var(--soft); font-size: 26rpx; }
 
 .list { display: flex; flex-direction: column; gap: 16rpx; }

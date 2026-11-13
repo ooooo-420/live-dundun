@@ -1,4 +1,8 @@
 const api = require('../../utils/api')
+const buzz = require('../../utils/buzz')
+
+// 输入框里只有数字和分隔符号＝选号；有别的字＝找商品名
+const isNums = s => /^[\d\s,，、\-~～到]*$/.test(s)
 
 // “2-10”“3 5 8”“2-5,9”→ [2,3,...]
 function parseNums(text) {
@@ -21,6 +25,10 @@ Page({
     picked: {},        // { 商品id: true }
     pickedCount: 0,
     quick: '',
+    search: '',        // 正在找的商品名（输入框里不是号码时）
+    onlyPicked: false,
+    hide: {},          // { 商品id: true }＝被搜寻或“只看已选”筛掉
+    noMatch: false,
     aheadOptions: ['到了才叫', '提前 1 件', '提前 3 件', '提前 5 件'],
     aheadValues: [0, 1, 3, 5],
     aheadIdx: 0,
@@ -62,6 +70,7 @@ Page({
       bump,
       prevIndex: bump ? old.explaining.index : null,
     })
+    buzz.check({ ...room, id: this.data.id })
     if (bump) setTimeout(() => this.setData({ bump: false, prevIndex: null }), 600)
   },
 
@@ -93,10 +102,27 @@ Page({
       statusText: api.STATUS_TEXT[room.status] || room.status,
       dirty: false,
     })
+    this.filter()
+    buzz.check({ ...room, id: this.data.id })
   },
 
   goVerify() {
     wx.navigateTo({ url: `/pages/verify/verify?id=${this.data.id}` })
+  },
+
+  // 依“找商品名”和“只看已选”算出哪些商品要藏起来
+  filter(patch) {
+    const d = { ...this.data, ...(patch || {}) }
+    const count = Object.keys(d.picked).length
+    const only = d.onlyPicked && count > 0  // 已选清空时自动回到全部
+    const word = d.search.toLowerCase()
+    const hide = {}
+    let shown = 0
+    for (const it of d.cart) {
+      if ((only && !d.picked[it.id]) || (word && String(it.title).toLowerCase().indexOf(word) < 0)) hide[it.id] = true
+      else shown++
+    }
+    this.setData({ ...(patch || {}), pickedCount: count, onlyPicked: only, hide, noMatch: !!word && d.cart.length > 0 && shown === 0 })
   },
 
   toggle(e) {
@@ -104,14 +130,26 @@ Page({
     const picked = { ...this.data.picked }
     if (picked[id]) delete picked[id]
     else picked[id] = true
+    // 正在“只看已选”时取消一件：先留在画面上（不然会突然消失、点错没法反悔），所以这里不重算筛选
     this.setData({ picked, pickedCount: Object.keys(picked).length, dirty: true })
+    if (!Object.keys(picked).length) this.filter()
+  },
+
+  toggleOnly() {
+    this.filter({ onlyPicked: !this.data.onlyPicked })
   },
 
   onQuick(e) {
-    this.setData({ quick: e.detail.value })
+    const quick = e.detail.value
+    this.filter({ quick, search: isNums(quick) ? '' : quick.trim() })
+  },
+
+  clearQuick() {
+    this.filter({ quick: '', search: '' })
   },
 
   applyQuick() {
+    if (this.data.search) return
     const nums = parseNums(this.data.quick)
     if (!nums.length) {
       wx.showToast({ title: '格式像 2-10 或 3 5 8', icon: 'none' })
@@ -125,12 +163,12 @@ Page({
       if (byIndex[n]) picked[byIndex[n]] = true
       else miss++
     }
-    this.setData({ picked, pickedCount: Object.keys(picked).length, dirty: true })
+    this.filter({ picked, dirty: true })
     wx.showToast({ title: miss ? `已选 ${nums.length - miss} 件，${miss} 个号码不存在` : `已选 ${nums.length} 件`, icon: 'none' })
   },
 
   clearAll() {
-    this.setData({ picked: {}, pickedCount: 0, dirty: true })
+    this.filter({ picked: {}, dirty: true })
   },
 
   onSeg(e) {

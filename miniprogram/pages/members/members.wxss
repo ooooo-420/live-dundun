@@ -1,6 +1,6 @@
 .wrap.enter { padding-top: 24rpx; }
 .title { font-size: 48rpx; font-weight: 900; margin: 8rpx 0 32rpx; }
-.code-box { padding: 40rpx 0 30rpx; text-align: center; margin-bottom: 28rpx; background: var(--bam); color: #fff; border-radius: 48rpx; box-shadow: 0 30rpx 60rpx rgba(63, 143, 91, 0.28); }
+.code-box { padding: 40rpx 0 30rpx; text-align: center; margin-bottom: 28rpx; background: var(--bam); color: #fff; border-radius: 48rpx; box-shadow: 0 30rpx 60rpx rgba(52, 121, 76, 0.28); }
 .code-box .muted { color: rgba(255, 255, 255, 0.8); }
 .code { font-size: 104rpx; font-weight: 800; letter-spacing: 0.16em; line-height: 1.1; }
 .list { margin: 0 44rpx; background: var(--card); border-radius: 44rpx; box-shadow: var(--shadow); padding: 0 32rpx; }
