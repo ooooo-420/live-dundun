@@ -49,17 +49,34 @@ function ticket(r) {
     text: `${t.pos}`,
     cls: t === hit || (!hit && t === upcoming) ? 'next' : t.explained ? 'done' : '',
   }))
-  let eta = ''
+  // 号码不会变的直播间（B 型）才算得出“还差几件”
+  const gap = r.type === 'B' && exp && exp.index && upcoming && upcoming.pos > exp.index ? upcoming.pos - exp.index : 0
+  let eta = ''   // 第二段的一句话（没有三格可放时才用）
   let prog = 0
-  if (hit) eta = '已经发微信提醒你' + (upcoming ? ` · 下一个 ${upcoming.pos} 号` : '')
-  else if (!list.length) eta = '还没设目标，点这张票去选号'
-  else if (!left.length) eta = '目标都讲过了'
-  else if (r.type === 'B' && exp && exp.index && upcoming && upcoming.pos > exp.index) {
-    eta = `还差 ${upcoming.pos - exp.index} 件到 ${upcoming.pos} 号`
-    prog = Math.round(exp.index / upcoming.pos * 100)
-  } else eta = `盯着 ${left.length} 个目标`
-  return { chips, eta, prog, hot: !!hit }
+  const fields = []  // 第三段的格子：{ k 小标签, v 大数字, u 单位或文字 }
+  if (!list.length) eta = '还没设目标，点这张票去选号'
+  else if (r.status === 'live' && exp && exp.id) {
+    if (hit) fields.push({ k: '已叫你', u: '微信 ✓' })
+    if (upcoming) fields.push({ k: '下一个', v: upcoming.pos, u: '号' })
+    else fields.push({ k: '目标', u: hit ? '最后一个' : '都讲过了' })
+    if (gap) {
+      fields.push({ k: '还差', v: gap, u: '件' })
+      if (!hit) prog = Math.round(exp.index / upcoming.pos * 100)
+      // 电脑估的每件秒数 × 还差几件 → 大约几分钟（给范围；跳着讲或样本太少时电脑不给）
+      if (!hit && r.pace && r.pace.lo) {
+        const lo = Math.max(1, Math.round(r.pace.lo * gap / 60))
+        const hi = Math.max(lo, Math.round(r.pace.hi * gap / 60))
+        fields.push({ k: '大约', v: lo === hi ? `${lo}` : `${lo}–${hi}`, u: '分' })
+      }
+    } else if (upcoming && left.length > 1) fields.push({ k: '还剩', v: left.length, u: '个目标' })
+  } else if (!left.length) eta = '目标都讲过了'
+  else eta = `盯着 ${left.length} 个目标`
+  return { chips, eta, prog, fields, hot: !!hit }
 }
+
+const pad = n => (n < 10 ? '0' : '') + n
+const hhmm = ms => { const d = new Date(ms); return `${pad(d.getHours())}:${pad(d.getMinutes())}` }
+const KIND = { arrive: ['到了', ''], ahead: ['快到了', 'near'], missed: ['可能错过', 'miss'] }
 
 Page({
   data: {
@@ -69,6 +86,8 @@ Page({
     rooms: [],
     hero: null,
     others: [],
+    stubs: [],
+    stubCount: 0,
     fly: null,
     headline: '',
     loading: true,
@@ -88,6 +107,7 @@ Page({
 
   onLoad() {
     this.last = null  // 上一次号码票的 {id, expId, index, title, hot}
+    this.stubIds = null  // 上一次看到的票根 id
   },
 
   onShow() {
@@ -156,8 +176,23 @@ Page({
       drag: false,
       watchBusy: false,
     }))
+    // 票根：最近叫过你的号，叠在票下面，只露最近两张。正在“到了”的那张还在票上，等撕下来才落进来
+    const notes = (d.notes || []).filter(x => !(hero && hero.hot && x.kind === 'arrive' && x.room === hero.id && hero.explaining && x.pid === hero.explaining.id))
+    const known = this.stubIds  // 第一次载入时是 null：不播“落下来”的动画
+    const stubs = notes.slice(0, 2).reverse().map(x => ({
+      id: x._id || x.id,
+      n: x.index || x.pos,
+      label: (KIND[x.kind] || KIND.arrive)[0],
+      cls: (KIND[x.kind] || KIND.arrive)[1],
+      time: hhmm(x.t),
+      fresh: !!(known && !known[x._id || x.id]),
+    }))
+    this.stubIds = {}
+    notes.forEach(x => { this.stubIds[x._id || x.id] = true })
+
     const n = watched.length
     this.setData({
+      stubs, stubCount: notes.length >= 10 ? '10+' : notes.length,
       loading: false,
       error: '',
       needJoin: false,
@@ -178,6 +213,10 @@ Page({
 
   openHero() {
     if (this.data.hero) wx.navigateTo({ url: `/pages/room/room?id=${this.data.hero.id}` })
+  },
+
+  openStubs() {
+    wx.navigateTo({ url: '/pages/stubs/stubs' })
   },
 
   goVerifyHero() {

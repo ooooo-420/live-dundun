@@ -41,7 +41,7 @@
             <view class="now idle-now" wx:else><text class="t-wait">{{hero.waitText}}</text></view>
           </view></view>
           <!-- 被撕走的旧存根 -->
-          <view wx:if="{{fly}}" class="fly {{fly.hot ? 'hot' : ''}}">
+          <view wx:if="{{fly}}" class="fly {{fly.hot ? 'hot keep' : ''}}">
             <view class="r1"><text class="live-pill">{{fly.pill}}</text><text class="t-name">{{fly.name}}</text></view>
             <view class="now"><text class="t-num num-font">{{fly.index}}</text><view class="t-side"><text>号 讲解中</text><text class="t-title {{tx.hang(fly.title) ? 'hang' : ''}}">{{fly.title}}</text></view></view>
           </view>
@@ -52,8 +52,18 @@
           <view class="chips" wx:if="{{hero.chips.length}}">
             <text wx:for="{{hero.chips}}" wx:for-item="c" wx:key="key" class="chip num-font {{c.cls}}">{{c.text}}</text>
           </view>
+          <view wx:if="{{hero.eta}}" class="eta">{{hero.eta}}</view>
+        </view>
+        <!-- 第三段：三格（下一个／还差／大约），像登机牌下半截 -->
+        <view wx:if="{{hero.fields.length}}" class="perf"><view class="hole l"></view><view class="hole r"></view></view>
+        <view wx:if="{{hero.fields.length}}" class="tbody">
+          <view class="fields">
+            <view wx:for="{{hero.fields}}" wx:for-item="f" wx:key="k" class="f">
+              <text class="f-k">{{f.k}}</text>
+              <view class="f-v"><text wx:if="{{f.v}}" class="f-n num-font">{{f.v}}</text><text>{{f.u}}</text></view>
+            </view>
+          </view>
           <view wx:if="{{hero.prog}}" class="t-prog"><view class="t-prog-bar" style="width: {{hero.prog}}%"></view></view>
-          <view class="eta">{{hero.eta}}</view>
         </view>
       </view>
 
@@ -67,6 +77,15 @@
       </view>
 
       <view wx:if="{{!(hero && hero.hot)}}" class="panda-paws"><image class="pimg {{hero && hero.bump ? 'go-paws' : ''}}" src="/images/panda_paws.png" /></view>
+    </view>
+
+    <!-- 票根：叫过你的号，撕下来叠在票下面；点开是通知记录 -->
+    <view wx:if="{{stubs.length}}" class="stubs" hover-class="press-row" hover-stay-time="100" bindtap="openStubs">
+      <view wx:for="{{stubs}}" wx:key="id" class="sb {{item.cls}} {{item.fresh ? 'land' : ''}}" style="left: {{index * 124}}rpx; top: {{index * 8}}rpx; transform: rotate({{index % 2 ? 3 : -3}}deg)">
+        <text class="sb-n num-font">{{item.n}}</text>
+        <view class="sb-t"><text>{{item.label}}</text><text>{{item.time}}</text></view>
+      </view>
+      <text class="stubs-l">票根 {{stubCount}} ›</text>
     </view>
   </view>
 

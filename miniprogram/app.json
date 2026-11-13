@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/room/room",
     "pages/members/members",
-    "pages/verify/verify"
+    "pages/verify/verify",
+    "pages/stubs/stubs"
   ],
   "window": {
     "navigationBarTextStyle": "black",

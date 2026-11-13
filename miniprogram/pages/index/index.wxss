@@ -65,9 +65,34 @@
 .tbody { padding: 36rpx 44rpx 34rpx; }
 .chips { display: flex; flex-wrap: wrap; gap: 16rpx; }
 .ticket.hot .chip.next { color: var(--tom); }
+/* 到号的存根不飞走：往下落到票根那一叠 */
+.fly.keep { animation: keep 0.8s cubic-bezier(0.5, 0, 0.7, 0.4) forwards; transform-origin: 20% 50%; }
+@keyframes keep { 0% { transform: none; } 20% { transform: rotate(-4deg) translate(8rpx, -16rpx); } 100% { transform: rotate(-3deg) translate(-60rpx, 620rpx) scale(0.34); opacity: 0.2; } }
+
+/* 第三段：三格 */
+.fields { display: flex; }
+.f { flex: 1; min-width: 0; }
+.f + .f { padding-left: 28rpx; margin-left: 4rpx; border-left: 3rpx solid rgba(255, 255, 255, 0.24); }
+.f-k { display: block; font-size: 23rpx; font-weight: 600; opacity: 0.85; letter-spacing: 0.04em; }
+.f-v { display: flex; align-items: baseline; gap: 8rpx; font-size: 36rpx; font-weight: 800; white-space: nowrap; line-height: 1.3; }
+.f-n { font-size: 48rpx; }
+
+/* 票根 */
+.stubs { position: relative; height: 150rpx; margin-top: 36rpx; }
+.sb { position: absolute; width: 300rpx; height: 128rpx; box-sizing: border-box; padding: 0 28rpx; border-radius: 32rpx 32rpx 12rpx 12rpx; color: #fff; display: flex; align-items: center; gap: 16rpx; background: var(--tom); box-shadow: 0 16rpx 36rpx rgba(0, 0, 0, 0.14); border-bottom: 4rpx dashed rgba(255, 255, 255, 0.55); }
+.sb.near { background: #5a9a70; }
+.sb.miss { background: #8a9088; }
+.sb-n { font-size: 68rpx; font-weight: 800; line-height: 1; }
+.sb-t { display: flex; flex-direction: column; font-size: 23rpx; font-weight: 600; line-height: 1.35; }
+.sb.land { animation: land 0.5s 0.55s cubic-bezier(0.3, 1.4, 0.5, 1) both; }
+@keyframes land { from { opacity: 0; margin-top: -90rpx; } to { opacity: 1; margin-top: 0; } }
+.stubs-l { position: absolute; right: 8rpx; top: 46rpx; font-size: 26rpx; font-weight: 700; color: var(--soft); }
+
 .t-prog { height: 12rpx; border-radius: 6rpx; background: rgba(255, 255, 255, 0.22); margin-top: 22rpx; overflow: hidden; }
 .t-prog-bar { height: 100%; border-radius: 6rpx; background: #fff; transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
-.eta { margin-top: 20rpx; font-size: 26rpx; font-weight: 600; }
+.eta { font-size: 26rpx; font-weight: 600; }
+.chips + .eta, .verify-pill + .eta { margin-top: 20rpx; }
+.tbody + .perf + .tbody { padding-top: 30rpx; }
 .verify-pill { margin-bottom: 24rpx; background: #fff; color: var(--tom); font-weight: 700; font-size: 26rpx; padding: 18rpx 26rpx; border-radius: 30rpx; }
 
 /* 空票 */

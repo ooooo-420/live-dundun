@@ -8,7 +8,7 @@ from pathlib import Path
 
 from playwright.async_api import BrowserContext, Page, async_playwright
 
-from . import douyin, rules, store
+from . import douyin, pace, rules, store
 from .notify import Notifier
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -37,6 +37,8 @@ class RoomWorker:
         self.shot: dict | None = None
         self.shot_area: dict | None = None
         self.shot_v = 0
+        # 每次换讲解的（时间, 号码），用来估主播讲一件大概多久
+        self.changes: list[tuple[float, int | None]] = []
 
     @property
     def room(self) -> dict:
@@ -53,6 +55,7 @@ class RoomWorker:
             "type": r.get("type"),
             "watch": bool(r.get("watch")),
             "explaining": self.explaining,
+            "pace": pace.per_item(self.changes) if self.status == "live" else None,
             "cart_count": len(self.cart),
             "targets": r.get("targets", []),
         }
@@ -127,6 +130,8 @@ class RoomWorker:
         self.cart_ref = list(self.cart)
         last_id = s.explaining_id
         self.explaining = self.find(last_id, s)
+        # 刚进直播间：不知道这件已经讲了多久，所以从下一次换讲解才开始计时
+        self.changes = []
         store.log("live", room=self.rid, items=len(self.cart), explaining=self.explaining)
 
         last_reload = time.time()
@@ -248,6 +253,7 @@ class RoomWorker:
         item = self.find(new, s2)
         self.explaining = item
         new_index = item.get("index") if item else None
+        self.changes = (self.changes + [(time.time(), new_index)])[-12:]
         t = rules.detect_type(prev_index, new_index)
         if t and self.room.get("type") != t:
             self.room["type"] = t
@@ -279,6 +285,7 @@ class Monitor:
         self.ctx: BrowserContext | None = None
         self.wechat: Notifier | None = None
         self.notes: list[dict] = []  # 最近发出的通知，给网页看
+        self.outbox: list[dict] = []  # 还没送上云端的“票根”（每次商品提醒一张），小程序的通知记录用
 
     def save(self) -> None:
         store.save(self.state)
@@ -497,6 +504,12 @@ class Monitor:
             note["ok"] = False
             note["error"] = str(e)[:200]
         self.notes = ([note] + self.notes)[:30]
+        ms = int(time.time() * 1000)
+        self.outbox = (self.outbox + [{
+            "id": f"{w.rid}-{ms}", "t": ms, "room": w.rid, "name": note["room"], "kind": kind,
+            "pid": target["id"], "pos": target["pos"], "index": cur, "title": target["title"],
+            "status": text, "ok": note["ok"],
+        }])[-100:]
         store.log("notify", room=w.rid, kind=kind, product=product, status=text, ok=note["ok"],
                   error=note.get("error"), channels=note.get("channels"))
 

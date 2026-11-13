@@ -1,0 +1,20 @@
+/* 票根：每张＝一次提醒。左边是撕下来的存根（号码），右边是哪件、哪间、几点 */
+.day { margin-top: 36rpx; }
+.day-h { display: flex; align-items: baseline; gap: 16rpx; font-size: 52rpx; font-weight: 900; margin: 0 8rpx 24rpx; }
+.day-h.old { font-size: 36rpx; }
+.day-n { font-size: 26rpx; font-weight: 700; color: var(--soft); }
+
+.hs { display: flex; margin-bottom: 24rpx; border-radius: 44rpx; overflow: hidden; background: var(--card); box-shadow: var(--shadow); }
+.hs-l { width: 184rpx; flex: none; padding: 22rpx 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; background: var(--tom); border-right: 4rpx dashed rgba(255, 255, 255, 0.6); }
+.hs-l.near { background: #5a9a70; }
+.hs-l.miss { background: #8a9088; }
+.hs-n { font-size: 88rpx; font-weight: 800; line-height: 0.95; }
+.hs-k { font-size: 22rpx; font-weight: 700; }
+.hs-r { flex: 1; min-width: 0; padding: 24rpx 32rpx; display: flex; flex-direction: column; justify-content: center; }
+.hs-t { font-size: 29rpx; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hs-s { font-size: 24rpx; color: var(--soft); margin-top: 4rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hs-s.fail { color: var(--danger); font-weight: 700; }
+
+.none { padding-top: 120rpx; }
+.none-t { font-size: 44rpx; font-weight: 900; margin-bottom: 8rpx; }
+.tail { height: 80rpx; }

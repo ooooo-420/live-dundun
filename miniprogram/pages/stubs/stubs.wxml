@@ -1,0 +1,23 @@
+<wxs src="../../utils/text.wxs" module="tx" />
+<view wx:if="{{error}}" class="banner err">连不上云端：{{error}}</view>
+
+<view wx:if="{{!loading && !days.length && !error}}" class="wrap none">
+  <view class="none-t">还没有票根</view>
+  <view class="soft">讲到你要的号码时，这里会留下一张。</view>
+</view>
+
+<view wx:for="{{days}}" wx:for-item="day" wx:key="key" class="wrap day enter">
+  <view class="day-h {{index ? 'old' : ''}}"><text>{{day.title}}</text><text class="day-n">叫了你 {{day.items.length}} 次</text></view>
+  <view wx:for="{{day.items}}" wx:key="id" class="hs">
+    <view class="hs-l {{item.cls}}">
+      <text class="hs-n num-font">{{item.n}}</text>
+      <text class="hs-k">{{item.label}}</text>
+    </view>
+    <view class="hs-r">
+      <view class="hs-t {{tx.hang(item.title) ? 'hang' : ''}}">{{item.title}}</view>
+      <view class="hs-s">{{item.sub}}</view>
+      <view class="hs-s {{item.fail ? 'fail' : ''}}">{{item.sent}}</view>
+    </view>
+  </view>
+</view>
+<view class="tail"></view>

@@ -67,7 +67,12 @@ const cloudApi = {
       pending: d.pending,
       synced: d.synced,
       paused: !!d.paused,
+      notes: d.notes || [],  // 旧版云函数没有这项
     }
+  },
+  // 票根：最近 7 天的提醒
+  async getNotes() {
+    return (await call('notes')).notes || []
   },
   // 监控开关。关着的时候电脑每分钟才同步一次，所以“开”要等久一点
   async setMonitoring(on) {
@@ -160,7 +165,10 @@ const wait = (v) => sleep(200).then(() => v)
 
 const demoApi = {
   async getRooms() {
-    return wait({ rooms: load().rooms, pending: 0, synced: null, paused: false })
+    return wait({ rooms: load().rooms, pending: 0, synced: null, paused: false, notes: [] })
+  },
+  async getNotes() {
+    return wait([])
   },
   async setMonitoring() {
     return wait({})

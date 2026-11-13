@@ -148,7 +148,7 @@ class CloudSync:
         out = []
         for w in self.mon.workers.values():
             p = w.public()
-            out.append({k: p.get(k) for k in ("id", "url", "name", "status", "error", "type", "watch", "explaining", "cart_count", "targets")})
+            out.append({k: p.get(k) for k in ("id", "url", "name", "status", "error", "type", "watch", "explaining", "pace", "cart_count", "targets")})
         return out
 
     def build(self) -> tuple[dict, str | None, dict[str, str]]:
@@ -178,6 +178,10 @@ class CloudSync:
             body["captchas"] = shots
         if self.results:
             body["results"] = self.results
+        # 票根（每次商品提醒一张）：送成功才从待送清单拿掉；每张有固定 id，重送也不会变成两张
+        notes = list(getattr(self.mon, "outbox", None) or [])[:20]
+        if notes:
+            body["notes"] = notes
         paused = bool(getattr(self.mon, "paused", False))
         # 关着的时候每分钟才同步一次，所以每次都带心跳；开关一变也马上带，让手机看到
         if self.count % HEARTBEAT_EVERY == 0 or paused or paused != self.sent_paused:
@@ -208,6 +212,10 @@ class CloudSync:
         for rid, sh in (body.get("captchas") or {}).items():
             self.sent_shots[rid] = sh["v"] if sh else 0
         self.results = []
+        # 旧版云函数不认得 notes（不会回 notesSaved）：先留着，等云函数更新后再送
+        if body.get("notes") and (data or {}).get("notesSaved") is not None:
+            sent = {n["id"] for n in body["notes"]}
+            self.mon.outbox = [n for n in self.mon.outbox if n["id"] not in sent]
         errs = (data or {}).get("resultErrors") or []
         if errs:
             store.log("cloud_result_error", errors=errs[:5])

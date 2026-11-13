@@ -69,6 +69,21 @@ def run(c):
     return asyncio.run(c)
 
 
+def test_notes_kept_until_cloud_confirms():
+    """票根：云端回 notesSaved 才从待送清单拿掉；旧版云函数（不回这项）或失败时留着重送。"""
+    mon, fc, s = make()
+    mon.outbox = [{"id": "111-1", "t": 1, "room": "111", "kind": "arrive", "pos": 3}]
+    run(s.tick())
+    assert fc.calls[-1]["notes"][0]["id"] == "111-1"
+    assert len(mon.outbox) == 1  # 旧版云函数没回 notesSaved：留着
+    old = fc.invoke
+    fc.invoke = lambda body: {**old(body), "notesSaved": len(body.get("notes") or [])}
+    run(s.tick())
+    assert mon.outbox == []
+    run(s.tick())
+    assert "notes" not in fc.calls[-1]
+
+
 def test_only_send_changes():
     mon, fc, s = make()
     mon.add_room("https://live.douyin.com/111")

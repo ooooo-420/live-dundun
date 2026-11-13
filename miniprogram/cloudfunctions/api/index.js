@@ -16,7 +16,9 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
 const _ = db.command
 
-const COLLECTIONS = ['rooms', 'carts', 'commands', 'config', 'captcha']
+// - notes     电脑写：票根，每次商品提醒一张 { t, room, name, kind, pid, pos, index, title, status, ok }，留 7 天
+const COLLECTIONS = ['rooms', 'carts', 'commands', 'config', 'captcha', 'notes']
+const NOTES_KEEP_DAYS = 7
 const COMMANDS = ['add_room', 'remove_room', 'set_targets', 'pause', 'resume', 'watch', 'unwatch', 'captcha_input']
 let ensured = false
 
@@ -116,7 +118,17 @@ async function fromApp(event) {
       const rooms = await listAll('rooms')
       const pending = await listAll('commands', { done: false })
       const pc = await pcInfo()
-      return { rooms, pending: pending.length, synced: pc.time, paused: pc.paused }
+      // 首页票下面那叠票根：最近 12 小时内的提醒，最多 10 张
+      let notes = []
+      try {
+        notes = (await db.collection('notes').where({ t: _.gt(Date.now() - 12 * 3600000) }).orderBy('t', 'desc').limit(10).get()).data
+      } catch (e) {}
+      return { rooms, pending: pending.length, synced: pc.time, paused: pc.paused, notes }
+    }
+    case 'notes': {
+      // 票根页：最近 7 天的提醒，新的在前
+      const r = await db.collection('notes').orderBy('t', 'desc').limit(100).get()
+      return { notes: r.data }
     }
     case 'room': {
       let room = null
@@ -204,6 +216,15 @@ async function fromPc(event) {
     }
   }
 
+  // 票根：用电脑给的固定 id 存，同一张重送也只会有一份
+  let notesSaved = 0
+  for (const n of event.notes || []) {
+    if (!n || !n.id) continue
+    const { id, ...data } = n
+    await db.collection('notes').doc(String(id)).set({ data })
+    notesSaved++
+  }
+
   // result 原本是 null，直接 update 成对象会被当成“在 null 里建字段”而失败，所以要用 _.set 整个换掉
   const resultErrors = []
   for (const res of event.results || []) {
@@ -228,6 +249,7 @@ async function fromPc(event) {
     }
     // 清掉一天前已完成的指令，免得越积越多
     try { await db.collection('commands').where({ done: true, created: _.lt(now - 86400000) }).remove() } catch (e) {}
+    try { await db.collection('notes').where({ t: _.lt(now - NOTES_KEEP_DAYS * 86400000) }).remove() } catch (e) {}
   }
 
   // 公众号测试号的数据（电脑有变才送）：存在 config/notify，给 watchdog 在电脑掉线时代发通知用
@@ -236,7 +258,7 @@ async function fromPc(event) {
   }
 
   const pending = await db.collection('commands').where({ done: false }).orderBy('created', 'asc').limit(20).get()
-  return { commands: pending.data, resultErrors }
+  return { commands: pending.data, resultErrors, notesSaved }
 }
 
 exports.main = async (event) => {
