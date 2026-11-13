@@ -50,7 +50,7 @@
 .live-pill { flex: none; font-size: 22rpx; font-weight: 700; background: rgba(255, 255, 255, 0.22); padding: 6rpx 20rpx; border-radius: 30rpx; }
 .t-name { margin-left: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .now { display: flex; align-items: flex-end; gap: 20rpx; margin-top: 16rpx; }
-.t-num { font-size: 184rpx; font-weight: 800; line-height: 0.9; }
+.t-num { font-size: 206rpx; font-weight: 800; line-height: 0.9; }
 .t-side { display: flex; flex-direction: column; min-width: 0; font-size: 27rpx; line-height: 1.45; padding-bottom: 20rpx; opacity: 0.95; }
 .t-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .idle-now { height: 166rpx; align-items: center; }

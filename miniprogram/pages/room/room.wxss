@@ -4,7 +4,7 @@
 .verify-row { margin-bottom: 24rpx; padding: 22rpx 30rpx; background: var(--tom-tint); color: #b4471f; font-weight: 700; font-size: 26rpx; border-radius: 32rpx; }
 .now { display: flex; align-items: flex-end; gap: 24rpx; }
 .big-wrap { position: relative; display: inline-block; overflow: hidden; }
-.big { display: block; font-size: 212rpx; line-height: 0.9; font-weight: 800; color: var(--bam); }
+.big { display: block; font-size: 236rpx; line-height: 0.9; font-weight: 800; color: var(--bam); }
 .flip-out { position: absolute; left: 0; top: 0; animation: flipOut 0.35s cubic-bezier(0.4, 0, 0.2, 1) both; }
 .flip-in { animation: flipIn 0.5s cubic-bezier(0.3, 1.3, 0.5, 1) both; }
 @keyframes flipOut { from { transform: none; opacity: 1; } 60% { opacity: 0; } to { transform: translateY(-110%); opacity: 0; } }
