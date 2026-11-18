@@ -1,6 +1,6 @@
 // 假数据：首页的几种状态＋直播间页
 const STATUS_TEXT = { starting: '启动中', offline: '没开播', live: '直播中', no_cart: '没有小黄车', error: '出错了', need_login: '要先登录抖音', captcha: '要人机验证', paused: '监控关闭中', idle: '没在盯' }
-const cart = [[27, '“临序”植绒全棉牛仔夹克', 928], [28, '“沉墟”流苏提花纯羊毛开衫', 986], [30, '“沉墟”窄幅赤耳定制原牛', 596], [31, '“临序”宽松工装裤', 458], [32, '翻领拉链夹克', 399], [36, '灰蓝卷边卫裤', 299]].map(([i, t, p]) => ({ id: 'p' + i, index: i, title: t, price: p }))
+const cart = [[7, '羊毛围巾', 199], [27, '“临序”植绒全棉牛仔夹克', 928], [28, '“沉墟”流苏提花纯羊毛开衫', 986], [30, '“沉墟”窄幅赤耳定制原牛', 596], [31, '“临序”宽松工装裤', 458], [32, '翻领拉链夹克', 399], [36, '灰蓝卷边卫裤', 299], [128, '重磅假两件帽衫加绒款', 359]].map(([i, t, p]) => ({ id: 'p' + i, index: i, title: t, price: p }))
 const targets = [{ id: 'p12', pos: 12, explained: true }, { id: 'p31', pos: 31 }, { id: 'p36', pos: 36 }, { id: 'p42', pos: 42 }]
 // state：off 监控关着｜none 开着但没选｜offline 选了但没开播｜live 直播中（expIdx 讲到几号）
 function rooms(state, expIdx) {
@@ -45,5 +45,10 @@ const mk = (state, expIdx, extra) => ({
   await harness.render('index', { ...live, async getRooms() { return { ...(await live.getRooms()), synced: Date.now() - 3 * 3600 * 1000 } } }, {}, null, null, '⑦ 电脑没回报：熊猫睡觉')
   await harness.render('index', mk('live', 32), {}, null, null, '⑧ 31 号讲完：票根多一张')
   await harness.render('stubs', mk('live', 32), {}, null, null, '⑨ 票根页')
+  // 选品页（直播间页）左上角的大号码：一位数、两位数、三位数
+  await harness.render('room', mk('live', 7), { id: '875426677831' }, null, null, '⑩ 选品页 7 号')
+  await harness.render('room', mk('live', 27), { id: '875426677831' }, null, null, '⑪ 选品页 27 号')
+  await harness.render('room', mk('live', 128), { id: '875426677831' }, null, null, '⑫ 选品页 128 号')
+  await harness.render('index', mk('live', 128), {}, null, null, '⑬ 首页 128 号')
   document.title = 'done'
 })().catch(e => { document.title = 'ERR ' + e.message })

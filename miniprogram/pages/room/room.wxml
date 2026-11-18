@@ -4,7 +4,7 @@
   <view class="wrap head enter">
     <view wx:if="{{room.status === 'captcha'}}" class="verify-row" hover-class="press" bindtap="goVerify">抖音要人机验证 · 点这里在手机上完成 ›</view>
     <view wx:if="{{room.status === 'live' && room.explaining && room.explaining.index}}" class="now">
-      <view class="big-wrap">
+      <view class="big-wrap {{room.explaining.index >= 100 ? 'wide' : ''}}">
         <text wx:if="{{bump && prevIndex}}" class="big num-font flip-out">{{prevIndex}}</text>
         <text class="big num-font {{bump ? 'flip-in' : ''}}">{{room.explaining.index}}</text>
       </view>
